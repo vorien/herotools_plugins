@@ -1,0 +1,28 @@
+#owncharacters{
+	font-size: 2rem;
+	line-height: 2rem;
+}
+
+#owncharacters .character-name{
+	font-weigh: bold;
+}
+
+#gmcharacters .character-name{
+	font-weigh: bold;
+}
+
+#gmcharacters{
+	font-size: 1rem;
+	line-height: 1.5rem;
+}
+
+.btndiv{
+	height: 100%;
+}
+.btn{
+	margin: auto;
+}
+
+#owncharacters.row, #gmcharacters.row{
+	margin-bottom: 1rem;
+}

@@ -1,0 +1,147 @@
+html, body{
+    font-size: 14px;
+}
+.virtue{
+    text-align:right;
+}
+.vice{
+    text-align: left;
+}
+.virtue, .vice{
+    /*height: 30px;*/
+    line-height: 2rem;
+}
+.personality-slider{
+    padding: 5;
+}
+.ps-wrapper{
+    height: 2rem;
+    padding: 10px;
+}
+.ps-wrapper > .ui-state-disabled{
+    opacity: 1;
+}
+.p-wrapper{
+    margin-bottom: .25rem;
+}
+label{
+    line-height: 2rem;
+    font-size: 1.5rem;
+    font-weight: bold;
+}
+.matchinputmb{
+    margin-bottom: 1em;
+}
+
+.npcnav{
+    line-height: 4rem;
+    float: left;
+    margin: 0 2rem;
+}
+.npcnav-brand{
+    font-size: 2rem;
+    font-style: bold;
+}
+.npcnav-item{
+    font-size: 1.25rem;
+    font-style: bold;
+}
+.npcnav-wrapper{
+    height: 4rem;
+    background-color: #f5f5f5;
+    margin-bottom: 1rem;
+}
+
+.npcnav-spacer{
+    height: 100%;
+    width: 20%;
+}
+fieldset legend{
+    margin-bottom: .5rem;
+}
+
+.page-wrapper{
+    margin: 10px 0;
+}
+.tab-content{
+    margin-top: 5px;
+}
+ul.nav{
+    margin-left: 0px;
+}
+.named-tab{
+    text-align: left;
+    padding-left: 1rem;
+    font-size: 1.5em;
+    font-weight: bold;
+	/*    background-color: #f5f5f5;
+		border-right: 1rem solid white;
+		border-radius: .5rem .5rem 0 0;*/
+}
+.nav-tabs.nav-justified > li > a {
+    font-size: 1.25em;
+    border-top: 1px solid white;
+    border-left: 1px solid white;
+    border-right: 1px solid white;
+    border-bottom: 1px solid black;
+    border-radius: 4px 4px 0 0;
+}
+.nav-tabs.nav-justified > .active > a,
+.nav-tabs.nav-justified > .active > a:hover,
+.nav-tabs.nav-justified > .active > a:focus {
+    font-size: 1.25em;
+    border-top: 1px solid black;
+    border-left: 1px solid black;
+    border-right: 1px solid black;
+    border-bottom: 1px solid white;
+    border-radius: 4px 4px 0 0;
+}
+
+
+.related-heading{
+    font-size: 1.2em;
+    font-weight: bold;
+}
+.assoc-name-heading{
+    font-weight: bold;
+}
+.assoc-name-content{
+
+}
+.assoc-description-heading{
+    font-weight: bold;
+}
+.assoc-description-content{
+
+}
+
+.line-above{
+    border-top: 1px solid lightgray;
+}
+
+.btn-submit{
+	margin-top: 1rem;
+	margin-bottom: 1rem;
+}
+
+
+.textarea-withbutton{
+	width: 80%;
+	float: left;
+}
+
+.btn-textarea-left{
+	float: left;
+	margin-left: 1rem;
+}
+
+.display-note{
+	padding: .5rem;
+	margin-bottom: 1rem;
+	border: 1px solid lightgrey;
+}
+
+li.select2-search{
+	display: none;
+}
+

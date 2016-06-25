@@ -1,0 +1,13 @@
+Archetypes
+Flaws
+Motivations
+
+Add to end of Entity
+	protected function _getSelectValue() {
+		return $this->_properties['name'] . ':     ' . $this->_properties['description'];
+	}
+
+Change
+        $this->displayField('name');
+to
+        $this->displayField('SelectValue');

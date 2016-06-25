@@ -1,0 +1,12 @@
+sudo rm /var/www/npcdata.dev/src/Model/Behavior/*.php
+sudo rm /var/www/npcdata.dev/src/Model/Entity/*.php
+sudo rm /var/www/npcdata.dev/src/Model/Table/*.php
+sudo rm -rf /var/www/npcdata.dev/tests
+sudo /var/www/npcdata.dev/bin/cake bake model all
+sudo /var/www/npcdata.dev/bin/cake bake controller all
+sudo /var/www/npcdata.dev/bin/cake bake template all
+sudo chown -R mcoury:www-data /var/www/npcdata.dev/
+sudo chmod -R 777 /var/www/npcdata.dev/
+
+
+
