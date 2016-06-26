@@ -25,6 +25,7 @@ class SectionBuildHelper extends Helper {
 	private $targetinfo;
 	private $maneuvers_standard;
 	private $maneuvers_optional;
+	private $armorlocationinfo;
 
 //	public $helpers = array('Vorien/HeroCombat.ManeuverDisplay', 'Vorien/HeroCombat.PageBuild', 'Html');
 
@@ -35,6 +36,7 @@ class SectionBuildHelper extends Helper {
 		$this->targetinfo = $this->_View->viewVars['targetinfo'];
 		$this->maneuvers_standard = $this->_View->viewVars['maneuvers_standard'];
 		$this->maneuvers_optional = $this->_View->viewVars['maneuvers_optional'];
+		$this->armorlocationinfo = $this->_View->viewVars['armorlocationinfo'];
 	}
 
 	public function buildTopSection() {
@@ -137,47 +139,51 @@ class SectionBuildHelper extends Helper {
 	}
 
 	public function showDamageStatusDisplay() {
+		$statcol1 = 10;
+		$statcol22 = 8;
+		$statcol32 = 7;
+		$statcol33 = 7;
 		echo $this->PageBuild->openRow();
-		echo $this->PageBuild->makeDiv("<h4>Character</h4>", "col-xs-24");
+		echo $this->PageBuild->makeDiv("<h4>Character Status</h4>", "col-xs-24");
 		echo $this->PageBuild->closeRow();
 		echo $this->PageBuild->openRow();
-		echo $this->PageBuild->makeDiv("PD", "col-xs-12");
-		echo $this->PageBuild->makeDiv($this->characterinfo['n_pd'] . " / r" . ($this->characterinfo['r_pd'] ? : 0 ), "col-xs-4");
+		echo $this->PageBuild->makeDiv("PD", "col-xs-" . $statcol1);
+		echo $this->PageBuild->makeDiv($this->characterinfo['n_pd'] . " / r" . ($this->characterinfo['r_pd'] ? : 0 ), "col-xs-" . $statcol22);
 		echo $this->PageBuild->closeRow();
 		echo $this->PageBuild->openRow();
-		echo $this->PageBuild->makeDiv("ED", "col-xs-12");
-		echo $this->PageBuild->makeDiv($this->characterinfo['n_ed'] . " / r" . ($this->characterinfo['r_ed'] ? : 0), "col-xs-4");
+		echo $this->PageBuild->makeDiv("ED", "col-xs-" . $statcol1);
+		echo $this->PageBuild->makeDiv($this->characterinfo['n_ed'] . " / r" . ($this->characterinfo['r_ed'] ? : 0), "col-xs-" . $statcol22);
 		echo $this->PageBuild->closeRow();
 //		echo $this->PageBuild->openRow();
-//		echo $this->PageBuild->makeDiv("Resistant PD", "col-xs-12");
-//		echo $this->PageBuild->makeDiv($this->characterinfo['r_pd'], "col-xs-4");
+//		echo $this->PageBuild->makeDiv("Resistant PD", "col-xs-" . $statcol1);
+//		echo $this->PageBuild->makeDiv($this->characterinfo['r_pd'], "col-xs-" . $statcol2);
 //		echo $this->PageBuild->closeRow();
 //		echo $this->PageBuild->openRow();
-//		echo $this->PageBuild->makeDiv("Resistant PD", "col-xs-12");
-//		echo $this->PageBuild->makeDiv($this->characterinfo['r_ed'], "col-xs-4");
+//		echo $this->PageBuild->makeDiv("Resistant PD", "col-xs-" . $statcol1);
+//		echo $this->PageBuild->makeDiv($this->characterinfo['r_ed'], "col-xs-" . $statcol2);
 //		echo $this->PageBuild->closeRow();
 		echo $this->PageBuild->openRow();
-		echo $this->PageBuild->makeDiv("Con", "col-xs-12");
-		echo $this->PageBuild->makeDiv($this->characterinfo['con'], "col-xs-4", "dcalc-con");
+		echo $this->PageBuild->makeDiv("Con", "col-xs-" . $statcol1);
+		echo $this->PageBuild->makeDiv($this->characterinfo['con'], "col-xs-" . $statcol22, "dcalc-con");
 		echo $this->PageBuild->closeRow();
 		echo $this->PageBuild->openRow();
-		echo $this->PageBuild->makeDiv("Recovery", "col-xs-12");
-		echo $this->PageBuild->makeDiv($this->characterinfo['recovery'], "col-xs-4", "dcalc-recovery");
+		echo $this->PageBuild->makeDiv("Recovery", "col-xs-" . $statcol1);
+		echo $this->PageBuild->makeDiv($this->characterinfo['recovery'], "col-xs-" . $statcol22, "dcalc-recovery");
 		echo $this->PageBuild->closeRow();
 		echo $this->PageBuild->openRow();
-		echo $this->PageBuild->makeDiv("Body", "col-xs-12");
-		echo $this->PageBuild->makeDiv($this->characterinfo['body'], "col-xs-4", "dcalc-bodystart");
-		echo $this->PageBuild->makeDiv("( <span id='dcalc-bodyremaining' class='full-stat'>" . $this->characterinfo['body'] . "</span> )", "col-xs-8");
+		echo $this->PageBuild->makeDiv("Body", "col-xs-" . $statcol1);
+		echo $this->PageBuild->makeDiv($this->characterinfo['body'], "col-xs-" . $statcol32, "dcalc-bodystart");
+		echo $this->PageBuild->makeDiv("( <span id='dcalc-bodyremaining' class='dc-body-normal'>" . $this->characterinfo['body'] . "</span> )", "col-xs-" . $statcol33);
 		echo $this->PageBuild->closeRow();
 		echo $this->PageBuild->openRow();
-		echo $this->PageBuild->makeDiv("Stun", "col-xs-12");
-		echo $this->PageBuild->makeDiv($this->characterinfo['stun'], "col-xs-4", "dcalc-stunstart");
-		echo $this->PageBuild->makeDiv("( <span id='dcalc-stunremaining' class='full-stat'>" . $this->characterinfo['stun'] . "</span> )", "col-xs-8");
+		echo $this->PageBuild->makeDiv("Stun", "col-xs-" . $statcol1);
+		echo $this->PageBuild->makeDiv($this->characterinfo['stun'], "col-xs-" . $statcol32, "dcalc-stunstart");
+		echo $this->PageBuild->makeDiv("( <span id='dcalc-stunremaining' class='dc-stun-normal'>" . $this->characterinfo['stun'] . "</span> )", "col-xs-" . $statcol33);
 		echo $this->PageBuild->closeRow();
 		echo $this->PageBuild->openRow();
-		echo $this->PageBuild->makeDiv("Endurance", "col-xs-12");
-		echo $this->PageBuild->makeDiv($this->characterinfo['endurance'], "col-xs-4", "dcalc-endstart");
-		echo $this->PageBuild->makeDiv("( <span id='dcalc-endremaining' class='full-stat'>" . $this->characterinfo['endurance'] . "</span> )", "col-xs-8");
+		echo $this->PageBuild->makeDiv("Endurance", "col-xs-" . $statcol1);
+		echo $this->PageBuild->makeDiv($this->characterinfo['endurance'], "col-xs-" . $statcol32, "dcalc-endstart");
+		echo $this->PageBuild->makeDiv("( <span id='dcalc-endremaining' class='dc-end-normal'>" . $this->characterinfo['endurance'] . "</span> )", "col-xs-" . $statcol33);
 		echo $this->PageBuild->closeRow();
 	}
 
@@ -230,7 +236,7 @@ class SectionBuildHelper extends Helper {
 
 	public function buildCalculationDisplay($type) {
 		echo $this->PageBuild->openRow(null, "calcs-$type");
-		echo $this->PageBuild->makeDiv(strtoupper($type), "col-xs-4");
+		echo $this->PageBuild->makeDiv(strtoupper($type), "col-xs-8");
 		if ($type == "ocv") {
 			echo $this->PageBuild->makeDiv(null, "col-xs-4 $type-current");
 			echo $this->PageBuild->makeDiv(null, "col-xs-12 $type-roll");
@@ -263,7 +269,7 @@ class SectionBuildHelper extends Helper {
 		$this->buildWeapons();
 		echo $this->PageBuild->closeDiv();
 		echo $this->PageBuild->openDiv("tab-pane", "target");
-		$this->buildTarget();
+		$this->buildTargets();
 		echo $this->PageBuild->closeDiv();
 		echo $this->PageBuild->openDiv("tab-pane", "maneuvers");
 		$this->buildManeuverChart();
@@ -287,28 +293,22 @@ class SectionBuildHelper extends Helper {
 		echo $this->PageBuild->closeRow();
 	}
 
-	public function buildTarget() {
+	public function showRanges() {
 		echo $this->PageBuild->openRow();
-		echo $this->PageBuild->openDiv("col-xs-10");
-		echo $this->PageBuild->openRow();
-		echo $this->PageBuild->makeDiv('Penalty', "col-xs-4");
-		echo $this->PageBuild->makeDiv('Location', "col-xs-8");
-		echo $this->PageBuild->makeDiv('Roll', "col-xs-8");
+		echo $this->PageBuild->makeDiv('Penalty', "col-xs-6");
+		echo $this->PageBuild->makeDiv('Location', "col-xs-12");
+		echo $this->PageBuild->makeDiv('Roll', "col-xs-6");
 		echo $this->PageBuild->closeRow();
-		foreach ($this->targetinfo as $penalty => $targettype) {
-			if (array_key_exists('Range', $targettype)) {
-				foreach ($targettype['Range'] as $target) {
-					echo $this->PageBuild->openRow();
-					echo $this->PageBuild->makeDiv($penalty, "col-xs-4");
-					echo $this->PageBuild->makeDiv($this->PageBuild->makeTargetDiv($penalty, $target['location'], $target['roll']), "col-xs-8");
-					echo $this->PageBuild->makeDiv($target['roll'], "col-xs-8");
-					echo $this->PageBuild->closeRow();
-				}
-			}
+		foreach ($this->targetinfo['shot'] as $target) {
+			echo $this->PageBuild->openRow();
+			echo $this->PageBuild->makeDiv($target['penalty'], "col-xs-6");
+			echo $this->PageBuild->makeDiv($this->PageBuild->makeTargetDiv($target['location'], $target['penalty'], $target['roll']), "col-xs-12");
+			echo $this->PageBuild->makeDiv($target['roll'], "col-xs-6");
+			echo $this->PageBuild->closeRow();
 		}
-		echo $this->PageBuild->closeDiv();
+	}
 
-		echo $this->PageBuild->openDiv("col-xs-10");
+	public function showTargets($type) {
 		echo $this->PageBuild->openRow();
 		echo $this->PageBuild->makeDiv('Penalty', "col-xs-4");
 		echo $this->PageBuild->makeDiv('Location', "col-xs-8");
@@ -316,20 +316,33 @@ class SectionBuildHelper extends Helper {
 		echo $this->PageBuild->makeDiv('BodyX', "col-xs-4");
 		echo $this->PageBuild->makeDiv('nStun', "col-xs-4");
 		echo $this->PageBuild->closeRow();
-
-		foreach ($this->targetinfo as $penalty => $targettype) {
-			if (array_key_exists('Location', $targettype)) {
-				foreach ($targettype as $target) {
-					echo $this->PageBuild->openRow();
-					echo $this->PageBuild->makeDiv($penalty, "col-xs-4");
-					echo $this->PageBuild->makeDiv($this->PageBuild->makeTargetDiv($penalty, $target['location']), "col-xs-8");
-					echo $this->PageBuild->makeDiv($target['stunx'], "col-xs-4");
-					echo $this->PageBuild->makeDiv($target['bodyx'], "col-xs-4");
-					echo $this->PageBuild->makeDiv($target['nstun'], "col-xs-4");
-					echo $this->PageBuild->closeRow();
-				}
-			}
+		foreach ($this->targetinfo[$type] as $target) {
+			echo $this->PageBuild->openRow();
+			echo $this->PageBuild->makeDiv($target['penalty'], "col-xs-4");
+			echo $this->PageBuild->makeDiv($this->PageBuild->makeTargetDiv($target['location'], $target['penalty'], $target['roll']), "col-xs-8");
+			echo $this->PageBuild->makeDiv($target['stunx'], "col-xs-4");
+			echo $this->PageBuild->makeDiv($target['bodyx'], "col-xs-4");
+			echo $this->PageBuild->makeDiv($target['nstun'], "col-xs-4");
+			echo $this->PageBuild->closeRow();
 		}
+	}
+
+	public function buildTargets() {
+		echo $this->PageBuild->openRow();
+
+		echo $this->PageBuild->openDiv("col-xs-9");
+		$this->showRanges();
+		echo $this->PageBuild->closeDiv();
+
+		echo $this->PageBuild->makeDiv('&nbsp;', "col-xs-1");
+
+		echo $this->PageBuild->openDiv("col-xs-14");
+		echo $this->PageBuild->openRow();
+		$this->showTargets('general');
+		echo $this->PageBuild->closeRow();
+		echo $this->PageBuild->openRow();
+		$this->showTargets('special');
+		echo $this->PageBuild->closeRow();
 		echo $this->PageBuild->closeDiv();
 
 		echo $this->PageBuild->closeRow();
@@ -337,28 +350,29 @@ class SectionBuildHelper extends Helper {
 
 	public function buildManeuverChart() {
 		echo $this->PageBuild->openRow();
-		
-		echo $this->PageBuild->openDiv("col-xs-2");
-			echo $this->PageBuild->openRow();
-				echo $this->PageBuild->openDiv("col-xs-24");
-					echo $this->PageBuild->openUL($class = 'nav nav-tabs nav-stacked', $id = 'maneuvertabs', $role = null);
-						echo $this->PageBuild->makeLI("<a href='#maneuvers-standard' role='tab' data-toggle='tab'>Standard</a>", $class = 'active');
-						echo $this->PageBuild->makeLI("<a href='#maneuvers-optional' role='tab' data-toggle='tab'>Optional</a>");
-						echo $this->PageBuild->makeLI("<a href='#maneuvers-martial' role='tab' data-toggle='tab'>Martial</a>");
-					echo $this->PageBuild->closeUL();
-				echo $this->PageBuild->closeDiv();
-			echo $this->PageBuild->closeRow();
 
-			echo $this->PageBuild->openRow();
-				echo $this->PageBuild->openDiv("col-xs-24");
-					echo $this->PageBuild->makeDiv("Action", null, "var-action");
-					echo $this->PageBuild->makeDiv("<input type='text' size='4' id='input-action'>");
-					echo $this->PageBuild->makeDiv("&nbsp;", null, "var-action");
-					echo $this->PageBuild->openDiv();
-						echo "<input id='input-action' type='text'>";
-					echo $this->PageBuild->closeDiv();
-				echo $this->PageBuild->closeDiv();
-			echo $this->PageBuild->closeRow();
+		echo $this->PageBuild->openDiv("col-xs-5");
+		
+		echo $this->PageBuild->openRow();
+		echo $this->PageBuild->openDiv("col-xs-24");
+		echo $this->PageBuild->openUL($class = 'nav nav-tabs nav-stacked', $id = 'maneuvertabs', $role = null);
+		echo $this->PageBuild->makeLI("<a href='#maneuvers-standard' role='tab' data-toggle='tab'>Standard</a>", $class = 'active');
+		echo $this->PageBuild->makeLI("<a href='#maneuvers-optional' role='tab' data-toggle='tab'>Optional</a>");
+		echo $this->PageBuild->makeLI("<a href='#maneuvers-martial' role='tab' data-toggle='tab'>Martial</a>");
+		echo $this->PageBuild->closeUL();
+		echo $this->PageBuild->closeDiv();
+		echo $this->PageBuild->closeRow();
+
+		echo $this->PageBuild->openRow();
+		echo $this->PageBuild->openDiv("col-xs-24");
+		echo $this->PageBuild->makeDiv("Action", null, "var-action");
+		echo $this->PageBuild->makeDiv("<input type='text' size='4' id='input-action'>");
+		echo $this->PageBuild->makeDiv("&nbsp;", null, "var-action");
+		echo $this->PageBuild->openDiv();
+		echo "<input id='input-action' type='text'>";
+		echo $this->PageBuild->closeDiv();
+		echo $this->PageBuild->closeDiv();
+		echo $this->PageBuild->closeRow();
 		echo $this->PageBuild->closeDiv();
 
 		echo $this->PageBuild->makeDiv("&nbsp;", "col-xs-1");
@@ -375,13 +389,11 @@ class SectionBuildHelper extends Helper {
 		echo $this->PageBuild->closeDiv();
 		echo $this->PageBuild->closeDiv();
 		echo $this->PageBuild->closeDiv();
+		
 		echo $this->PageBuild->closeRow();
 	}
 
 	public function buildArmorSection() {
-		$armorinfo = $this->_View->viewVars['armorlocationinfo'];
-		$this->characterinfo = $this->_View->viewVars['characterinfo'];
-		$this->locationinfo = $this->_View->viewVars['locationinfo'];
 		echo $this->PageBuild->openRow();
 		echo $this->PageBuild->openDiv("col-xs-18");
 		echo $this->PageBuild->openRow();
@@ -391,16 +403,14 @@ class SectionBuildHelper extends Helper {
 		echo $this->PageBuild->makeDiv('Armor', "col-xs-5");
 		echo $this->PageBuild->makeDiv('Material', "col-xs-5");
 		echo $this->PageBuild->closeRow();
-		for ($armorctr = 3; $armorctr <= 18; $armorctr++) {
-			if (array_key_exists($armorctr, $armorinfo)) {
-				echo $this->PageBuild->openRow();
-				echo $this->PageBuild->makeDiv($armorinfo[$armorctr]['location']['locationdata'], "col-xs-5");
-				echo $this->PageBuild->makeDiv($armorinfo[$armorctr]['r_pd'], "col-xs-3");
-				echo $this->PageBuild->makeDiv($armorinfo[$armorctr]['r_ed'], "col-xs-3");
-				echo $this->PageBuild->makeDiv($armorinfo[$armorctr]['armor'], "col-xs-5");
-				echo $this->PageBuild->makeDiv($armorinfo[$armorctr]['materialdata'], "col-xs-8");
-				echo $this->PageBuild->closeRow();
-			}
+		foreach ($this->armorlocationinfo as $location) {
+			echo $this->PageBuild->openRow();
+			echo $this->PageBuild->makeDiv(implode(" - ", $location['location']), "col-xs-5");
+			echo $this->PageBuild->makeDiv($location['r_pd'], "col-xs-3");
+			echo $this->PageBuild->makeDiv($location['r_ed'], "col-xs-3");
+			echo $this->PageBuild->makeDiv($location['armor']['armor'], "col-xs-5");
+			echo $this->PageBuild->makeDiv(implode(" - ", $location['material']), "col-xs-8");
+			echo $this->PageBuild->closeRow();
 		}
 		echo $this->PageBuild->closeDiv();
 

@@ -148,16 +148,6 @@ body{
 	margin-right: 22px;
 }
 
-.cl-set-slider{
-	width: 100%;
-	height: 280px;
-	border: 1px solid black;
-			margin-top: 22px;
-			margin-bottom: 22px;
-			margin-left: 22px;
-			margin-right: 22px;
-}
-
 .cl-row-horizontal{
 	padding-bottom: 6px;
 	padding-top: 6px;
@@ -220,15 +210,6 @@ body{
 .squeeze-right{
 	margin-left: 0px;
 	margin-right: -20px;
-}
-
-.targetlocation{
-	font-size: 10px;
-	font-weight: bolder;
-}
-
-.targetlocation:hover{
-	cursor: pointer;
 }
 
 .targetbox{
@@ -370,12 +351,32 @@ body{
 	margin:2px 0 0 5px; 
 }
 
+.targetlocation{
+	font-size: 1em;
+	font-weight: bolder;
+}
+
+.targetlocation:hover{
+	cursor: pointer;
+}
+
+.cl-set-slider{
+	width: 100%;
+	height: 280px;
+	border: 1px solid black;
+			margin-top: 22px;
+			margin-bottom: 22px;
+			margin-left: 22px;
+			margin-right: 22px;
+}
+
 /*
 * CSS for the combat calculator
 */
-.dc-body-dazed{color: orange}
+.dc-body-dazed{color: yellow}
 .dc-body-bleeding{color: red}
-.dc-body-dead{color: crimson}
+.dc-body-dying{color: crimson}
+.dc-body-dead{color: red}
 .dc-body-normal{color: green}
 
 .dc-stun-stunned{color: orange}
@@ -385,6 +386,7 @@ body{
 .dc-stun-normal{color: green}
 
 .dc-end-normal{color: green}
+.dc-end-dazed{color: yellow}
 
 div.row.dc-row{
 	margin-bottom: .5rem;

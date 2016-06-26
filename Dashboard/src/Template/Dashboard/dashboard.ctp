@@ -18,7 +18,7 @@ foreach ($owncharacters as $character) {
 	echo $this->PageBuild->makeDiv($character['name'], 'col-xs-7 character-name');
 	echo $this->PageBuild->makeDiv($this->Html->link(__('View'), array('controller' => 'characters', 'action' => 'view', $character['id']), $btnclass), $btndivclass, null, $btnid);
 	echo $this->PageBuild->makeDiv($this->Html->link(__('Edit'), array('controller' => 'characters', 'action' => 'edit', $character['id']), $btnclass), $btndivclass, null, $btnid);
-	echo $this->PageBuild->makeDiv($this->Html->link(__('Combat'), array('plugin' => 'Vorien/HeroCombat', 'controller' => 'herocombat', 'action' => 'index', $character['id']), $btnclass), $btndivclass, null, $btnid);
+	echo $this->PageBuild->makeDiv($this->Html->link(__('Combat'), array('plugin' => 'Vorien/HeroCombat', 'controller' => 'combat', 'action' => 'index', $character['id']), $btnclass), $btndivclass, null, $btnid);
 	echo $this->PageBuild->makeDiv($this->Html->link(__('Charactersheet'), array('plugin' => 'Vorien/Charactersheet', 'controller' => 'charactersheet', 'action' => 'index', $character['id']), $btnclass), $btndivclass, null, $btnid);
 	echo $this->PageBuild->closeRow();
 }
@@ -41,7 +41,7 @@ foreach ($gmcharacters as $character) {
 	echo $this->PageBuild->makeDiv($character['name'], 'col-xs-6 character-name');
 	echo $this->PageBuild->makeDiv($this->Html->link(__('View'), array('controller' => 'characters', 'action' => 'view', $character['id']), $btnclass), $btndivclass, null, $btnid);
 	echo $this->PageBuild->makeDiv($this->Html->link(__('Edit'), array('controller' => 'characters', 'action' => 'edit', $character['id']), $btnclass), $btndivclass, null, $btnid);
-	echo $this->PageBuild->makeDiv($this->Html->link(__('Combat'), array('plugin' => 'Vorien/HeroCombat', 'controller' => 'herocombat', 'action' => 'index', $character['id']), $btnclass), $btndivclass, null, $btnid);
+	echo $this->PageBuild->makeDiv($this->Html->link(__('Combat'), array('plugin' => 'Vorien/HeroCombat', 'controller' => 'combat', 'action' => 'index', $character['id']), $btnclass), $btndivclass, null, $btnid);
 	echo $this->PageBuild->makeDiv($this->Html->link(__('Charactersheet'), array('plugin' => 'Vorien/Charactersheet', 'controller' => 'charactersheet', 'action' => 'index', $character['id']), $btnclass), $btndivclass, null, $btnid);
 	echo $this->PageBuild->closeRow();
 }

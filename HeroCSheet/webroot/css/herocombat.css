@@ -1,0 +1,472 @@
+/*
+To change this license header, choose License Headers in Project Properties.
+To change this template file, choose Tools | Templates
+and open the template in the editor.
+*/
+/* 
+    Created on : Aug 18, 2014, 3:46:41 PM
+    Author     : Michael
+*/
+
+body{
+	background-color: lightgrey;
+}
+.draggable{
+	height: 50px;
+	width: 50px;
+	border: 1px solid black;
+}
+.droppable-frame{
+	height: 250px;
+	width: 250px;
+}
+
+.bordered{
+	border-style: solid;
+	border-width: 4px;
+	width: 100%;
+	height: 100%;
+	padding: 3px;
+}
+.border-red{
+	border-color: red;
+}
+
+.border-yellow{
+	border-color: yellow;
+}
+
+.border-blue{
+	border-color: blue;
+}
+
+.border-green{
+	border-color: green;
+}
+
+.border-orange{
+	border-color: orange;
+}
+
+.border-purple{
+	border-color: purple;
+}
+
+.btn-bucket-horizontal{
+	height: 156px;
+	width: 156px;
+	border: 3px solid black;
+}
+
+.btn-bucket-vertical{
+	height: 186px;
+	width: 231px;
+	border: 3px solid black;
+}
+
+.cl{
+	text-align: center;
+	height: 28px;
+	width: 73px;
+	font-size: xx-small;
+	font-height: 10px;
+	float: left;
+	margin: 1px 1px;
+	padding: 2px 5px;
+	border-radius: 5px;
+}
+
+.cl:hover{
+	cursor: pointer;
+}
+
+.cl-red{
+	border: 1px solid red;
+	background-color: red;
+	color: black;
+}
+
+.cl-yellow{
+	border: 1px solid yellow;
+	background-color: yellow;
+	color: black;
+}
+
+.cl-blue{
+	border: 1px solid blue;
+	background-color: blue;
+	color: white;
+}
+
+.cl-green{
+	border: 1px solid green;
+	background-color: green;
+	color: white;
+}
+
+.cl-orange{
+	border: 1px solid orange;
+	background-color: orange;
+	color: black;
+}
+
+.cl-purple{
+	border: 1px solid purple;
+	background-color: purple;
+	color: white;
+}
+
+.cl-black{
+	border: 1px solid black;
+	background-color: black;
+	color: white;
+}
+
+.cl-drop-vertical{
+	width: 75px;
+	height: 250px;
+	margin-top: 22px;
+	margin-bottom: 22px;
+	margin-left: 22px;
+	margin-right: 22px;
+}
+
+.cl-drop-horizontal{
+	width: 600px;
+	height: 60px;
+	margin-top: 22px;
+	margin-bottom: 22px;
+	margin-left: 22px;
+	margin-right: 22px;
+}
+
+.cl-set-slider{
+	width: 100%;
+	height: 280px;
+	border: 1px solid black;
+	/*		margin-top: 22px;
+			margin-bottom: 22px;
+			margin-left: 22px;
+			margin-right: 22px;*/
+}
+
+.cl-row-horizontal{
+	padding-bottom: 6px;
+	padding-top: 6px;
+	padding-left: 10px;
+	border: 1px solid darkgrey;
+}
+
+.cl-frame{
+	height: 100%;
+	width: 100%;
+}
+
+#main-str, #off-str{
+	float: left;
+}
+
+#weapon-frame-main, #weapon-frame-off{
+	margin-bottom: 10px;
+}
+
+.border-target{
+	border: 1px solid black;
+	height: 75px;
+	text-align: center;
+}
+
+.vertalign{
+	height: 75px;
+}
+
+.vertalign1{
+	line-height: 75px;
+	height: 75px;
+}
+
+.vertalign2{
+	line-height: 37.5px;
+	height: 37.5px
+}
+
+.vertalign3{
+	line-height: 25px;
+	height: 25px;
+}
+
+.rheight{
+	height: 300px;
+}
+
+.shift-left{
+	margin-left: -20px;
+	margin-right: 0px;
+}
+
+.shift-right{
+	margin-left: 10px;
+	margin-right: 0px;
+}
+
+.squeeze-right{
+	margin-left: 0px;
+	margin-right: -20px;
+}
+
+.targetlocation{
+	font-size: 10px;
+	font-weight: bolder;
+}
+
+.targetlocation:hover{
+	cursor: pointer;
+}
+
+.targetbox{
+	width: 100px;
+	height: 75px;
+	text-align: center;
+	border: 1px solid black;
+	float: left;
+}
+
+.targetboxheader{
+	width: 100px;
+	height: 25px;
+	text-align: center;
+	border: 1px solid black;
+	float: left;
+	font-weight: bold;
+	font-size: 14px;
+}
+
+#select-character{
+	font-size: 16px;
+}
+
+.height-spacer{
+	height: 12px;
+}
+
+.accordionpanel{
+	background-color: lightgrey;
+	margin-top: 0px;
+	border-radius: 0px;
+}
+
+#accordion{
+	margin-top: 0px;
+}
+
+.panel{
+	margin-top: 0px;
+}
+.panel-default{
+	margin-top: 0px;
+}
+
+.targetselection{
+	margin-left: 0px;
+	margin-right: 0px;
+}
+
+#level-display-horizontal{
+	display: none;
+}
+
+#level-display-vertical{
+	margin-left: 15px;
+	display: none;
+}
+
+.placeholder-206{
+	width: 206px;
+}
+
+.placeholder-100{
+	width: 100px;
+}
+
+.rng-penalty-input, .rng-distance-input{
+	width: 50px;
+	font-size: small;
+}
+
+.shift-up{
+	margin-top: 0px;
+}
+
+.no-margins{
+	margin: 0px;
+}
+
+.no-padding{
+	padding: 0px;
+}
+
+.nav{
+	border: none;
+}
+
+.no-border{
+	border: none;
+}
+
+.panel-body{
+	padding: 5px 0px;
+}
+
+#input-action{
+	font-size: 14px;
+	height: 25px;
+	width: 75px;
+	visibility:hidden;
+}
+
+#var-action{
+	visibility:hidden;
+}
+
+.maneuver-select:hover{
+	cursor: pointer;
+	background-color: #FFF;
+}
+
+#weapon-selection-wrapper{
+	display: none;
+}
+
+#level-calculations{
+	/*display: none;*/
+}
+
+#main-tab-wrapper{
+	visibility: hidden;
+}
+
+.related{
+	display: none;
+}
+
+.top-section{
+	height: 200px;
+}
+
+.asterisk{
+	font-size: 200%;
+	color: red;
+	font-weight: bold;
+	line-height: 10px;
+	vertical-align:bottom; 
+	margin:2px 0 0 5px; 
+}
+
+.stunned-stat{
+	color: crimson;
+}
+
+.negative-stat{
+	color: red;
+}
+
+.reduced-stat{
+	color: orange;
+}
+
+.full-stat{
+	color: green;
+}
+
+#dcalc-bodyremaining, #dcalc-stunremaining, #dcalc-endremaining{
+	font-weight: bold;
+}
+
+.slider{
+	height: 250px;
+	margin-top: 10px;
+	margin-bottom: 0px;
+	margin-left: 10px;
+	margin-right: 0px;
+}
+
+.slider-heading{
+	font-size: 18px;
+	font-weight: 500;
+	height: 19px;
+	line-height: 19.7999992370605px;
+	margin-bottom: 10px;
+	margin-left: 0px;
+	margin-right: 0px;
+	margin-top: 0px;
+	padding-bottom: 0px;
+	padding-left: 0px;
+	padding-right: 0px;
+	padding-top: 0px;
+	text-align: center;		
+}
+
+.slider-current{
+	text-align: center;
+}
+
+.ui-slider-line {
+	visibility: hidden;
+}
+
+.ui-slider-pips .ui-slider-pip {
+	color: black;
+	font-weight: normal;
+	width: 100px;
+	font-size: .7em;
+}
+
+.ui-slider-pips [class*=ui-slider-pip-initial] {
+
+	font-weight: normal;
+	color: #000;
+	/*font-size: .9em;*/
+
+}
+
+.ui-slider-pips [class*=ui-slider-pip-selected] {
+
+	font-weight: bold;
+	color: #F00;
+	/*font-size: .9em;*/
+
+}
+
+.ui-slider-vertical.ui-slider-pips .ui-slider-label {
+	/*font-size: .9em;*/
+
+	width: 100px;
+}
+
+.div-slider{
+	padding-left: 5px;
+	padding-right: 5px;
+}
+
+.min-padding{
+	padding:0px;
+	margin: 0px;
+}
+
+.first-in-panel{
+	margin-top: 5px;
+}
+
+.second-in-panel{
+	margin-top: 30px;
+}
+
+.nav-tabs li a{
+	font-weight: bold;
+	font-size: 1.2em;
+}
+
+.column-head{
+	font-weight: bold;
+	font-size: 1.05em;
+}

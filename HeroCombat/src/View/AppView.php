@@ -8,7 +8,7 @@ class AppView extends View {
 
 	public function initialize() {
 		parent::initialize();
-		$this->loadHelper('SectionBuild');
+//		$this->loadHelper('SectionBuild');
 	}
 
 }

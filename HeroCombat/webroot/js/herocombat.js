@@ -9,7 +9,7 @@ function toConsole(item) {
 }
 
 function displayWeapons() {
-	switch (getValueFromText(attackweapon.Weapon.hands)) {
+	switch (getValueFromText(attackweapon.weapon.hands)) {
 		case 2:
 			$("#two-hands").prop("checked", true);
 			$("#two-hands-wrapper").hide();
@@ -24,7 +24,7 @@ function displayWeapons() {
 			break;
 	}
 	if (
-			attackweapon.Weapon.type == "Shields"
+			attackweapon.weapon.type == "Shields"
 			|| $("#two-hands").is(":checked")
 			) {
 		$("#weapon-select-defense").val(uaweaponid);
@@ -42,16 +42,16 @@ function displayWeapons() {
 }
 
 function populateStrSelect() {
-	char_str = getValueFromText(character.Character.str);
+	char_str = getValueFromText(character.str);
 	$("#str-used-wrapper").html("");
 	$("#rng-penalty").val("");
-	str_required = getValueFromText(attackweapon.Weapon.str_min);
+	str_required = getValueFromText(attackweapon.weapon.str_min);
 	strHTML = "<select id='str-used'>";
-	if (getValueFromText(attackweapon.Weapon.str_adds_damage) == 1) {
-		if (getValueFromText(attackweapon.Weapon.hands) == 1.5 && $("#two-hands").is(":checked")) {
+	if (getValueFromText(attackweapon.weapon.str_adds_damage) == 1) {
+		if (getValueFromText(attackweapon.weapon.hands) == 1.5 && $("#two-hands").is(":checked")) {
 			str_required -= 2;
 		}
-		str_overage = getValueFromText(attackweapon.Weapon.str_overage);
+		str_overage = getValueFromText(attackweapon.weapon.str_overage);
 		for (i = -5; i < 10; i++) {
 			strlist = Math.ceil(str_required + (str_overage * i));
 			if (strlist >= 1) {
@@ -84,58 +84,57 @@ function populateMaxRange() {
 	$("#rng-max").html(rng_max);
 }
 function populateMartialManeuvers() {
-	call_url = webroot + "combat/getmartialmaneuvers/" + character.Character.id + "/" + attackweaponid;
-//	console.log(call_url);
+	call_url = ajax_root + "combat/getmartialmaneuvers/" + character.id + "/" + attackweaponid;
 	$("#maneuvers-martial").load(call_url, function () {
 	});
 }
 
 function populateCharacterData() {
-	cdata.char_ocv = getValueFromText(character.Character.ocv);
-	cdata.char_dcv = getValueFromText(character.Character.dcv);
-	cdata.char_str = getValueFromText(character.Character.str);
-	cdata.char_dc = getValueFromText(character.Character.ma_dc);
+	cdata.char_ocv = getValueFromText(character.ocv);
+	cdata.char_dcv = getValueFromText(character.dcv);
+	cdata.char_str = getValueFromText(character.str);
+	cdata.char_dc = getValueFromText(character.ma_dc);
 }
 
 function populateDefenseData() {
-	wdata.weap_ocv = getValueFromText(defenseweapon.Characterweapon.ocv_modifier) + getValueFromText(defenseweapon.Weapon.ocv);
-	wdata.weap_dcv = getValueFromText(defenseweapon.Characterweapon.dcv_modifier) + getValueFromText(defenseweapon.Weapon.dcv);
+	wdata.weap_ocv = getValueFromText(defenseweapon.weapon.ocv);
+	wdata.weap_dcv = getValueFromText(defenseweapon.weapon.dcv);
 }
 
 function populateWeaponData() {
-	wdata.weap_ocv = getValueFromText(attackweapon.Characterweapon.ocv_modifier) + getValueFromText(attackweapon.Weapon.ocv);
-	wdata.weap_dcv = getValueFromText(attackweapon.Characterweapon.dcv_modifier) + getValueFromText(attackweapon.Weapon.dcv);
-	wdata.weap_dmg = getValueFromText(attackweapon.Characterweapon.damage_classes_modifier) + getValueFromText(attackweapon.Weapon.damage_classes);
-	wdata.weap_rng = getValueFromText(attackweapon.Characterweapon.range_modifier) + getValueFromText(attackweapon.Weapon.rmod);
-	wdata.weap_dmg_type = attackweapon.Weapon.damage_type;
-	wdata.weap_dmg_effect = attackweapon.Weapon.damage_effect;
-	wdata.weap_oh_offset = getValueFromText(attackweapon.Characterweapon.offhand_offset);
-	wdata.weap_oh_defense = getValueFromText(attackweapon.Characterweapon.offhand_defense);
-	wdata.weap_ma_offset = getValueFromText(attackweapon.Characterweapon.multi_attack_offset);
-	wdata.weap_element = getValueFromText(attackweapon.Characterweapon.weapon_element);
-	wdata.weap_type = attackweapon.Weapon.type.trim();
-	wdata.weap_hands = getValueFromText(attackweapon.Weapon.hands);
-	wdata.weap_str_overage = getValueFromText(attackweapon.Weapon.str_overage);
-	wdata.weap_str_min = getValueFromText(attackweapon.Characterweapon.str_min_modifier) + getValueFromText(attackweapon.Weapon.str_min);
-	wdata.weap_max_range = getValueFromText(attackweapon.Characterweapon.max_range_modifier) + getValueFromText(attackweapon.Weapon.max_range);
-	wdata.weap_mass = attackweapon.Weapon.mass;
+	wdata.weap_ocv = getValueFromText(attackweapon.ocv);
+	wdata.weap_dcv = getValueFromText(attackweapon.dcv);
+	wdata.weap_dmg = getValueFromText(attackweapon.damage_classes);
+	wdata.weap_rng = getValueFromText(attackweapon.range_modifier);
+	wdata.weap_dmg_type = attackweapon.weapon.damage_type;
+	wdata.weap_dmg_effect = attackweapon.weapon.damage_effect;
+	wdata.weap_oh_offset = getValueFromText(character.offhand_offset);
+	wdata.weap_oh_defense = getValueFromText(character.offhand_defense);
+	wdata.weap_ma_offset = getValueFromText(character.multi_attack_offset);
+	wdata.weap_element = getValueFromText(character.weapon_element);
+	wdata.weap_type = attackweapon.weapon.type.trim();
+	wdata.weap_hands = getValueFromText(attackweapon.weapon.hands);
+	wdata.weap_str_overage = getValueFromText(attackweapon.weapon.str_overage);
+	wdata.weap_str_min = getValueFromText(attackweapon.str_min);
+	wdata.weap_max_range = getValueFromText(attackweapon.max_range);
+	wdata.weap_mass = attackweapon.weapon.mass;
 
-	odata.weap_ocv = getValueFromText(defenseweapon.Characterweapon.ocv_modifier) + getValueFromText(defenseweapon.Weapon.ocv);
-	odata.weap_dcv = getValueFromText(defenseweapon.Characterweapon.dcv_modifier) + getValueFromText(defenseweapon.Weapon.dcv);
-	odata.weap_dmg = getValueFromText(defenseweapon.Characterweapon.damage_classes_modifier) + getValueFromText(defenseweapon.Weapon.damage_classes);
-	odata.weap_rng = getValueFromText(defenseweapon.Characterweapon.range_modifier) + getValueFromText(defenseweapon.Weapon.rmod);
-	odata.weap_dmg_type = defenseweapon.Weapon.damage_type;
-	odata.weap_dmg_effect = defenseweapon.Weapon.damage_effect;
-	odata.weap_oh_offset = getValueFromText(defenseweapon.Characterweapon.offhand_offset);
-	odata.weap_oh_defense = getValueFromText(defenseweapon.Characterweapon.offhand_defense);
-	odata.weap_ma_offset = getValueFromText(defenseweapon.Characterweapon.multi_attack_offset);
-	odata.weap_element = getValueFromText(defenseweapon.Characterweapon.weapon_element);
-	odata.weap_type = defenseweapon.Weapon.type.trim();
-	odata.weap_hands = getValueFromText(defenseweapon.Weapon.hands);
-	odata.weap_str_overage = getValueFromText(defenseweapon.Weapon.str_overage);
-	odata.weap_str_min = getValueFromText(defenseweapon.Characterweapon.str_min_modifier) + getValueFromText(defenseweapon.Weapon.str_min);
-	odata.weap_max_range = getValueFromText(defenseweapon.Characterweapon.max_range_modifier) + getValueFromText(defenseweapon.Weapon.max_range);
-	odata.weap_mass = defenseweapon.Weapon.mass;
+	odata.weap_ocv = getValueFromText(defenseweapon.weapon.ocv);
+	odata.weap_dcv = getValueFromText(defenseweapon.dcv);
+	odata.weap_dmg = getValueFromText(defenseweapon.damage_classes);
+	odata.weap_rng = getValueFromText(defenseweapon.range_modifier);
+	odata.weap_dmg_type = defenseweapon.weapon.damage_type;
+	odata.weap_dmg_effect = defenseweapon.weapon.damage_effect;
+	odata.weap_oh_offset = getValueFromText(character.offhand_offset);
+	odata.weap_oh_defense = getValueFromText(character.offhand_defense);
+	odata.weap_ma_offset = getValueFromText(character.multi_attack_offset);
+	odata.weap_element = getValueFromText(character.weapon_element);
+	odata.weap_type = defenseweapon.weapon.type.trim();
+	odata.weap_hands = getValueFromText(defenseweapon.weapon.hands);
+	odata.weap_str_overage = getValueFromText(defenseweapon.weapon.str_overage);
+	odata.weap_str_min = getValueFromText(defenseweapon.str_min);
+	odata.weap_max_range = getValueFromText(defenseweapon.max_range);
+	odata.weap_mass = defenseweapon.weapon.mass;
 }
 
 function populateManeuverData() {
@@ -160,7 +159,6 @@ function populatePenaltyData() {
 	pdata.rng_distance = getValueFromText($("#rng-distance").val());
 	pdata.rng_penalty = getRangePenalty(pdata.rng_distance);
 	pdata.tgt_penalty = getValueFromText($("#tgt-penalty").val());
-//	console.log(pdata);
 }
 
 function showLevelCalculations() {
@@ -345,7 +343,7 @@ function checkMaxDamage() {
 	 * TODO
 	 *************************/
 	dmgdiv.droppable();
-	if (attackweapon.Weapon.id !== "90" && (current_dmg) >= (2 * weap_dmg)) {
+	if (attackweapon.weapon.id !== "90" && (current_dmg) >= (2 * weap_dmg)) {
 		dmgdiv.droppable("disable");
 		if (dmgdiv.hasClass("border-dmg")) {
 			dmgdiv.removeClass("border-dmg");

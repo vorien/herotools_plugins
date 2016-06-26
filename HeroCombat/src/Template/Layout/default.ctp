@@ -30,8 +30,8 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 		<?= $this->Html->css('cake.css') ?>
 		<?= $this->Html->css('Vorien/Dashboard.jqueryui/jquery-ui.min') ?>
 		<?= $this->Html->css('Vorien/Dashboard.bootstrap/bootstrap') ?>
-		<?= $this->Html->css('Vorien/HeroCombat.jqueryui_slider_pips/jquery-ui-slider-pips') ?>
 		<?= $this->Html->css('Vorien/Dashboard.main') ?>
+		<?= $this->Html->css('Vorien/HeroCombat.jqueryui_slider_pips/jquery-ui-slider-pips') ?>
 		<?= $this->Html->css('Vorien/HeroCombat.herocombat') ?>
 		<?= $this->Html->css('Vorien/HeroCombat.herocombat-margins') ?>
 

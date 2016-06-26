@@ -94,8 +94,8 @@ class PageBuildHelper extends Helper {
 		return $output;
 	}
 
-	public function makeTargetDiv($penalty, $target, $roll = null) {
-		return $this->makeDiv($target, "targetlocation", preg_replace("/[^A-Za-z0-9]/", "", $target), array("penalty" => $penalty, "target" => $target, "roll" => $roll));
+	public function makeTargetDiv($location, $penalty, $roll = null) {
+		return $this->makeDiv($location, "targetlocation", preg_replace("/[^A-Za-z0-9]/", "", $location), array("penalty" => $penalty, "target" => $location, "roll" => $roll));
 	}
 
 	public function openAccordion($hand) {

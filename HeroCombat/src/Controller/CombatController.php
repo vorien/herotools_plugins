@@ -5,9 +5,10 @@ namespace Vorien\HeroCombat\Controller;
 use Vorien\HeroCombat\Controller\AppController;
 use Cake\ORM\TableRegistry;
 use Cake\Core\Plugin;
+use Cake\Event\Event;
 
 /**
- * CakePHP ProcessController
+ * CakePHP CombatController
  * @author Michael
  */
 class CombatController extends AppController {
@@ -23,6 +24,11 @@ class CombatController extends AppController {
 //		$this->loadComponent('Vorien/HDParser.HDPSkillDisplay');
 //		$this->loadComponent('Vorien/HDParser.HDPSections');
 //		$this->loadComponent('Vorien/HDParser.HDPArray');
+	}
+
+	public function beforeRender(Event $event) {
+		parent::beforeRender($event);
+		$this->viewBuilder()->helpers(['Vorien/Dashboard.PageBuild']);
 	}
 
 	public function index($character_id) {
@@ -57,7 +63,6 @@ class CombatController extends AppController {
 		$json_leveltracking = json_encode($leveltracking);
 
 		$starting_weapon_id = $this->getUnarmedCharacterWeapon($character_id);
-		debug($starting_weapon_id);
 
 
 //		debug($weapons);
@@ -77,35 +82,13 @@ class CombatController extends AppController {
 		$query->hydrate(false);
 		$query->contain([
 			'Locations' => function ($q) {
-				return $q->select(['roll', 'location', 'sublocation'])
-								->formatResults(function ($locations) {
-									return $locations->map(function ($location) {
-												$location['locationdata'] = $location['roll'] . ' - ' . $location['location'] . (!empty($location['sublocation']) ? ' (' . $location['sublocation'] . ')' : '');
-												return $location;
-											});
-								});
-//				return $q->select(['roll', 'location', 'sublocation']);
+				return $q->select(['roll', 'location', 'sublocation']);
 			},
 					'Armors' => function ($q) {
-				return $q->select(['armor', 'type', 'r_pd', 'r_ed'])
-								->formatResults(function ($armors) {
-									return $armors->map(function ($armor) {
-												$armor['armordata'] = $armor['armor'] . ' (' . $armor['type'] . ')';
-												return $armor;
-											});
-								});
+				return $q->select(['armor', 'type', 'r_pd', 'r_ed']);
 			},
 					'Materials' => function ($q) {
-				return $q->select(['material', 'manufacture', 'option', 'r_pd', 'r_ed'])
-								->formatResults(function ($materials) {
-									return $materials->map(function ($material) {
-												$material['materialdata'] = $material['material'] . ' - ' .
-														(!empty($material['manufacture']) ? ' (' . $material['manufacture'] .
-																(!empty($material['option']) ? ' / ' . $material['option'] : '') .
-																')' : '');
-												return $material;
-											});
-								});
+				return $q->select(['material', 'manufacture', 'option', 'r_pd', 'r_ed']);
 			}
 				]);
 				$query->where([
@@ -113,19 +96,46 @@ class CombatController extends AppController {
 					'Characterprotections.active' => true
 				]);
 				$armorlocationinfo = $query->all()->toArray();
-				$this->DisplayFunctions->removeByKey($armorlocationinfo, ['created', 'modified']);
-				return $armorlocationinfo;
 
-//				$return = [];
-//				foreach ($armorlocationinfo as $armor) {
-//					$return[$value['Location']['roll']] = $value[0];
-//					$return[$value['Location']['roll']]['armor'] = $value['Armor']['armor'];
-//					$return[$value['Location']['roll']]['material'] = $value['Material']['material'];
-//					$return[$value['Location']['roll']]['armor'] = $value['Armor']['armor'];
-//					$return[$value['Location']['roll']]['r_pd'] = max(0, $return[$value['Location']['roll']]['r_pd']);
-//					$return[$value['Location']['roll']]['r_ed'] = max(0, $return[$value['Location']['roll']]['r_ed']);
-//				}
-//				return $return;
+				$armordata = [];
+				foreach ($armorlocationinfo as $armorlocation) {
+					$armordata[$armorlocation['location']['roll']] = [
+						'id' => $armorlocation['id'],
+						'active' => $armorlocation['active'],
+						'character_id' => $armorlocation['character_id'],
+						'location_id' => $armorlocation['location_id'],
+						'covering_id' => $armorlocation['covering_id'],
+						'armor_id' => $armorlocation['armor_id'],
+						'material_id' => $armorlocation['material_id'],
+						'name' => $armorlocation['name'],
+						'n_pd' => $armorlocation['n_pd_modifier'] + $armorlocation['material']['r_pd'] + $armorlocation['armor']['r_pd'],
+						'n_ed' => $armorlocation['n_ed_modifier'] + $armorlocation['material']['r_ed'] + $armorlocation['armor']['r_ed'],
+						'r_pd' => $armorlocation['r_pd_modifier'] + $armorlocation['material']['r_pd'] + $armorlocation['armor']['r_pd'],
+						'r_ed' => $armorlocation['n_ed_modifier'] + $armorlocation['material']['r_ed'] + $armorlocation['armor']['r_ed'],
+						'stealth_penalty' => $armorlocation['stealth_penalty'],
+						'weight_modifier' => $armorlocation['weight_modifier'],
+						'training_penalty_offset' => $armorlocation['training_penalty_offset'],
+						'normal_dr' => $armorlocation['normal_dr'],
+						'killing_dr' => $armorlocation['killing_dr'],
+						'notes' => $armorlocation['notes'],
+						'material' => [
+							'material' => $armorlocation['material']['material'],
+							'manufacture' => $armorlocation['material']['manufacture'],
+							'option' => $armorlocation['material']['option'],
+						],
+						'armor' => [
+							'armor' => $armorlocation['armor']['armor'],
+							'type' => $armorlocation['armor']['type'],
+						],
+						'location' => [
+							'roll' => $armorlocation['location']['roll'],
+							'location' => $armorlocation['location']['location'],
+							'sublocation' => $armorlocation['location']['sublocation'],
+						]
+					];
+				}
+				ksort($armordata);
+				return $armordata;
 			}
 
 			public function getTargetInfo() {
@@ -158,24 +168,15 @@ class CombatController extends AppController {
 				$query = $data->find();
 				$query->hydrate(false);
 				$query->contain(['Targets']);
-				$query->formatResults(function ($locations) {
-					return $locations->map(function ($location) {
-								$location['locationdata'] = $location['roll'] . ' - ' . $location['location'] . (!empty($location['sublocation']) ? ' (' . $location['sublocation'] . ')' : '');
-								return $location;
-							});
-				});
 				$locationinfo = $query->all()->toArray();
-				$this->DisplayFunctions->removeByKey($locationinfo, ['created', 'modified']);
-//				debug($locationinfo);
-				return $locationinfo;
-//				$this->Location->unbindModel(array('hasMany' => array('Characterprotection', 'Coveringlocation')));
-//				$locationinfo = $this->Location->find('all');
-//				$return = array();
-//				foreach ($locationinfo as $value) {
-//					$return[$value['Location']['roll']]['Location'] = $value['Location'];
-//					$return[$value['Location']['roll']]['Target'] = $value['Target'];
-//				}
-//				return $return;
+				$this->DisplayFunctions->removeByKey($maneuverinfo, ['$locationinfo', 'modified']);
+
+				$locationdata = [];
+				foreach ($locationinfo as $location) {
+					$locationdata[$location['roll']] = $location;
+					$locationdata[$location['roll']]['locationdata'] = $location['roll'] . ' - ' . $location['location'] . (!empty($location['sublocation']) ? ' (' . $location['sublocation'] . ')' : '');
+				}
+				return $locationdata;
 			}
 
 			public function getManeuverList($type = null) {
@@ -214,26 +215,48 @@ class CombatController extends AppController {
 				$query->hydrate(false);
 				$query->contain(['Weapons']);
 				$query->where(['Characterweapons.character_id' => $character_id]);
+				$characterweapons = $query->all()->toArray();
 
-				$query->formatResults(function ($characterweapons) {
-					return $characterweapons->map(function ($characterweapon) {
-								foreach ($characterweapon['weapon'] as $wkey => $wvalue) {
-									if ($wkey == 'weapon') {
-										$characterweapon['base_weapon'] = $wvalue;
-									} else {
-										$characterweapon[$wkey] = $wvalue;
-									}
-								}
-								unset($characterweapon['weapon']);
-								return $characterweapon;
-							});
-				});
-
-				$allweaponinfo = $query->all()->toArray();
-				$this->DisplayFunctions->removeByKey($allweaponinfo, ['created', 'modified']);
-//				debug($allweaponinfo);
-//				exit;
-				return $allweaponinfo;
+				$weapondata = [];
+				foreach ($characterweapons as $characterweapon) {
+					$weapondata[$characterweapon['id']] = [
+						'id' => $characterweapon['id'],
+						'character_id' => $characterweapon['character_id'],
+						'weapon_id' => $characterweapon['weapon_id'],
+						'name' => $characterweapon['name'],
+						'ocv' => $characterweapon['ocv_modifier'] + $characterweapon['weapon']['ocv'],
+						'dcv' => $characterweapon['dcv_modifier'] + $characterweapon['weapon']['dcv'],
+						'damage_classes' => $characterweapon['damage_classes_modifier'] + $characterweapon['weapon']['damage_classes'],
+						'str_min' => $characterweapon['str_min_modifier'] + $characterweapon['weapon']['str_min'],
+						'range_modifier' => $characterweapon['range_modifier'] + $characterweapon['weapon']['rmod'],
+						'max_range' => $characterweapon['max_range_modifier'] + $characterweapon['weapon']['max_range'],
+						'offhand_offset' => $characterweapon['offhand_offset'],
+						'offhand_defense' => $characterweapon['offhand_defense'],
+						'multi_attack_offset' => $characterweapon['multi_attack_offset'],
+						'weapon_element' => $characterweapon['weapon_element'],
+						'notes' => $characterweapon['notes'] . $characterweapon['weapon']['notes'],
+						'weapon' => [
+							'weapon' => $characterweapon['weapon']['weapon'],
+							'type' => $characterweapon['weapon']['type'],
+							'str_overage' => $characterweapon['weapon']['str_overage'],
+							'str_adds_damage' => $characterweapon['weapon']['str_adds_damage'],
+							'damage_type' => $characterweapon['weapon']['damage_type'],
+							'damage_effect' => $characterweapon['weapon']['damage_effect'],
+							'stunx' => $characterweapon['weapon']['stunx'],
+							'body' => $characterweapon['weapon']['body'],
+							'def' => $characterweapon['weapon']['def'],
+							'mass' => $characterweapon['weapon']['mass'],
+							'ar_cost' => $characterweapon['weapon']['ar_cost'],
+							'length' => $characterweapon['weapon']['length'],
+							'hands' => $characterweapon['weapon']['hands'],
+							'shots' => $characterweapon['weapon']['shots'],
+							'thrown' => $characterweapon['weapon']['thrown'],
+							'concentration' => $characterweapon['weapon']['concentration'],
+							'advantages' => $characterweapon['weapon']['advantages']
+						]
+					];
+				}
+				return $weapondata;
 			}
 
 			public function getLevelTrackingArray($character_id) {
@@ -249,8 +272,28 @@ class CombatController extends AppController {
 				]);
 				$query->where(['Characterlevels.character_id' => $character_id]);
 				$leveltrackingarray = $query->all()->toArray();
-				$this->DisplayFunctions->removeByKey($leveltrackingarray, ['created', 'modified']);
-				return $leveltrackingarray;
+
+				$explodedlevels = [];
+				foreach ($leveltrackingarray as $lta_key => $level) {
+					$weaponarray = [];
+					foreach ($level['characterweapons'] as $cwvalue) {
+						$weaponarray[] = intval($cwvalue['id']);
+					}
+					for ($ctr = 0; $ctr < $level['qty']; $ctr++) {
+						$levelarray = [
+							// Create a unique id for each exploded level
+							'id' => (($lta_key + 1) * 100) + ($ctr + 1),
+							'name' => $level['name'],
+							'type' => $level['level']['type'],
+							'claimed' => false,
+							'cost' => intval($level['level']['cost']),
+							'color' => $level['level']['color'],
+							'weapons' => $weaponarray
+						];
+						$explodedlevels[] = $levelarray;
+					}
+				}
+				return $explodedlevels;
 
 //				$all_levels = $this->Characterlevel->find('all', array(
 //					'conditions' => array(
@@ -269,18 +312,6 @@ class CombatController extends AppController {
 //					'order' => 'Level.cost'
 //				));
 //
-//				foreach ($all_levels as $lkey => $level) {
-//					for ($ctr = 0; $ctr < $level['Characterlevel']['qty']; $ctr++) {
-//						$levelarray = array();
-//						$levelarray['claimed'] = false;
-//						$levelarray['cost'] = intval($level['Level']['cost']);
-//						$levelarray['color'] = $level['Level']['color'];
-//						foreach ($level['Characterweapon'] as $cwkey => $cwvalue) {
-//							$levelarray['weapons'][] = intval($cwvalue['id']);
-//						}
-//						$leveltrackingarray[] = $levelarray;
-//					}
-//				}
 //
 //				foreach ($leveltrackingarray as $ltakey => $ltavalue) {
 //					$leveltrackingarray[$ltakey]['id'] = $ltakey;
@@ -348,7 +379,7 @@ class CombatController extends AppController {
 			}
 
 			public function getmartialmaneuvers($character_id = null, $mainid = 0) {
-				$this->viewBuilder()->layout('Vorien/HeroCombat.default');
+				$this->viewBuilder()->autoLayout(false);
 				$maneuverlist = array();
 
 				if ($character_id) {
@@ -544,5 +575,64 @@ class CombatController extends AppController {
 						
 					}
 
+//	public function getArmorLocationInfo($character_id) {
+//		if (!$character_id) {
+//			return [];
+//		}
+//		$data = TableRegistry::get('Vorien/HeroCombat.Characterprotections');
+//		$query = $data->find();
+//		$query->hydrate(false);
+//		$query->contain([
+//			'Locations' => function ($q) {
+//				return $q->select(['roll', 'location', 'sublocation'])
+//								->formatResults(function ($locations) {
+//									return $locations->map(function ($location) {
+//												$location['locationdata'] = $location['roll'] . ' - ' . $location['location'] . (!empty($location['sublocation']) ? ' (' . $location['sublocation'] . ')' : '');
+//												return $location;
+//											});
+//								});
+////				return $q->select(['roll', 'location', 'sublocation']);
+//			},
+//					'Armors' => function ($q) {
+//				return $q->select(['armor', 'type', 'r_pd', 'r_ed'])
+//								->formatResults(function ($armors) {
+//									return $armors->map(function ($armor) {
+//												$armor['armordata'] = $armor['armor'] . ' (' . $armor['type'] . ')';
+//												return $armor;
+//											});
+//								});
+//			},
+//					'Materials' => function ($q) {
+//				return $q->select(['material', 'manufacture', 'option', 'r_pd', 'r_ed'])
+//								->formatResults(function ($materials) {
+//									return $materials->map(function ($material) {
+//												$material['materialdata'] = $material['material'] . ' - ' .
+//														(!empty($material['manufacture']) ? ' (' . $material['manufacture'] .
+//																(!empty($material['option']) ? ' / ' . $material['option'] : '') .
+//																')' : '');
+//												return $material;
+//											});
+//								});
+//			}
+//				]);
+//				$query->where([
+//					'Characterprotections.character_id' => $character_id,
+//					'Characterprotections.active' => true
+//				]);
+//				$armorlocationinfo = $query->all()->toArray();
+//				$this->DisplayFunctions->removeByKey($armorlocationinfo, ['created', 'modified']);
+//				return $armorlocationinfo;
+//
+////				$return = [];
+////				foreach ($armorlocationinfo as $armor) {
+////					$return[$value['Location']['roll']] = $value[0];
+////					$return[$value['Location']['roll']]['armor'] = $value['Armor']['armor'];
+////					$return[$value['Location']['roll']]['material'] = $value['Material']['material'];
+////					$return[$value['Location']['roll']]['armor'] = $value['Armor']['armor'];
+////					$return[$value['Location']['roll']]['r_pd'] = max(0, $return[$value['Location']['roll']]['r_pd']);
+////					$return[$value['Location']['roll']]['r_ed'] = max(0, $return[$value['Location']['roll']]['r_ed']);
+////				}
+////				return $return;
+//			}
 				}
 				

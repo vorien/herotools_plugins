@@ -11,8 +11,6 @@ colors["dmg"] = ["yellow", "blue", "green", "black"];
 colors["rng"] = ["orange"];
 colors["tgt"] = ["purple"];
 colors["def"] = ["brown"];
-//	toConsole("starting");
-//	toConsole(colors["ocv"].toString());
 
 function getAvailableLevels(weapon_id, level_type) {
 	return filterByType(filterByWeapon(filterByUnclaimed(levels), weapon_id), level_type);

@@ -22,11 +22,10 @@ function setDCBaseValues() {
 }
 
 function setDCCharacterValues() {
-	dc.character.npd = getParseOrZero(character.Character.n_pd);
-	dc.character.ned = getParseOrZero(character.Character.n_ed);
-	dc.character.rpd = getParseOrZero(character.Character.r_pd);
-	dc.character.red = getParseOrZero(character.Character.r_ed);
-
+	dc.character.npd = getParseOrZero(character.n_pd);
+	dc.character.ned = getParseOrZero(character.n_ed);
+	dc.character.rpd = getParseOrZero(character.r_pd);
+	dc.character.red = getParseOrZero(character.r_ed);
 }
 
 function setDCArmorValues() {
@@ -110,8 +109,10 @@ function setDCBodyStatus(damage) {
 		dc.body.status = 'dazed';
 	} else if (dc.body.remaining < 0 && damage) {
 		dc.body.status = 'bleeding';
-	} else if (dc.body.remaining < (2 * dc.body.start)) {
+	} else if (dc.body.remaining < (-1 * dc.body.start)) {
 		dc.body.status = 'dead';
+	} else if (dc.body.remaining < 0) {
+		dc.body.status = 'dying';
 	} else {
 		dc.body.status = 'normal';
 	}
@@ -194,15 +195,15 @@ $(function () {
 		switch (dcnk) {
 			case "Killing":
 				bodybase = Math.max(0, dc.calc.body - rdef);
-				stunbase = dc.calc.body * locations[dc.location]['Target']['stunx'];
-				kdamage = Math.max(0, Math.floor(bodybase * locations[dc.location]['Target']['bodyx']));
+				stunbase = dc.calc.body * locations[dc.location].target['stunx'];
+				kdamage = Math.max(0, Math.floor(bodybase * locations[dc.location].target['bodyx']));
 				ndamage = Math.max(kdamage, stunbase - ndef);
 				break;
 			case "Normal":
 				bodybase = Math.max(0, dc.calc.body - rdef);
 				stunbase = Math.max(0, dc.calc.stun - ndef);
-				kdamage = Math.max(0, Math.floor(bodybase * locations[dc.location]['Target']['bodyx']));
-				ndamage = Math.max(kdamage, Math.floor(stunbase * locations[dc.location]['Target']['nstun']));
+				kdamage = Math.max(0, Math.floor(bodybase * locations[dc.location].target['bodyx']));
+				ndamage = Math.max(kdamage, Math.floor(stunbase * locations[dc.location].target['nstun']));
 				break;
 			default:
 				alert('Leave Stun Damage empty for Killing attacks');
@@ -238,7 +239,7 @@ $(function () {
 		setDCBaseValues();
 		dc.body.remaining = Math.min(dc.body.start, dc.body.remaining + 1);
 		dc.stun.remaining = Math.min(dc.stun.start, dc.stun.remaining + 1);
-		setDCBodyStatus();
+		setDCBodyStatus(false);
 		setDCStunStatus();
 		updateStatDisplays();
 	});
@@ -248,6 +249,8 @@ $(function () {
 		dc.body.remaining = dc.body.start;
 		dc.stun.remaining = dc.stun.start;
 		dc.end.remaining = dc.end.start;
+		setDCBodyStatus(false);
+		setDCStunStatus();
 		updateStatDisplays();
 	});
 

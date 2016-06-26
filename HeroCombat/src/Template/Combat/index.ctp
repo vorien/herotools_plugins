@@ -1,34 +1,6 @@
 <script type="text/javascript">
-	Tracing.untrace();
-	Tracing.trace(
-			"populateStrSelect",
-			"populateMaxRange",
-			'populateMartialManeuvers',
-			"initializeSliders",
-			"populateCharacterData",
-			"populateManeuverData",
-			"populatePenaltyData",
-			"populateWeaponData",
-			"updateSliders"
-			);
-//	Tracing.before(
-//			"populateCurrentValuesByHand",
-//			function(fnName, args, depth) {
-//				toConsole(Date.now() + " Before " + fnName + " args (" + args + ") depth: " + depth);
-//			}
-//	);
-//
-//	Tracing.after(
-//			"populateCurrentValuesByHand",
-//			function(fnName, retval, depth) {
-//				toConsole(Date.now() + " After " + fnName + " retval (" + retval + ") depth: " + depth);
-//			}
-//	);
-	Tracing.untrace();
-//	Tracing.trace('getBaseDef');
 
 	var ajax_root = "<?php echo $ajax_root; ?>";
-console.log(ajax_root);
 
 	var character = <?php echo $json_characterinfo; ?>;
 	var weapons = <?php echo $json_weapons; ?>;
@@ -41,6 +13,8 @@ console.log(ajax_root);
 	var locations = <?php echo $json_locationinfo; ?>;
 	var targets = <?php echo $json_targetinfo; ?>;
 	var levels = <?php echo $json_leveltracking ?>;
+//console.log(character);
+//console.log(locations);
 
 //	console.log(filterByWeapon(filterByType(levels,"dmg"),3));
 //	console.log(weapons[defenseweaponid]);
@@ -55,15 +29,15 @@ console.log(ajax_root);
 		tgtlocation = $("#General");
 		$("#weapon-selection-wrapper").show();
 		$("#main-tab-wrapper").css("visibility", "visible");
-		displayWeapons("page load");
-		populateCharacterData("page load");
-		populateManeuverData("page load");
-		populatePenaltyData("page load");
-		initializeSliders("page load");
+		displayWeapons();
+		populateCharacterData();
+		populateManeuverData();
+		populatePenaltyData();
+		initializeSliders();
 
 //		initializeSliders();
-//		getlevels("page load");
-//		populateCurrentValues("page load");
+//		getlevels();
+//		populateCurrentValues();
 //		console.log(getLevels(undefined, "max"));
 //		console.log(getLevels(undefined, "min"));
 //		console.log(getLevels(undefined, "count"));
@@ -78,8 +52,8 @@ console.log(ajax_root);
 		});
 
 		$("body").on("change", $("#rng-penalty"), function () {
-			populatePenaltyData("rng-penalty change");
-			updateSliders("rng-penalty: change: " + $(this).attr("id"));
+			populatePenaltyData();
+			updateSliders();
 		});
 
 		$(".targetlocation").click(function () {
@@ -87,8 +61,8 @@ console.log(ajax_root);
 //			console.log($(this).data("penalty"));
 			$("#tgt-penalty").val($(this).data("penalty"));
 			console.log($("#tgt-penalty").val());
-			populatePenaltyData(".targetlocation click");
-			updateSliders(".targetlocation click");
+			populatePenaltyData();
+			updateSliders();
 			$('#maintabs a:first').tab('show');
 		});
 
@@ -104,12 +78,12 @@ console.log(ajax_root);
 			displayWeapons("weapon change");
 			populateMartialManeuvers();
 			maneuver = $("#Strike.maneuver-select");
-			updateSliders("weapon change");
+			updateSliders();
 		});
 
 		$('#two-hands').change(function () {
 			populateStrSelect("two-hands change");
-			updateSliders("two hands change");
+			updateSliders();
 		});
 
 		$("body").on("click", ".maneuver-select", function () {
@@ -133,14 +107,14 @@ console.log(ajax_root);
 				$("#var-action").html("").css("visibility", "hidden").attr("data-action", "");
 				$("#input-action").css("visibility", "hidden").val(0).attr("data-action", "");
 			}
-			populateWeaponData(".maneuver-select");
-			populateManeuverData(".maneuver-select")
-			updateSliders(".maneuver-select");
+			populateWeaponData();
+			populateManeuverData()
+			updateSliders();
 			$('#maintabs a:first').tab('show');
 		});
 
 		$("body").on("change", "#input-action", function () {
-			updateSliders("#input-action");
+			updateSliders();
 		});
 
 
@@ -158,13 +132,13 @@ console.log(ajax_root);
 
 </script>
 <?php
+//debug($this->viewVars['armorlocationinfo']);
 //debug($armorlocationinfo);
 //echo($json_characterinfo);
 ?>
 
-
 <?php
 $this->SectionBuild->buildTopSection();
-$this->SectionBuild->buildTabs();
+//$this->SectionBuild->buildTabs();
 ?>
 

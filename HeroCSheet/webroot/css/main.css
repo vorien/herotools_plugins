@@ -1,0 +1,69 @@
+/*form .input label{
+	float: left;
+}
+
+form .input input{
+	float: left;
+}*/
+
+div.form, div.index, div.view{
+	float: left;
+	width: 100%;
+}
+
+form div{
+	clear: none;
+}
+
+.form-row, .form-row-label, .form-row-input, .form-row-label label, .form-row-input input{
+	margin: 0px;
+	padding: 0px;
+}
+
+.form-group-row{
+	margin: 0px 0px 4px 0px;
+	padding: 0px;
+}
+.form-group-row label{
+	margin: 0px;
+	padding: 0px;
+	height: 25px;
+	line-height: 20px;
+}
+
+.form-group-row input{
+	height: 25px;
+	padding: 0px 0px 0px 4px;
+	margin: 0px;
+}
+
+.form-group-row .input{
+	padding: 0px;
+	margin: 0px;
+}
+
+.form-group-row select{
+	height: 25px;
+	line-height: 20px;
+	padding: 0px;
+	margin: 0px;
+}
+
+div.actions{
+	width: 90%;
+}
+
+.form-row-label label{
+	font-weight: bold;
+}
+
+.form-row-input input[type="checkbox"]{
+	margin: 0px;
+	margin-left: 5px;
+	transform: scale(1.5);
+	-webkit-transform: scale(1.5);
+}
+
+.row{
+	clear: both;
+}
