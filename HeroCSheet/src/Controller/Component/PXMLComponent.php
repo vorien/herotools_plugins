@@ -1,15 +1,15 @@
 <?php
 
-namespace MFC\HDParser\Controller\Component;
+namespace Vorien\HeroCSheet\Controller\Component;
 
 use Cake\Controller\Component;
 
 
 /**
- * CakePHP HDPXMLComponent
+ * CakePHP PXMLComponent
  * @author Michael
  */
-class HDPXMLComponent extends Component {
+class PXMLComponent extends Component {
 
 
 	function display_xml_error($error, $xml) {

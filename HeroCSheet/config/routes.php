@@ -4,7 +4,7 @@ use Cake\Routing\Router;
 
 Router::plugin(
     'Vorien/HeroCSheet',
-    ['path' => '/vorien/hero-c-sheet'],
+    ['path' => '/charactersheet'],
     function (RouteBuilder $routes) {
         $routes->fallbacks('DashedRoute');
     }

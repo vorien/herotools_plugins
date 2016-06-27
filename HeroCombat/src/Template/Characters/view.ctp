@@ -5,8 +5,8 @@
         <li><?= $this->Form->postLink(__('Delete Character'), ['action' => 'delete', $character->id], ['confirm' => __('Are you sure you want to delete # {0}?', $character->id)]) ?> </li>
         <li><?= $this->Html->link(__('List Characters'), ['action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New Character'), ['action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?> </li>
+        <li><?= $this->Html->link(__('List Users'), ['controller' => 'Userdata', 'action' => 'index']) ?> </li>
+        <li><?= $this->Html->link(__('New User'), ['controller' => 'Userdata', 'action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Characterlevels'), ['controller' => 'Characterlevels', 'action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New Characterlevel'), ['controller' => 'Characterlevels', 'action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Charactermaneuvers'), ['controller' => 'Charactermaneuvers', 'action' => 'index']) ?> </li>
@@ -28,10 +28,10 @@
             <th><?= __('Player') ?></th>
             <td><?= h($character->player) ?></td>
         </tr>
-        <tr>
+<!--        <tr>
             <th><?= __('User') ?></th>
             <td><?= $character->has('user') ? $this->Html->link($character->user->id, ['controller' => 'Users', 'action' => 'view', $character->user->id]) : '' ?></td>
-        </tr>
+        </tr>-->
         <tr>
             <th><?= __('Id') ?></th>
             <td><?= $this->Number->format($character->id) ?></td>

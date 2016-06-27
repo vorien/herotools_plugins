@@ -1,17 +1,17 @@
 <?php
 
-namespace MFC\HDParser\Controller\Component;
+namespace Vorien\HeroCSheet\Controller\Component;
 
 use Cake\Controller\Component;
 
 
 /**
- * CakePHP HDPStandardizeComponent
+ * CakePHP PStandardizeComponent
  * @author Michael
  */
-class HDPStandardizeComponent extends Component {
+class PStandardizeComponent extends Component {
 
-	public $components = ['HDPCore'];
+	public $components = ['PCore'];
 
 	function standardizeTemplate($template, $returnarray = array()) {
 		foreach ($template as $key => $value) {
@@ -22,14 +22,14 @@ class HDPStandardizeComponent extends Component {
 				if (is_int($key) === false) {
 					$newkey = $key;
 				} else {
-					if ($attributes = $this->HDPCore->hasAttributes($value)) {
-						if ($xmlid = $this->HDPCore->getAttributeValue($attributes, 'XMLID')) {
+					if ($attributes = $this->PCore->hasAttributes($value)) {
+						if ($xmlid = $this->PCore->getAttributeValue($attributes, 'XMLID')) {
 							$newkey = $xmlid;
 						} else {
-							if ($display = $this->HDPCore->getAttributeValue($attributes, 'DISPLAY')) {
+							if ($display = $this->PCore->getAttributeValue($attributes, 'DISPLAY')) {
 								$newkey = strtoupper($display);
 							} else {
-								if ($characteristic = $this->HDPCore->getAttributeValue($attributes, 'CHARACTERISTIC')) {
+								if ($characteristic = $this->PCore->getAttributeValue($attributes, 'CHARACTERISTIC')) {
 									$newkey = strtoupper($display);
 								} else {
 									$newkey = "NO XMLID, DISPLAY or CHARACTERISTIC";
@@ -58,11 +58,11 @@ class HDPStandardizeComponent extends Component {
 		if (is_array($main)) {
 			foreach ($main as $key => $value) {
 				debug(str_repeat(" ", $returnarray['depth'] * $displaystep) . "key: $key");
-				if ($attributes = $this->HDPCore->hasAttributes($value)) {
-					if ($xmlid = $this->HDPCore->getAttributeValue($attributes, 'XMLID')) {
+				if ($attributes = $this->PCore->hasAttributes($value)) {
+					if ($xmlid = $this->PCore->getAttributeValue($attributes, 'XMLID')) {
 						debug(str_repeat(" ", $returnarray['depth'] * $displaystep) . "xmlid: $xmlid");
 					} else {
-						if ($xmlid = $this->HDPCore->getAttributeValue($attributes, 'DISPLAY')) {
+						if ($xmlid = $this->PCore->getAttributeValue($attributes, 'DISPLAY')) {
 							$xmlid = strtoupper($xmlid);
 							debug(str_repeat(" ", $returnarray['depth'] * $displaystep) . "display: $xmlid");
 						} else {
@@ -128,110 +128,110 @@ class HDPStandardizeComponent extends Component {
 		$keystowatch = array();
 		$outarray = array();
 		foreach ($array as $key => $value) {
-			$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "Start");
+			$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "Start");
 			if (is_array($value)) {
-				$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "is array");
+				$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "is array");
 				if ($prevkey === 'POWERS' && $key === 'POWER') {
-					$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as POWER");
+					$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as POWER");
 					$outarray[$key] = $this->standardizeArray($value, $key);
 				} else if ($key === 'ADDER' || $key === 'MODIFIER') {
-					$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as ADDER/MODIFIER");
+					$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as ADDER/MODIFIER");
 					$outarray[$key] = $this->standardizeArray($value, $key);
 				} else if ($key === 'attributes') {
-					$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as attributes");
+					$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as attributes");
 					$outarray[$key] = $value;
 				} else if ($key === 'NOTES') {
-					$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as notes");
+					$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as notes");
 					$outarray[$key] = $value;
 //				} else if ($key === 'CHARACTERISTIC_CHOICE') {
-//					$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as characteristic_choice");
+//					$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as characteristic_choice");
 //					$outarray[$key] = $value;
 //				} else if ($key === 'ITEM') {
-//					$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as item");
+//					$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as item");
 //					$outarray[$key] = $value;
 				} else if ($key === 'DESCRIPTION') {
-					$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as description");
+					$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as description");
 					$outarray[$key] = $value;
 //				} else if ($key === 'TYPE') {
-//					$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as type");
+//					$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as type");
 //					$outarray[$key] = $outarray[$key] = $value;
 				} else {
-					$attr_xmlid = $this->HDPCore->getAttribute('XMLID', $value);
-					$attr_input = $this->HDPCore->getAttribute('INPUT', $value);
-					$attr_option = $this->HDPCore->getAttribute('OPTION', $value);
-					$attr_alias = $this->HDPCore->getAttribute('ALIAS', $value);
-					$attr_name = $this->HDPCore->getAttribute('NAME', $value);
-					$attr_characteristic = $this->HDPCore->getAttribute('CHARACTERISTIC', $value);
+					$attr_xmlid = $this->PCore->getAttribute('XMLID', $value);
+					$attr_input = $this->PCore->getAttribute('INPUT', $value);
+					$attr_option = $this->PCore->getAttribute('OPTION', $value);
+					$attr_alias = $this->PCore->getAttribute('ALIAS', $value);
+					$attr_name = $this->PCore->getAttribute('NAME', $value);
+					$attr_characteristic = $this->PCore->getAttribute('CHARACTERISTIC', $value);
 					if ($attr_xmlid) {
-						$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "has xmlid");
+						$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "has xmlid");
 						if ($prevkey === $attr_xmlid && !$attr_name && !$attr_option) {
-							$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as alias/alias because key is same as prevkey");
-							$outarray[$this->HDPCore->replaceSpacesWithUnderscores(strtoupper($attr_alias))][$this->HDPCore->replaceSpacesWithUnderscores(strtoupper($attr_alias))] = $this->standardizeArray($value, $key);
+							$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as alias/alias because key is same as prevkey");
+							$outarray[$this->PCore->replaceSpacesWithUnderscores(strtoupper($attr_alias))][$this->PCore->replaceSpacesWithUnderscores(strtoupper($attr_alias))] = $this->standardizeArray($value, $key);
 						} else if ($attr_xmlid === $key) {
-							$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "= xmlid");
+							$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "= xmlid");
 							$outarray[$key] = $this->standardizeArray($value, $key);
 						} else if ($attr_xmlid === 'OTHER') {
-							$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "other dumped as input");
+							$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "other dumped as input");
 							$outarray[$attr_input] = $this->standardizeArray($value, $key);
 						} else if ($attr_xmlid === 'GENERIC_OBJECT') {
-							$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "other dumped as input");
+							$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "other dumped as input");
 							$outarray[strtoupper($attr_alias)] = $this->standardizeArray($value, $key);
-						} else if ($this->HDPCore->attributeExists('INPUT', $value)) {
-							if ($this->HDPCore->attributeExists('NAME', $value)) {
-								$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped input:name");
+						} else if ($this->PCore->attributeExists('INPUT', $value)) {
+							if ($this->PCore->attributeExists('NAME', $value)) {
+								$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped input:name");
 								$outarray[$attr_xmlid][$attr_name] = $this->standardizeArray($value, $key);
 							} else {
-								$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped input:xmlid");
+								$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped input:xmlid");
 								$outarray[$attr_xmlid][$attr_input] = $this->standardizeArray($value, $key);
 							}
-						} else if ($this->HDPCore->attributeExists('OPTION', $value)) {
-							if ($this->HDPCore->attributeExists('NAME', $value)) {
-								$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped option:name");
+						} else if ($this->PCore->attributeExists('OPTION', $value)) {
+							if ($this->PCore->attributeExists('NAME', $value)) {
+								$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped option:name");
 								$outarray[$attr_xmlid][$attr_option][$attr_name] = $this->standardizeArray($value, $key);
 							} else {
-								$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped option:xmlid");
+								$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped option:xmlid");
 								$outarray[$attr_xmlid][$attr_option] = $this->standardizeArray($value, $key);
 							}
 //						} else if ($prevkey == 'ADDER' && $this->attributeExists('ALIAS', $value)) {
-//							$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped (from ADDER) alias");
+//							$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped (from ADDER) alias");
 //							$outarray[$attr_alias] = $this->standardizeArray($value, array($attr_alias));
-						} else if ($this->HDPCore->attributeExists('NAME', $value)) {
-							$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped xmlid:name");
+						} else if ($this->PCore->attributeExists('NAME', $value)) {
+							$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped xmlid:name");
 							$outarray[$attr_xmlid][$attr_name] = $this->standardizeArray($value, $key);
 						} else {
-							$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped default as xmlid");
+							$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped default as xmlid");
 							$outarray[$attr_xmlid] = $this->standardizeArray($value, $key);
 						}
 					} else {
-						$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "has NO xmlid");
+						$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "has NO xmlid");
 						if (count(array_filter(array_keys($value), 'is_int')) > 0) {
-							$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "has int keys");
+							$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "has int keys");
 							$outarray = array_merge_recursive($outarray, $this->standardizeArray($value, $key));
 //							if (strpos($prevkey, $key) !== false) {
-//								$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "in $prevkey");
+//								$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "in $prevkey");
 //								$outarray = array_merge_recursive($outarray, $this->standardizeArray($value, $key));
 //							} else {
-//								$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "NOT in $prevkey");
+//								$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "NOT in $prevkey");
 //								$outarray[$prevkey] = $this->standardizeArray($value, $key);
 //							}
 						} else {
-							$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "has NO int keys");
+							$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "has NO int keys");
 							if (is_int($key) || $key === 'ITEM') {
-								$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "is int or ITEM");
+								$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "is int or ITEM");
 								if ($attr_characteristic) {
-									$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as characteristic");
+									$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as characteristic");
 									$outarray[$attr_characteristic] = $this->standardizeArray($value, $key);
 								}
 							} else {
-								$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "is NOT int");
-								$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped default as $key");
+								$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "is NOT int");
+								$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped default as $key");
 								$outarray[$key] = $this->standardizeArray($value, $key);
 							}
 						}
 					}
 				}
 			} else {
-				$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as key to value");
+				$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as key to value");
 				$outarray[$key] = $value;
 			}
 		}
@@ -242,57 +242,57 @@ class HDPStandardizeComponent extends Component {
 		$keystowatch = array();
 		$outarray = array();
 		foreach ($array as $key => $value) {
-			$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "Start");
+			$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "Start");
 			if ($key === 'attributes') {
-				$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "merging in $prevkey attributes");
+				$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "merging in $prevkey attributes");
 				$outarray[$key] = array_replace_recursive($attributes, $array[$key]);
 				continue;
 			} else {
 				if (is_array($value)) {
-					$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "is array");
-					$characteristicattributes = $this->HDPCore->getTemplateCharacteristicAttributes($key, $value, $template);
-					$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "characteristic attributes created", $characteristicattributes);
-					$optionattributes = $this->HDPCore->getTemplateOptionAttributes($key, $value, $template);
-					$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "option attributes created", $optionattributes);
-					$adderattributes = $this->HDPCore->getTemplateAdderAttributes($key, $value, $template);
-					$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "adder attributes created", $adderattributes);
-					$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "characteristic/option/adder attributes created");
-					if ($this->HDPCore->hasAttributes($value)) {
-						$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "array[$key] has attributes");
+					$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "is array");
+					$characteristicattributes = $this->PCore->getTemplateCharacteristicAttributes($key, $value, $template);
+					$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "characteristic attributes created", $characteristicattributes);
+					$optionattributes = $this->PCore->getTemplateOptionAttributes($key, $value, $template);
+					$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "option attributes created", $optionattributes);
+					$adderattributes = $this->PCore->getTemplateAdderAttributes($key, $value, $template);
+					$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "adder attributes created", $adderattributes);
+					$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "characteristic/option/adder attributes created");
+					if ($this->PCore->hasAttributes($value)) {
+						$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "array[$key] has attributes");
 					} else {
-						$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "array[$key] has NO attributes");
+						$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "array[$key] has NO attributes");
 					}
 					if (array_key_exists($key, $template)) {
-						$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "in template");
-						if ($this->HDPCore->hasAttributes($template[$key])) {
-							$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "template[$key]  attributes merged");
+						$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "in template");
+						if ($this->PCore->hasAttributes($template[$key])) {
+							$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "template[$key]  attributes merged");
 							$attributes = array_replace_recursive($attributes, $template[$key]['attributes']);
 						}
-						$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "merging characteristic/option/adder attributes");
+						$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "merging characteristic/option/adder attributes");
 						$attributes = array_replace_recursive($attributes, $characteristicattributes, $optionattributes, $adderattributes);
 
-						$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "Merging recursive at $key");
+						$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "Merging recursive at $key");
 						$outarray[$key] = $this->mergeCharacterAndTemplate($value, $template[$key], $key, $attributes);
-						$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "Clearing attributes");
+						$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "Clearing attributes");
 						$attributes = array();
 					} else {
 						$attributes = array_replace_recursive($attributes, $characteristicattributes);
-						$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "NOT in template");
-						$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "Merging recursive at $key");
+						$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "NOT in template");
+						$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "Merging recursive at $key");
 						$outarray[$key] = $this->mergeCharacterAndTemplate($value, $template, $key, $attributes);
 					}
 				} else {
-					$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "is NOT array");
-					$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "Dumping at $key");
+					$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "is NOT array");
+					$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "Dumping at $key");
 					$outarray[$key] = $value;
-					$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "Clearing attributes");
+					$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "Clearing attributes");
 					$attributes = array();
 				}
 			}
 		}
-		$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "Clearing attributes");
+		$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "Clearing attributes");
 		$attributes = array();
-		$this->HDPCore->debugoutbyvalue($keystowatch, $key, $prevkey, "returning outarray", $outarray);
+		$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "returning outarray", $outarray);
 		return $outarray;
 	}
 

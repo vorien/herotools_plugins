@@ -8,8 +8,8 @@
             )
         ?></li>
         <li><?= $this->Html->link(__('List Characters'), ['action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('List Users'), ['controller' => 'Userdata', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('New User'), ['controller' => 'Userdata', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Characterlevels'), ['controller' => 'Characterlevels', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Characterlevel'), ['controller' => 'Characterlevels', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Charactermaneuvers'), ['controller' => 'Charactermaneuvers', 'action' => 'index']) ?></li>
@@ -42,7 +42,7 @@
             echo $this->Form->input('stun');
             echo $this->Form->input('endurance');
             echo $this->Form->input('recovery');
-            echo $this->Form->input('user_id', ['options' => $users, 'empty' => true]);
+            echo $this->Form->input('userdata_id', ['options' => $userdata, 'empty' => true]);
             echo $this->Form->input('gm_id');
         ?>
     </fieldset>

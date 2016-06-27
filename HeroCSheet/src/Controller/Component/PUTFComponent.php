@@ -1,15 +1,15 @@
 <?php
 
-namespace MFC\HDParser\Controller\Component;
+namespace Vorien\HeroCSheet\Controller\Component;
 
 use Cake\Controller\Component;
 
 
 /**
- * CakePHP HCUTFComponent
+ * CakePHP PUTFComponent
  * @author Michael
  */
-class HCUTFComponent extends Component {
+class PUTFComponent extends Component {
 
 	public $components = array();
 

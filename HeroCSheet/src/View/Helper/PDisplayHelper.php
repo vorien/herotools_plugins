@@ -1,13 +1,13 @@
 <?php
-namespace MFC\HDParser\View\Helper;
+namespace Vorien\HeroCSheet\View\Helper;
 
 use Cake\View\Helper;
 
 /**
- * CakePHP HDPDisplayHelper
+ * CakePHP PDisplayHelper
  * @author Michael
  */
-class HDPDisplayHelper extends Helper {
+class PDisplayHelper extends Helper {
 
 	public $helpers = array();
 

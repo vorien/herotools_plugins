@@ -1,20 +1,20 @@
 <?php
 
-namespace MFC\HDParser\Controller\Component;
+namespace Vorien\HeroCSheet\Controller\Component;
 
 use Cake\Controller\Component;
 
 
 /**
- * CakePHP HDPAdderModifierComponent
+ * CakePHP PAdderModifierComponent
  * @author Michael
  */
-class HDPAdderModifierComponent extends Component {
+class PAdderModifierComponent extends Component {
 
-	public $components = ['Vorien/HDParser.HDPCore','Vorien/HDParser.HDPArray'];
+	public $components = ['Vorien/HeroCSheet.PCore','Vorien/HeroCSheet.PArray'];
 
 	function getAdders($array, $type = null) {
-		$returnarray = $this->HDPArray->getEmptyAaMArray();
+		$returnarray = $this->PArray->getEmptyAaMArray();
 		foreach ($array as $key => $value) {
 			$adderarray = $this->getAdder($key, $value);
 			$returnarray['cost'] += $adderarray['cost'];
@@ -25,15 +25,15 @@ class HDPAdderModifierComponent extends Component {
 
 	function getAdder($key, $value, $type = null, $adderarray = array()) {
 		if (!$adderarray) {
-			$adderarray = $this->HDPArray->getEmptyAaMArray();
+			$adderarray = $this->PArray->getEmptyAaMArray();
 		}
 		if (is_numeric($key)) {
 			$key = 'default';
 		}
 		switch ($key) {
 			case "attributes":
-				$adderarray['cost'] += $this->HDPCore->getCost($value);
-				$adderarray['extras'] = array_unique(array_merge_recursive($adderarray['extras'], $this->HDPCore->getAdderExtras($value, ($type == 'power' ? "A" : null))));
+				$adderarray['cost'] += $this->PCore->getCost($value);
+				$adderarray['extras'] = array_unique(array_merge_recursive($adderarray['extras'], $this->PCore->getAdderExtras($value, ($type == 'power' ? "A" : null))));
 				break;
 			case "ADDER":
 				$adderarray = $this->getAdders($value, $adderarray);
@@ -53,10 +53,10 @@ class HDPAdderModifierComponent extends Component {
 	}
 
 	function getModifiers($array, $type = null) {
-		$returnarray = $this->HDPArray->getEmptyAaMArray();
+		$returnarray = $this->PArray->getEmptyAaMArray();
 		foreach ($array as $key => $value) {
 			$modifierarray = $this->getModifier($key, $value, $type);
-			$returnarray = $this->HDPCore->addModifierCost($modifierarray['cost'], $returnarray);
+			$returnarray = $this->PCore->addModifierCost($modifierarray['cost'], $returnarray);
 			$returnarray['extras'] = array_unique(array_merge_recursive($returnarray['extras'], $modifierarray['extras']));
 		}
 		return $returnarray;
@@ -64,15 +64,15 @@ class HDPAdderModifierComponent extends Component {
 
 	function getModifier($key, $value, $type = null, $modifierarray = array()) {
 		if (!$modifierarray) {
-			$modifierarray = $this->HDPArray->getEmptyAaMArray();
+			$modifierarray = $this->PArray->getEmptyAaMArray();
 		}
 		if (is_numeric($key)) {
 			$key = 'default';
 		}
 		switch ($key) {
 			case "attributes":
-				$modifierarray['cost'] += $this->HDPCore->getCost($value);
-				$modifierarray['extras'] = array_unique(array_merge_recursive($modifierarray['extras'], $this->HDPCore->getModifierExtras($value, ($type == 'power' ? "M" : null))));
+				$modifierarray['cost'] += $this->PCore->getCost($value);
+				$modifierarray['extras'] = array_unique(array_merge_recursive($modifierarray['extras'], $this->PCore->getModifierExtras($value, ($type == 'power' ? "M" : null))));
 				break;
 			case "ADDER":
 				$adderarray = $this->getAdders($value, $modifierarray, $type);

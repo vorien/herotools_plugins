@@ -11,7 +11,7 @@
  * @since     3.0.0
  * @license   http://www.opensource.org/licenses/mit-license.php MIT License
  */
-namespace MFC\HDParser\View;
+namespace Vorien\HeroCSheet\View;
 
 use Cake\View\View;
 
@@ -35,6 +35,6 @@ class AppView extends View
      * @return void
      */
     public function initialize()    {
-		$this->loadHelper('HDPDisplay');
+		$this->loadHelper('PDisplay');
     }
 }

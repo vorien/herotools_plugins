@@ -1,15 +1,15 @@
 <?php
 
-namespace MFC\HDParser\Controller\Component;
+namespace Vorien\HeroCSheet\Controller\Component;
 
 use Cake\Controller\Component;
 
 
 /**
- * CakePHP HDPArrayComponent
+ * CakePHP PArrayComponent
  * @author Michael
  */
-class HDPArrayComponent extends Component {
+class PArrayComponent extends Component {
 
 //	public $components = array();
 

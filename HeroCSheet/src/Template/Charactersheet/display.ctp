@@ -27,8 +27,8 @@
 		<div class='col-xs-22'>
 			<?php
 			if ($print == 'display') {
-				echo $this->element('Vorien/HDParser.display/navtabs');
-				echo $this->element('Vorien/HDParser.display/tabpanelcharacteristics');
+				echo $this->element('Vorien/HeroCSheet.display/navtabs');
+				echo $this->element('Vorien/HeroCSheet.display/tabpanelcharacteristics');
 			}
 			?>
 
@@ -78,13 +78,13 @@
 										<?php echo (array_key_exists('display', $value) ? $value['display'] . (array_key_exists('star', $value) ? "<span class='asterisk'>*</span>" : "") : "&nbsp;"); ?>
 									</div>
 									<div class="col-xs-2">
-										<?php echo $this->HDPDisplay->getSkillRoll($value, $characteristics); ?>
+										<?php echo $this->PDisplay->getSkillRoll($value, $characteristics); ?>
 									</div>
 									<div class="col-xs-2">
 										<?php echo (array_key_exists('cost', $value) ? $value['cost'] : "&nbsp;"); ?>
 									</div>
 									<div class="col-xs-10 small">
-										<?php echo $this->HDPDisplay->displayExtras($value); ?>
+										<?php echo $this->PDisplay->displayExtras($value); ?>
 									</div>
 								</div>
 								<?php
@@ -110,7 +110,7 @@
 										<?php echo (array_key_exists('cost', $value) ? $value['cost'] : "&nbsp;"); ?>
 									</div>
 									<div class="col-xs-10 small">
-										<?php echo $this->HDPDisplay->displayExtras($value); ?>
+										<?php echo $this->PDisplay->displayExtras($value); ?>
 									</div>
 								</div>
 								<?php
@@ -135,7 +135,7 @@
 								<?php echo (array_key_exists('display', $value) ? $value['display'] . (array_key_exists('star', $value) ? "*" : "") : "&nbsp;"); ?>
 							</div>
 							<div class="col-xs-2">
-								<?php echo $this->HDPDisplay->getSkillRoll($value, $characteristics); ?>
+								<?php echo $this->PDisplay->getSkillRoll($value, $characteristics); ?>
 							</div>
 							<div class="col-xs-2">
 								<?php echo (array_key_exists('cost', $value) ? $value['cost'] : "&nbsp;"); ?>
@@ -149,9 +149,9 @@
 			</div>
 			<?php
 			if ($print == 'display') {
-				echo $this->element('Vorien/HDParser.display/tabpaneltpa');
+				echo $this->element('Vorien/HeroCSheet.display/tabpaneltpa');
 			} else {
-				echo $this->element('Vorien/HDParser.print/pagebreak');
+				echo $this->element('Vorien/HeroCSheet.print/pagebreak');
 			}
 			?>
 			<div class ="row first-in-panel">
@@ -181,7 +181,7 @@
 								<?php echo $value['cost']; ?>
 							</div>
 							<div class="col-xs-<?= $perktabs[4] ?> small">
-								<?php echo $this->HDPDisplay->displayExtras($value); ?>
+								<?php echo $this->PDisplay->displayExtras($value); ?>
 							</div>
 						</div>
 						<hr class="min-padding">
@@ -208,7 +208,7 @@
 								<?php echo $value['cost']; ?>
 							</div>
 							<div class="col-xs-12 small">
-								<?php echo $this->HDPDisplay->displayExtras($value); ?>
+								<?php echo $this->PDisplay->displayExtras($value); ?>
 							</div>
 						</div>
 						<?php
@@ -236,7 +236,7 @@
 								<?php echo round($value['cost']); ?>
 							</div>
 							<div class="col-xs-10 small">
-								<?php echo $this->HDPDisplay->displayExtras($value); ?>
+								<?php echo $this->PDisplay->displayExtras($value); ?>
 							</div>
 						</div>
 						<?php
@@ -246,7 +246,7 @@
 			</div>
 			<?php
 			if ($print == 'display') {
-				echo $this->element('Vorien/HDParser.display/tabpanelcomplications');
+				echo $this->element('Vorien/HeroCSheet.display/tabpanelcomplications');
 			}
 			?>
 			<div class ="row first-in-panel">
@@ -272,7 +272,7 @@
 								<?php echo $value['cost']; ?>
 							</div>
 							<div class="col-xs-<?= $complicationtabs[3] ?> small">
-								<?php echo $this->HDPDisplay->displayExtras($value, true); ?>
+								<?php echo $this->PDisplay->displayExtras($value, true); ?>
 							</div>
 						</div>
 						<hr class="min-padding">
@@ -283,7 +283,7 @@
 			</div>
 			<?php
 			if ($print == 'display') {
-				echo $this->element('Vorien/HDParser.display/tabpanelclose');
+				echo $this->element('Vorien/HeroCSheet.display/tabpanelclose');
 			}
 			?>
 		</div>

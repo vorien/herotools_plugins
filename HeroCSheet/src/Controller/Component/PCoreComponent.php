@@ -1,15 +1,15 @@
 <?php
 
-namespace MFC\HDParser\Controller\Component;
+namespace Vorien\HeroCSheet\Controller\Component;
 
 use Cake\Controller\Component;
 
 
 /**
- * CakePHP HDPCoreComponent
+ * CakePHP PCoreComponent
  * @author Michael
  */
-class HDPCoreComponent extends Component {
+class PCoreComponent extends Component {
 
 	public $components = array('HCParserStandardize', 'HCParserSkillDisplay', 'HCParserSections', 'HCParserArray');
 

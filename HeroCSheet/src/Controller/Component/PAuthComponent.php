@@ -1,15 +1,15 @@
 <?php
 
-namespace MFC\HDParser\Controller\Component;
+namespace Vorien\HeroCSheet\Controller\Component;
 
 use Cake\Controller\Component;
 
 
 /**
- * CakePHP HCAuth
+ * CakePHP PAuthComponent
  * @author Michael
  */
-class HCAuthComponent extends Component {
+class PAuthComponent extends Component {
 
 	public $components = array('Session', 'Auth');
 

@@ -28,12 +28,12 @@ use Cake\Core\Plugin;
 
 
 if (extension_loaded('apc') && function_exists('apc_dec') && (php_sapi_name() !== 'cli' || ini_get('apc.enable_cli'))) {
-    Cache::config('charactersheet', array(
+    Cache::config('herocsheet', array(
         'engine' => 'Apc', //[required]
 //        'duration'=> 3600, //[optional]
 //        'probability'=> 100, //[optional]
 //        'prefix' => Inflector::slug(APP_DIR) . '_', //[optional]  prefix every cache file with this string
     ));
 } else {
-    Cache::config('charactersheet', array('engine' => 'File'));
+    Cache::config('herocsheet', array('engine' => 'File'));
 }

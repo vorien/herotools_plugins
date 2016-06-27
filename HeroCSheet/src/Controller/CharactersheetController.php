@@ -1,8 +1,8 @@
 <?php
 
-namespace MFC\HDParser\Controller;
+namespace Vorien\HeroCSheet\Controller;
 
-use MFC\HDParser\Controller\AppController;
+use Vorien\HeroCSheet\Controller\AppController;
 //use Cake\ORM\TableRegistry;
 //use Cake\Utility\Inflector;
 //use App\Model\Entity;
@@ -19,24 +19,24 @@ use Cake\Core\Configure;
  */
 class CharactersheetController extends AppController {
 
-	public $HDPFiles;
+	public $PFiles;
 
 	public function initialize() {
 		parent::initialize();
-		$this->HDPFiles = Plugin::path('Vorien/HDParser') . 'webroot' . DS . 'files/';
-		$this->loadComponent('Vorien/HDParser.HDPCore');
-		$this->loadComponent('Vorien/HDParser.HDPXML');
-		$this->loadComponent('Vorien/HDParser.HDPStandardize');
-		$this->loadComponent('Vorien/HDParser.HDPSkillDisplay');
-		$this->loadComponent('Vorien/HDParser.HDPSections');
-		$this->loadComponent('Vorien/HDParser.HDPArray');
+		$this->PFiles = Plugin::path('Vorien/HeroCSheet') . 'webroot' . DS . 'files/';
+		$this->loadComponent('Vorien/HeroCSheet.PCore');
+		$this->loadComponent('Vorien/HeroCSheet.PXML');
+		$this->loadComponent('Vorien/HeroCSheet.PStandardize');
+		$this->loadComponent('Vorien/HeroCSheet.PSkillDisplay');
+		$this->loadComponent('Vorien/HeroCSheet.PSections');
+		$this->loadComponent('Vorien/HeroCSheet.PArray');
 	}
 
 	function display() {
 //		debug(func_get_args()[0]);
 		$print = func_get_args()[0];
 //		debug($print);
-		$files = Cache::readMany([ 'character', 'main'], 'charactersheet');
+		$files = Cache::readMany([ 'character', 'main'], 'herocsheet');
 		if (empty($files['character']) || empty($files['main'])) {
 			$this->Flash->set('You need to select a Character and a Base Template before displaying your character');
 			return $this->routeAction(true);
@@ -54,27 +54,27 @@ class CharactersheetController extends AppController {
 
 		$xmlstarttring = '<?xml version="1.0" encoding="UTF-8"?>';
 
-		$character_array = $this->HDPArray->objectToArray($character_xml);
+		$character_array = $this->PArray->objectToArray($character_xml);
 		unset($character_array['TEMPLATE']);
 		unset($character_array['RULES']);
-		$template_array = $this->HDPArray->objectToArray($character_xml->TEMPLATE);
-		$rules_array = $this->HDPArray->objectToArray($character_xml->RULES);
-		$main_array = $this->HDPArray->objectToArray($main_xml);
+		$template_array = $this->PArray->objectToArray($character_xml->TEMPLATE);
+		$rules_array = $this->PArray->objectToArray($character_xml->RULES);
+		$main_array = $this->PArray->objectToArray($main_xml);
 
-		$character_clean = $this->HDPArray->removeEmptyArrayKeys($character_array);
-		$template_clean = $this->HDPArray->removeEmptyArrayKeys($template_array);
-		$rules_clean = $this->HDPArray->removeEmptyArrayKeys($rules_array);
-		$main_clean = $this->HDPArray->removeEmptyArrayKeys($main_array);
+		$character_clean = $this->PArray->removeEmptyArrayKeys($character_array);
+		$template_clean = $this->PArray->removeEmptyArrayKeys($template_array);
+		$rules_clean = $this->PArray->removeEmptyArrayKeys($rules_array);
+		$main_clean = $this->PArray->removeEmptyArrayKeys($main_array);
 
-		$this->HDPCore->moveEnhancers($character_clean);
+		$this->PCore->moveEnhancers($character_clean);
 
-		$character_standardized = $this->HDPStandardize->standardizeArray($character_clean);
-		$template_standardized = $this->HDPStandardize->standardizeArray($template_clean);
-		$main_standardized = $this->HDPStandardize->standardizeArray($main_clean);
+		$character_standardized = $this->PStandardize->standardizeArray($character_clean);
+		$template_standardized = $this->PStandardize->standardizeArray($template_clean);
+		$main_standardized = $this->PStandardize->standardizeArray($main_clean);
 
 		$mainplustemplate = array_replace_recursive($main_standardized, $template_standardized);
 
-		$mergedCharacter = $this->HDPStandardize->mergeCharacterAndTemplate($character_standardized, $mainplustemplate);
+		$mergedCharacter = $this->PStandardize->mergeCharacterAndTemplate($character_standardized, $mainplustemplate);
 
 		$skillenhancers = array("KS" => 0, "AK" => 0, "PS" => 0, "CuK" => 0);
 		foreach ($mergedCharacter['SKILL_ENHANCERS'] as $key => $characteristic) {
@@ -93,7 +93,7 @@ class CharactersheetController extends AppController {
 		}
 
 		foreach ($mergedCharacter['CHARACTERISTICS'] as $key => $characteristic) {
-			$cdisplayarray = $this->HDPSkillDisplay->getCharacteristicDisplay($characteristic, $rules_clean['attributes'][$key . "_MAX"]);
+			$cdisplayarray = $this->PSkillDisplay->getCharacteristicDisplay($characteristic, $rules_clean['attributes'][$key . "_MAX"]);
 			$characteristics[$key] = $cdisplayarray;
 		}
 
@@ -130,33 +130,33 @@ class CharactersheetController extends AppController {
 		$intellect_skills_list = array("Analyze", "Bugging", "Computer Programming", "Concealment", "Cramming", "Criminology", "Cryptography", "Deduction", "Demolitions", "Disguise", "Electronics", "Forensic Medicine", "Forgery", "Gambling", "Inventor", "Lipreading", "Mechanics", "Mimicry", "Navigation", "Paramedics", "Security Systems", "Shadowing", "Survival", "Systems Operation", "Tactics", "Tracking", "Ventriloquism", "Weaponsmith");
 		$interaction_skills_list = array("Acting", "Animal Handler", "Bribery", "Bureaucratics", "Charm", "Conversation", "High Society", "Interrogation", "Oratory", "Persuasion", "Streetwise", "Trading");
 
-		$agility_skills = array_map("strtoupper", array_map(array($this->HDPCore, 'replaceSpacesWithUnderscores'), $agility_skills_list));
+		$agility_skills = array_map("strtoupper", array_map(array($this->PCore, 'replaceSpacesWithUnderscores'), $agility_skills_list));
 		$intellect_skills = array_map("strtoupper", $intellect_skills_list);
 		$interaction_skills = array_map("strtoupper", $interaction_skills_list);
 
 		foreach ($mergedCharacter['SKILLS'] as $key => $value) {
-			$arraykeycount = $this->HDPArray->getArrayKeyCount($value);
-			if ($this->HDPCore->hasAttributes($value) && $arraykeycount == 1) {
-				$skills[$key] = $this->HDPSkillDisplay->getSkillDisplay($value, $characteristics);
+			$arraykeycount = $this->PArray->getArrayKeyCount($value);
+			if ($this->PCore->hasAttributes($value) && $arraykeycount == 1) {
+				$skills[$key] = $this->PSkillDisplay->getSkillDisplay($value, $characteristics);
 			} else {
 				switch ($key) {
 					case "PROFESSIONAL_SKILL":
 					case "KNOWLEDGE_SKILL":
 						foreach ($value as $bkey => $bvalue) {
-							$skills[$bvalue['attributes']['ALIAS'] . ": " . $bkey] = $this->HDPSkillDisplay->getBackgroundSkillDisplay($bvalue, $characteristics);
+							$skills[$bvalue['attributes']['ALIAS'] . ": " . $bkey] = $this->PSkillDisplay->getBackgroundSkillDisplay($bvalue, $characteristics);
 						}
 						break;
 					case "TRANSPORT_FAMILIARITY":
 					case "WEAPON_FAMILIARITY":
-						$skills[$value['attributes']['DISPLAY']] = $this->HDPSkillDisplay->getFamiliaritySkillDisplay($value);
+						$skills[$value['attributes']['DISPLAY']] = $this->PSkillDisplay->getFamiliaritySkillDisplay($value);
 						break;
 					case "TWO_WEAPON_FIGHTING_HTH";
 					case "DEFENSE_MANEUVER";
-						$skills[$key] = $this->HDPSkillDisplay->getNoRollSkillDisplay($value);
+						$skills[$key] = $this->PSkillDisplay->getNoRollSkillDisplay($value);
 						break;
 					case "LANGUAGES";
 						foreach ($value as $lkey => $lvalue) {
-							$skills["Language" . ": " . $lkey] = $this->HDPSkillDisplay->getLanguageDisplay($lvalue);
+							$skills["Language" . ": " . $lkey] = $this->PSkillDisplay->getLanguageDisplay($lvalue);
 						}
 						break;
 					case "COMBAT_LEVELS":
@@ -166,33 +166,33 @@ class CharactersheetController extends AppController {
 						$prefix = strtoupper(implode('', $matches[0])) . ": ";
 						foreach ($value as $lvalue) {
 							foreach ($lvalue as $lsubkey => $lsubvalue) {
-								$skills[$prefix . $lsubkey] = $this->HDPSkillDisplay->getListSkillDisplay($lsubvalue, $prefix);
+								$skills[$prefix . $lsubkey] = $this->PSkillDisplay->getListSkillDisplay($lsubvalue, $prefix);
 							}
 						}
 						break;
 					case "SKILL_LEVELS":
 						foreach ($value as $skey => $sval) {
-							if (!$this->HDPCore->hasAttributes($sval)) {
+							if (!$this->PCore->hasAttributes($sval)) {
 								foreach ($sval as $subskey => $subsval) {
-									if ($this->HDPCore->hasAttributes($subsval)) {
+									if ($this->PCore->hasAttributes($subsval)) {
 										$svalue = $sval[$subskey];
 									}
 								}
 							} else {
 								$svalue = $sval;
 							}
-							$skills["SL: " . $skey] = $this->HDPSkillDisplay->getSkillLevelDisplay($svalue);
+							$skills["SL: " . $skey] = $this->PSkillDisplay->getSkillLevelDisplay($svalue);
 						}
 						break;
 					default:
 						if ($arraykeycount == 1) {
 							foreach ($value as $dkey => $dvalue) {
-								if ($this->HDPCore->hasAttributes($dvalue)) {
-									$skills[$key . " - " . $dkey] = $this->HDPSkillDisplay->getSkillDisplay($dvalue, $characteristics);
+								if ($this->PCore->hasAttributes($dvalue)) {
+									$skills[$key . " - " . $dkey] = $this->PSkillDisplay->getSkillDisplay($dvalue, $characteristics);
 								}
 							}
 						} else {
-							$skills[$key] = $this->HDPSkillDisplay->getMultiLevelSkillDisplay($value, $characteristics);
+							$skills[$key] = $this->PSkillDisplay->getMultiLevelSkillDisplay($value, $characteristics);
 						}
 						break;
 				}
@@ -214,7 +214,7 @@ class CharactersheetController extends AppController {
 						$checkarray = $interaction_skills;
 						break;
 					case 'RELATED':
-						$checkarray = array_map("strtoupper", array_map(array($this->HDP, 'replaceSpacesWithUnderscores'), array_keys($value['affects'])));
+						$checkarray = array_map("strtoupper", array_map(array($this->P, 'replaceSpacesWithUnderscores'), array_keys($value['affects'])));
 						break;
 					default:
 						break(2);
@@ -238,7 +238,7 @@ class CharactersheetController extends AppController {
 		}
 
 		foreach ($mergedCharacter['TALENTS'] as $key => $value) {
-			$talents[$key] = $this->HDPSections->getTalents($value);
+			$talents[$key] = $this->PSections->getTalents($value);
 		}
 
 		if (array_key_exists('STRIKING_APPEARANCE', $talents)) {
@@ -253,13 +253,13 @@ class CharactersheetController extends AppController {
 			}
 		}
 
-		$perks = $this->HDPSections->getRawData($character_clean['PERKS']);
+		$perks = $this->PSections->getRawData($character_clean['PERKS']);
 
 
 		$activespells = array();
 		$castspells = array();
 
-		$powers = $this->HDPSections->getPowers($mergedCharacter['POWERS']);
+		$powers = $this->PSections->getPowers($mergedCharacter['POWERS']);
 		foreach ($powers as $key => $value) {
 			if (!empty($value['skillroll'])) {
 				$castspells[$key] = $value;
@@ -277,7 +277,7 @@ class CharactersheetController extends AppController {
 
 //		debug($mergedCharacter['DISADVANTAGES']['DISTINCTIVEFEATURES']['Blue Lock of Hair']);
 //
-		$complications = $this->HDPSections->getRawData($mergedCharacter['DISADVANTAGES']);
+		$complications = $this->PSections->getRawData($mergedCharacter['DISADVANTAGES']);
 //		debug($complications['Blue Lock of Hair']);
 //		foreach($mergedCharacter['DISADVANTAGES'] as $key => $complication){
 //			debug($key);
@@ -285,7 +285,7 @@ class CharactersheetController extends AppController {
 //		}
 //		exit;
 
-		$this->HDPCore->sortOnTwoKeys($skills, 'type', 'display');
+		$this->PCore->sortOnTwoKeys($skills, 'type', 'display');
 
 		$backgroundskills = array();
 		$norollskills = array();
@@ -310,22 +310,22 @@ class CharactersheetController extends AppController {
 
 //		debug($viewdata);
 		if ($print == 'display') {
-			$this->viewBuilder()->layout('Vorien/HDParser.csheet/display');
+			$this->viewBuilder()->layout('Vorien/HeroCSheet.csheet/display');
 		} else {
-			$this->viewBuilder()->layout('Vorien/HDParser.csheet/print');
+			$this->viewBuilder()->layout('Vorien/HeroCSheet.csheet/print');
 		}
-		$this->render('Vorien/HDParser.display');
+		$this->render('Vorien/HeroCSheet.display');
 	}
 
 	public function select() {
 //		debug("In select");
-		if (!Cache::deleteMany([ 'character', 'main'], 'charactersheet')) { // deleting cache entries
+		if (!Cache::deleteMany([ 'character', 'main'], 'herocsheet')) { // deleting cache entries
 			$this->Flash->set("Unable to delete cache entries");
-//			debug(Cache::deleteMany([ 'character', 'main'], 'charactersheet'));
+//			debug(Cache::deleteMany([ 'character', 'main'], 'herocsheet'));
 		}
 		$characterfiles = [];
 		$templates = [];
-		$dir = new Folder($this->HDPFiles);
+		$dir = new Folder($this->PFiles);
 		$characterfiles = $dir->find('.*\.hdc');
 		$templates = $dir->find('.*\.hdt');
 		$this->set(compact('characterfiles', 'templates'));
@@ -342,7 +342,7 @@ class CharactersheetController extends AppController {
 //		debug("data-main: " . (!empty($this->request->data['main']) ? 'Yes' : 'No'));
 		if (empty($this->request->data['character']) || empty($this->request->data['main'])) {
 //			debug("Checking cache for file names");
-			if ($result = Cache::readMany([ 'character', 'main'], 'charactersheet')) { // Cache is set
+			if ($result = Cache::readMany([ 'character', 'main'], 'herocsheet')) { // Cache is set
 //				debug("Cache is set");
 //				debug($result);
 				return $this->routeAction();
@@ -354,9 +354,9 @@ class CharactersheetController extends AppController {
 //			debug("file names set in request-data");
 //			debug("Trying to set cache");
 			if (Cache::writeMany([
-						'character' => $this->HDPFiles . $this->request->data['character'],
-						'main' => $this->HDPFiles . $this->request->data['main']
-							], 'charactersheet')) {
+						'character' => $this->PFiles . $this->request->data['character'],
+						'main' => $this->PFiles . $this->request->data['main']
+							], 'herocsheet')) {
 				unset($this->request->data['character']);
 				unset($this->request->data['main']);
 //				debug("Cache loaded successfully");
@@ -372,7 +372,7 @@ class CharactersheetController extends AppController {
 	public function upload() {
 		if ($this->request->is('post')) {
 			if (!empty($this->request->data)) {
-				$filename = $this->HDPFiles . $this->request->data['file']['name'];
+				$filename = $this->PFiles . $this->request->data['file']['name'];
 				if (move_uploaded_file($this->request->data['file']['tmp_name'], $filename)) {
 					$this->Flash->set('File uploaded successfuly.');
 					$this->request->data = [];

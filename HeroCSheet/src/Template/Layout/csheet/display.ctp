@@ -26,19 +26,19 @@
 		<?php
 		echo $this->Html->meta('icon');
 
-		echo $this->Html->css('Vorien/HDParser.cake.generic');
-		echo $this->Html->css('Vorien/HDParser.jqueryui/jquery-ui.min');
-		echo $this->Html->css('Vorien/HDParser.bootstrap/bootstrap');
-		echo $this->Html->css('Vorien/HDParser.main');
-		echo $this->Html->css('Vorien/HDParser.herocombat');
-		echo $this->Html->css('Vorien/HDParser.herocombat-margins');
+		echo $this->Html->css('Vorien/HeroCSheet.cake.generic');
+		echo $this->Html->css('Vorien/HeroCSheet.jqueryui/jquery-ui.min');
+		echo $this->Html->css('Vorien/HeroCSheet.bootstrap/bootstrap');
+		echo $this->Html->css('Vorien/HeroCSheet.main');
+		echo $this->Html->css('Vorien/HeroCSheet.herocombat');
+		echo $this->Html->css('Vorien/HeroCSheet.herocombat-margins');
 
-		echo $this->Html->script('Vorien/HDParser.jquery/jquery-2.1.1.min');
-		echo $this->Html->script('Vorien/HDParser.jqueryui/jquery-ui.min');
-		echo $this->Html->script('Vorien/HDParser.jqueryui/jquery.ui.touch-punch.min');
-		echo $this->Html->script('Vorien/HDParser.bootstrap/bootstrap.min');
-		echo $this->Html->script('Vorien/HDParser.herocombat');
-		echo $this->Html->script('Vorien/HDParser.tracing/tracing');
+		echo $this->Html->script('Vorien/HeroCSheet.jquery/jquery-2.1.1.min');
+		echo $this->Html->script('Vorien/HeroCSheet.jqueryui/jquery-ui.min');
+		echo $this->Html->script('Vorien/HeroCSheet.jqueryui/jquery.ui.touch-punch.min');
+		echo $this->Html->script('Vorien/HeroCSheet.bootstrap/bootstrap.min');
+		echo $this->Html->script('Vorien/HeroCSheet.herocombat');
+		echo $this->Html->script('Vorien/HeroCSheet.tracing/tracing');
 
 		echo $this->fetch('meta');
 		echo $this->fetch('css');

@@ -37,7 +37,7 @@ class CharactersController extends AppController
     public function view($id = null)
     {
         $character = $this->Characters->get($id, [
-            'contain' => ['Users', 'Gms', 'Characterlevels', 'Charactermaneuvers', 'Characterprotections', 'Characterweapons']
+            'contain' => ['Userdata', 'Gms', 'Characterlevels', 'Charactermaneuvers', 'Characterprotections', 'Characterweapons']
         ]);
 
         $this->set('character', $character);
@@ -88,9 +88,9 @@ class CharactersController extends AppController
                 $this->Flash->error(__('The character could not be saved. Please, try again.'));
             }
         }
-        $users = $this->Characters->Users->find('list', ['limit' => 200]);
+        $userdata = $this->Characters->Userdata->find('list', ['limit' => 200]);
         $gms = $this->Characters->Gms->find('list', ['limit' => 200]);
-        $this->set(compact('character', 'users', 'gms'));
+        $this->set(compact('character', 'userdata', 'gms'));
         $this->set('_serialize', ['character']);
     }
 

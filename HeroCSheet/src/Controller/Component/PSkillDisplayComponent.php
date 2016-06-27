@@ -1,17 +1,17 @@
 <?php
 
-namespace MFC\HDParser\Controller\Component;
+namespace Vorien\HeroCSheet\Controller\Component;
 
 use Cake\Controller\Component;
 
 
 /**
- * CakePHP HDPSkillDisplayComponent
+ * CakePHP PSkillDisplayComponent
  * @author Michael
  */
-class HDPSkillDisplayComponent extends Component {
+class PSkillDisplayComponent extends Component {
 
-	public $components = ['Vorien/HDParser.HDPCore'];
+	public $components = ['Vorien/HeroCSheet.PCore'];
 
 	function getSkillLevelDisplay($skilllevel) {
 		$attributes = $skilllevel['attributes'];
@@ -39,7 +39,7 @@ class HDPSkillDisplayComponent extends Component {
 		$initialattributes = $multilevel['attributes'];
 		$xmlid = $initialattributes['XMLID'];
 		$display = $initialattributes['DISPLAY'];
-		$type = $this->HDPCore->getAttributeValue($initialattributes, 'TYPE', null);
+		$type = $this->PCore->getAttributeValue($initialattributes, 'TYPE', null);
 		$familiarity = $initialattributes['FAMILIARITY'];
 		$characteristic = $initialattributes['CHARACTERISTIC'];
 		$levels = $initialattributes['LEVELS'];
@@ -54,17 +54,17 @@ class HDPSkillDisplayComponent extends Component {
 						$attributes = $value;
 						$fullvalue = $multilevel['ADDER'];
 					} else {
-						$attributes = $this->HDPCore->hasAttributes($value);
+						$attributes = $this->PCore->hasAttributes($value);
 						$fullvalue = $value;
 					}
-					$maxcost = $this->HDPCore->getAttributeValue($attributes, 'MAXCOST', 0);
+					$maxcost = $this->PCore->getAttributeValue($attributes, 'MAXCOST', 0);
 					$subcost = 0;
 					if (array_key_exists('ADDER', $fullvalue)) {
 						foreach ($fullvalue['ADDER'] as $subkey => $subvalue) {
 							if ($subkey === 'attributes') {
 								$subattributes = $subvalue;
 							} else {
-								$subattributes = $this->HDPCore->hasAttributes($subvalue);
+								$subattributes = $this->PCore->hasAttributes($subvalue);
 							}
 							$extras[] = $subattributes['ALIAS'] == 'Other' ? $subattributes['INPUT'] : $subattributes['ALIAS'];
 							$subcost += $subattributes['BASECOST'];
@@ -72,7 +72,7 @@ class HDPSkillDisplayComponent extends Component {
 						$cost += min($maxcost, $subcost);
 					} else {
 						$extras[] = $attributes['ALIAS'] == 'Other' ? $attributes['INPUT'] : $attributes['ALIAS'];
-						$cost += $this->HDPCore->getAttributeValue($attributes, 'BASECOST', 0);
+						$cost += $this->PCore->getAttributeValue($attributes, 'BASECOST', 0);
 					}
 				}
 			}
@@ -85,7 +85,7 @@ class HDPSkillDisplayComponent extends Component {
 		$xmlid = $initialattributes['XMLID'];
 		$display = $initialattributes['DISPLAY'];
 		$extras = array();
-		$cost = $this->HDPCore->getAttributeValue($initialattributes, 'BASECOST', 0);
+		$cost = $this->PCore->getAttributeValue($initialattributes, 'BASECOST', 0);
 		if (array_key_exists('ADDER', $familiarity)) {
 			foreach ($familiarity['ADDER'] as $key => $value) {
 				if ($key !== 'ADDER') {
@@ -93,17 +93,17 @@ class HDPSkillDisplayComponent extends Component {
 						$attributes = $value;
 						$fullvalue = $familiarity['ADDER'];
 					} else {
-						$attributes = $this->HDPCore->hasAttributes($value);
+						$attributes = $this->PCore->hasAttributes($value);
 						$fullvalue = $value;
 					}
-					$maxcost = $this->HDPCore->getAttributeValue($attributes, 'MAXCOST', 0);
+					$maxcost = $this->PCore->getAttributeValue($attributes, 'MAXCOST', 0);
 					$subcost = 0;
 					if (array_key_exists('ADDER', $fullvalue)) {
 						foreach ($fullvalue['ADDER'] as $subkey => $subvalue) {
 							if ($subkey === 'attributes') {
 								$subattributes = $subvalue;
 							} else {
-								$subattributes = $this->HDPCore->hasAttributes($subvalue);
+								$subattributes = $this->PCore->hasAttributes($subvalue);
 							}
 							$extras[] = $subattributes['ALIAS'] == 'Other' ? $subattributes['INPUT'] : $subattributes['ALIAS'];
 							$subcost += $subattributes['BASECOST'];
@@ -111,7 +111,7 @@ class HDPSkillDisplayComponent extends Component {
 						$cost += min($maxcost, $subcost);
 					} else {
 						$extras[] = $attributes['ALIAS'] == 'Other' ? $attributes['INPUT'] : $attributes['ALIAS'];
-						$cost += $this->HDPCore->getAttributeValue($attributes, 'BASECOST', 0);
+						$cost += $this->PCore->getAttributeValue($attributes, 'BASECOST', 0);
 					}
 				}
 			}
@@ -141,13 +141,13 @@ class HDPSkillDisplayComponent extends Component {
 		$extras = array();
 		$xmlid = $attributes['XMLID'];
 		$display = $attributes['ALIAS'] . ": " . $attributes['INPUT'];
-		$familiarity = $this->HDPCore->getAttributeValue($attributes, 'FAMILIARITY', false);
+		$familiarity = $this->PCore->getAttributeValue($attributes, 'FAMILIARITY', false);
 		$type = $attributes['ALIAS'];
 		$basecost = $attributes['BASECOST'];
 		$levels = $attributes['LEVELS'];
 		$lvlval = $attributes['LVLVAL'];
-		$characteristic = $this->HDPCore->getAttributeValue($attributes, 'CHARACTERISTIC', false);
-		$lvlcost = $this->HDPCore->getAttributeValue($attributes, 'LVLCOST', 1);
+		$characteristic = $this->PCore->getAttributeValue($attributes, 'CHARACTERISTIC', false);
+		$lvlcost = $this->PCore->getAttributeValue($attributes, 'LVLCOST', 1);
 		$cost = max(0, $basecost + ($levels * $lvlcost));
 		return array('display' => $display, 'familiarity' => $familiarity, 'characteristic' => $characteristic, 'roll' => true, 'basecost' => $basecost,  'levels' => $levels,  'lvlval' => $lvlval, 'cost' => $cost, 'type' => $type, 'id' => $xmlid);
 	}
@@ -160,13 +160,13 @@ class HDPSkillDisplayComponent extends Component {
 		if (array_key_exists('INPUT', $attributes)) {
 			$display .= " - " . $attributes['INPUT'];
 		}
-		$familiarity = $this->HDPCore->getAttributeValue($attributes, 'FAMILIARITY', false);
+		$familiarity = $this->PCore->getAttributeValue($attributes, 'FAMILIARITY', false);
 		$type = "skill";
 		$basecost = $attributes['BASECOST'];
 		$levels = $attributes['LEVELS'];
 		$lvlval = $attributes['LVLVAL'];
-		$characteristic = $this->HDPCore->getAttributeValue($attributes, 'CHARACTERISTIC', false);
-		$lvlcost = $this->HDPCore->getAttributeValue($attributes, 'LVLCOST', 1);
+		$characteristic = $this->PCore->getAttributeValue($attributes, 'CHARACTERISTIC', false);
+		$lvlcost = $this->PCore->getAttributeValue($attributes, 'LVLCOST', 1);
 		$cost = max(0, $basecost + ($levels * $lvlcost));
 		return array('display' => $display, 'familiarity' => $familiarity, 'characteristic' => $characteristic, 'roll' => true, 'basecost' => $basecost,  'levels' => $levels,  'lvlval' => $lvlval, 'cost' => $cost, 'type' => $type, 'id' => $xmlid);
 	}
@@ -179,7 +179,7 @@ class HDPSkillDisplayComponent extends Component {
 		$type = $attributes['ALIAS'];
 		$cost = max($attributes['BASECOST'] - ($attributes["NATIVE_TONGUE"] == 'Yes' ? 4 : 0),0);
 		if (array_key_exists('ADDER', $language)) {
-			if ($this->HDPCore->hasAttributes($language['ADDER'])) {
+			if ($this->PCore->hasAttributes($language['ADDER'])) {
 				$extras[] = $language['ADDER']['attributes']['DISPLAY'];
 				$cost += $language['ADDER']['attributes']['BASECOST'];
 			}
@@ -188,11 +188,11 @@ class HDPSkillDisplayComponent extends Component {
 	}
 
 	function getNoRollSkillDisplay($nrs) {
-		if ($this->HDPCore->hasAttributes($nrs)) {
+		if ($this->PCore->hasAttributes($nrs)) {
 			$attributes = $nrs['attributes'];
 		} else {
 			foreach ($nrs as $nrskey => $nrsvalue) {
-				if ($this->HDPCore->hasAttributes($nrsvalue)) {
+				if ($this->PCore->hasAttributes($nrsvalue)) {
 					$attributes = $nrsvalue['attributes'];
 					$nrs = $nrsvalue;
 					break;

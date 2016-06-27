@@ -1,6 +1,6 @@
 <?php
 
-namespace MFC\HDParser\Controller\Component;
+namespace Vorien\HeroCSheet\Controller\Component;
 
 use Cake\Controller\Component;
 
@@ -39,7 +39,7 @@ use Cake\Controller\Component;
  * Converted to CakePHP 3 Component by Michael Coury (3/29/16)
  */
  
-class HCArray2XMLComponent extends Component{
+class PArray2XMLComponent extends Component{
  
 	public $components = array();
 
