@@ -36,6 +36,10 @@ class CharactersTable extends Table
 
         $this->addBehavior('Timestamp');
 
+        $this->belongsTo('Charactersheets', [
+            'foreignKey' => 'userdata_id',
+            'className' => 'Vorien/HeroCSheet.Charactersheets'
+        ]);
         $this->belongsTo('Userdata', [
             'foreignKey' => 'userdata_id',
             'className' => 'Vorien/Dashboard.Userdata'

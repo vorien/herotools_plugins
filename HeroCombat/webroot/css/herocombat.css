@@ -277,10 +277,23 @@ body{
 	width: 100px;
 }
 
+.row .usage-details-row{
+	margin-top: .5em;
+}
+
+.usage-details-text{
+	line-height: 2.34rem;
+}
+
 .rng-penalty-input, .rng-distance-input{
-	width: 50px;
+	width: 75px;
 	font-size: small;
 }
+
+#rng-distance{
+	margin-bottom: 0;
+}
+
 
 .shift-up{
 	margin-top: 0px;
@@ -339,8 +352,10 @@ body{
 }
 
 .top-section{
-	height: 200px;
+	margin-bottom: .75rem;
+	/*height: 200px;*/
 }
+
 
 .asterisk{
 	font-size: 200%;

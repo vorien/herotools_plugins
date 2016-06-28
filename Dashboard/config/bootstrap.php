@@ -5,8 +5,8 @@ use Cake\Core\Plugin;
 use Cake\Datasource\ConnectionManager;
 
 try {
-    Configure::config('dashboard', new PhpConfig(Plugin::path('Vorien/Dashboard') . 'config/'));
-    Configure::load('app', 'dashboard');
+    Configure::config('voriendashboard', new PhpConfig(Plugin::path('Vorien/Dashboard') . 'config/'));
+    Configure::load('app', 'voriendashboard');
 	ConnectionManager::config(Configure::consume('Datasources'));
 } catch (\Exception $e) {
     exit($e->getMessage() . "\n");

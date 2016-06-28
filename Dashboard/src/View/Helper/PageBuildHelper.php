@@ -38,6 +38,9 @@ class PageBuildHelper extends Helper {
 		return "</div>";
 	}
 
+	public function makeRow($class=null, $id = null){
+		return $this->openRow($class, $id) . $this->closeRow();
+	}
 	public function openDiv($class = null, $id = null, $data = null) {
 		$idout = "";
 		$classout = "";

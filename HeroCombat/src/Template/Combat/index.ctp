@@ -1,7 +1,39 @@
+<?php
+echo $this->PageBuild->makeDiv("", "character-info");
+echo $this->PageBuild->openRow("top-section");
+
+echo $this->PageBuild->makeDiv("&nbsp;", "col-xs-1");
+
+echo $this->PageBuild->openDiv("col-xs-5");
+$this->SectionBuild->showWeaponList('attack');
+$this->SectionBuild->showWeaponList('defense');
+$this->SectionBuild->showUsageDetails();
+echo $this->PageBuild->closeDiv();
+
+echo $this->PageBuild->makeDiv(null, "col-xs-1");
+
+echo $this->PageBuild->openDiv("col-xs-4");
+$this->SectionBuild->showCalculatedValues();
+echo $this->PageBuild->closeDiv();
+
+echo $this->PageBuild->makeDiv(null, "col-xs-1");
+
+echo $this->PageBuild->openDiv("col-xs-5");
+$this->SectionBuild->showDamageStatusDisplay();
+echo $this->PageBuild->closeDiv();
+
+echo $this->PageBuild->openDiv("col-xs-7");
+$this->SectionBuild->showDamageStatusCalculations();
+echo $this->PageBuild->closeDiv();
+
+echo $this->PageBuild->closeRow();
+
+$this->SectionBuild->buildTabs();
+?>
+
 <script type="text/javascript">
 
 	var ajax_root = "<?php echo $ajax_root; ?>";
-
 	var character = <?php echo $json_characterinfo; ?>;
 	var weapons = <?php echo $json_weapons; ?>;
 	var uaweaponid = <?php echo $starting_weapon_id; ?>;
@@ -13,15 +45,6 @@
 	var locations = <?php echo $json_locationinfo; ?>;
 	var targets = <?php echo $json_targetinfo; ?>;
 	var levels = <?php echo $json_leveltracking ?>;
-//console.log(character);
-//console.log(locations);
-
-//	console.log(filterByWeapon(filterByType(levels,"dmg"),3));
-//	console.log(weapons[defenseweaponid]);
-
-//	console.log(armor);
-//	console.log(locations);
-//	console.log(character);
 
 	$(function () {
 		$("select[id^='weapon-select']").val(uaweaponid);
@@ -34,17 +57,6 @@
 		populateManeuverData();
 		populatePenaltyData();
 		initializeSliders();
-
-//		initializeSliders();
-//		getlevels();
-//		populateCurrentValues();
-//		console.log(getLevels(undefined, "max"));
-//		console.log(getLevels(undefined, "min"));
-//		console.log(getLevels(undefined, "count"));
-//		setClaim(8, 'defense');
-//		console.log(getLevelsByWeapon());
-//		console.log(getLevelsByOwner("attack"));
-
 
 		$("body").on("change", "select[id$='str-used']", function () {
 			populateMaxRange("#str-used change");
@@ -94,16 +106,13 @@
 			if (actions.indexOf("target") !== -1) {
 				$("#var-action").html("Targets").css("visibility", "visible").attr("data-action", "target");
 				$("#input-action").css("visibility", "visible").attr("data-action", "target");
-			}
-			else if (actions.indexOf("dc") !== -1) {
+			} else if (actions.indexOf("dc") !== -1) {
 				$("#var-action").html("DC Qty").css("visibility", "visible").attr("").attr("data-action", "dc");
 				$("#input-action").css("visibility", "visible").attr("data-action", "dc");
-			}
-			else if (actions.indexOf("velocity") !== -1) {
+			} else if (actions.indexOf("velocity") !== -1) {
 				$("#var-action").html("Velocity").css("visibility", "visible").attr("data-action", "velocity");
 				$("#input-action").css("visibility", "visible").attr("data-action", "velocity");
-			}
-			else {
+			} else {
 				$("#var-action").html("").css("visibility", "hidden").attr("data-action", "");
 				$("#input-action").css("visibility", "hidden").val(0).attr("data-action", "");
 			}
@@ -131,14 +140,4 @@
 
 
 </script>
-<?php
-//debug($this->viewVars['armorlocationinfo']);
-//debug($armorlocationinfo);
-//echo($json_characterinfo);
-?>
-
-<?php
-$this->SectionBuild->buildTopSection();
-//$this->SectionBuild->buildTabs();
-?>
 

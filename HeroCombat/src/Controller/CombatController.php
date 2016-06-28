@@ -15,15 +15,8 @@ class CombatController extends AppController {
 
 	public function initialize() {
 		parent::initialize();
-//		$this->loadComponent('Vorien/HeroCombat.HCUTF');
-		$this->loadComponent('Vorien/HeroCombat.Ownership');
-		$this->loadComponent('Vorien/HeroCombat.ActiveCharacter');
-		$this->loadComponent('Vorien/HeroCombat.DisplayFunctions');
-//		$this->loadComponent('Vorien/HDParser.HDPXML');
-//		$this->loadComponent('Vorien/HDParser.HDPStandardize');
-//		$this->loadComponent('Vorien/HDParser.HDPSkillDisplay');
-//		$this->loadComponent('Vorien/HDParser.HDPSections');
-//		$this->loadComponent('Vorien/HDParser.HDPArray');
+		$this->loadComponent('Vorien/Dashboard.Ownership');
+		$this->loadComponent('Vorien/Dashboard.DisplayFunctions');
 	}
 
 	public function beforeRender(Event $event) {
@@ -38,7 +31,7 @@ class CombatController extends AppController {
 		$this->Ownership->checkCharacterOwnership($character_id);
 
 		//Set the active character in the session for faster reference
-		$this->ActiveCharacter->setActiveCharacter($character_id);
+//		$this->ActiveCharacter->setActiveCharacter($character_id);
 
 		$ajax_root = '/herocombat/';
 		$armorlocationinfo = $this->getArmorLocationInfo($character_id);

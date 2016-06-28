@@ -1,5 +1,5 @@
 <?php
-namespace Vorien\HeroCombat\Controller\Component;
+namespace Vorien\Dashboard\Controller\Component;
 
 use Cake\Controller\Component;
 use Cake\Controller\ComponentRegistry;

@@ -4,7 +4,13 @@ namespace Vorien\HeroCSheet\Controller;
 
 use App\Controller\AppController as BaseController;
 
-class AppController extends BaseController
-{
+use Cake\Event\Event;
+
+class AppController extends BaseController {
+
+	public function beforeFilter(Event $event) {
+		parent::beforeFilter($event);
+		$this->Auth->allow(['']);
+	}
 
 }

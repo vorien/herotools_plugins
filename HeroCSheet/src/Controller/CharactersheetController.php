@@ -12,6 +12,7 @@ use Cake\Filesystem\File;
 use Cake\Core\Plugin;
 use Cake\Cache\Cache;
 use Cake\Core\Configure;
+use Cake\Event\Event;
 
 /**
  * CakePHP CharactersheetController
@@ -21,11 +22,16 @@ class CharactersheetController extends AppController {
 
 	public $PFiles;
 
+	public function beforeRender(Event $event) {
+		parent::beforeRender($event);
+		$this->viewBuilder()->helpers(['Vorien/Dashboard.Display']);
+	}
+
 	public function initialize() {
 		parent::initialize();
 		$this->PFiles = Plugin::path('Vorien/HeroCSheet') . 'webroot' . DS . 'files/';
 		$this->loadComponent('Vorien/HeroCSheet.PCore');
-		$this->loadComponent('Vorien/HeroCSheet.PXML');
+//		$this->loadComponent('Vorien/HeroCSheet.PXML');
 		$this->loadComponent('Vorien/HeroCSheet.PStandardize');
 		$this->loadComponent('Vorien/HeroCSheet.PSkillDisplay');
 		$this->loadComponent('Vorien/HeroCSheet.PSections');

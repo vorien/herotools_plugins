@@ -73,13 +73,13 @@ debug("WRONG CTP");
 								<?php echo (array_key_exists('display', $value) ? $value['display'] . (array_key_exists('star', $value) ? "<span class='asterisk'>*</span>" : "") : "&nbsp;"); ?>
 							</div>
 							<div class="col-xs-2">
-								<?php echo $this->PDisplay->getSkillRoll($value, $characteristics); ?>
+								<?php echo $this->Display->getSkillRoll($value, $characteristics); ?>
 							</div>
 							<div class="col-xs-2">
 								<?php echo (array_key_exists('cost', $value) ? $value['cost'] : "&nbsp;"); ?>
 							</div>
 							<div class="col-xs-10 small">
-								<?php echo $this->PDisplay->displayExtras($value); ?>
+								<?php echo $this->Display->displayExtras($value); ?>
 							</div>
 						</div>
 						<?php
@@ -105,7 +105,7 @@ debug("WRONG CTP");
 								<?php echo (array_key_exists('cost', $value) ? $value['cost'] : "&nbsp;"); ?>
 							</div>
 							<div class="col-xs-10 small">
-								<?php echo $this->PDisplay->displayExtras($value); ?>
+								<?php echo $this->Display->displayExtras($value); ?>
 							</div>
 						</div>
 						<?php
@@ -130,7 +130,7 @@ debug("WRONG CTP");
 						<?php echo (array_key_exists('display', $value) ? $value['display'] . (array_key_exists('star', $value) ? "*" : "") : "&nbsp;"); ?>
 					</div>
 					<div class="col-xs-2">
-						<?php echo $this->PDisplay->getSkillRoll($value, $characteristics); ?>
+						<?php echo $this->Display->getSkillRoll($value, $characteristics); ?>
 					</div>
 					<div class="col-xs-2">
 						<?php echo (array_key_exists('cost', $value) ? $value['cost'] : "&nbsp;"); ?>
@@ -182,7 +182,7 @@ debug("WRONG CTP");
 						<?php echo $value['cost']; ?>
 					</div>
 					<div class="col-xs-<?= $perktabs[4] ?> small">
-						<?php echo $this->PDisplay->displayExtras($value); ?>
+						<?php echo $this->Display->displayExtras($value); ?>
 					</div>
 				</div>
 				<hr class="min-padding">
@@ -209,7 +209,7 @@ debug("WRONG CTP");
 						<?php echo $value['cost']; ?>
 					</div>
 					<div class="col-xs-12 small">
-						<?php echo $this->PDisplay->displayExtras($value); ?>
+						<?php echo $this->Display->displayExtras($value); ?>
 					</div>
 				</div>
 				<?php
@@ -237,7 +237,7 @@ debug("WRONG CTP");
 						<?php echo round($value['cost']); ?>
 					</div>
 					<div class="col-xs-10 small">
-						<?php echo $this->PDisplay->displayExtras($value); ?>
+						<?php echo $this->Display->displayExtras($value); ?>
 					</div>
 				</div>
 				<?php
@@ -270,7 +270,7 @@ debug("WRONG CTP");
 						<?php echo $value['cost']; ?>
 					</div>
 					<div class="col-xs-<?= $complicationtabs[3] ?> small">
-						<?php echo $this->PDisplay->displayExtras($value, true); ?>
+						<?php echo $this->Display->displayExtras($value, true); ?>
 					</div>
 				</div>
 				<hr class="min-padding">

@@ -39,39 +39,6 @@ class SectionBuildHelper extends Helper {
 		$this->armorlocationinfo = $this->_View->viewVars['armorlocationinfo'];
 	}
 
-	public function buildTopSection() {
-		echo $this->PageBuild->makeDiv("", "character-info");
-		echo $this->PageBuild->openRow("top-section");
-
-		echo $this->PageBuild->makeDiv("&nbsp;", "col-xs-1");
-
-		echo $this->PageBuild->openDiv("col-xs-5");
-		$this->showWeaponList('attack');
-		$this->showWeaponList('defense');
-		$this->showUsageDetails();
-		echo $this->PageBuild->closeDiv();
-
-		echo $this->PageBuild->makeDiv(null, "col-xs-1");
-
-		echo $this->PageBuild->openDiv("col-xs-4");
-		$this->showCalculatedValues();
-		echo $this->PageBuild->closeDiv();
-
-		echo $this->PageBuild->makeDiv(null, "col-xs-1");
-
-		echo $this->PageBuild->openDiv("col-xs-5");
-		$this->showDamageStatusDisplay();
-		echo $this->PageBuild->closeDiv();
-
-		echo $this->PageBuild->openDiv("col-xs-7");
-		$this->showDamageStatusCalculations();
-		echo $this->PageBuild->closeDiv();
-
-		echo $this->PageBuild->closeRow();
-
-		$this->buildTabs();
-	}
-
 	public function showCalculatedValues() {
 		echo $this->PageBuild->openDiv(null, "level-calculations");
 		echo $this->PageBuild->makeDiv("<h3 class='text-center'>Calculated<br />Values</h3>");
@@ -89,25 +56,25 @@ class SectionBuildHelper extends Helper {
 	}
 
 	public function showUsageDetails() {
-		echo $this->PageBuild->openRow();
-		echo $this->PageBuild->openDiv("col-xs-24");
-		echo $this->PageBuild->makeDiv("&nbsp;", "clearfix");
-		echo $this->PageBuild->makeDiv("Strength: ", "pull-left");
-		echo $this->PageBuild->makeDiv("", "pull-left", "str-used-wrapper");
-		echo $this->PageBuild->makeDiv("&nbsp;", "clearfix");
-		echo $this->PageBuild->makeDiv("&nbsp;");
-		echo $this->PageBuild->makeDiv("Distance (m):");
-		echo $this->PageBuild->openDiv();
-		echo "[max <span id='rng-max'></span>]: <input type='text' id='rng-distance' class='rng-distance-input' size='3'>";
-		echo $this->PageBuild->closeDiv();
-		echo $this->PageBuild->openDiv(null, 'two-hands-wrapper');
-		echo "  Two Hands <input type='checkbox' id='two-hands'>";
-		echo $this->PageBuild->closeDiv();
-		echo $this->PageBuild->makeDiv("&nbsp;", "clearfix");
+		echo $this->PageBuild->openRow('usage-details-row');
+		echo $this->PageBuild->makeDiv("Strength: ", 'col-xs-8 usage-details-text');
+		echo $this->PageBuild->makeDiv("", "col-xs-8", "str-used-wrapper");
+		echo $this->PageBuild->closeRow();
+
+		echo $this->PageBuild->openRow('usage-details-row');
+		echo $this->PageBuild->makeDiv("Distance (m) [max <span id='rng-max'></span>]:", 'col-xs-18 usage-details-text');
+		echo $this->PageBuild->makeDiv("<input type='text' id='rng-distance' class='rng-distance-input' size='3'>", 'col-xs-6');
+		echo $this->PageBuild->closeRow();
+
+		echo $this->PageBuild->openRow('usage-details-row');
+		echo $this->PageBuild->makeDiv("Two Hands:", 'col-xs-10 usage-details-text');
+		echo $this->PageBuild->makeDiv("<input type='checkbox' id='two-hands'>", 'col-xs-6');
+		echo $this->PageBuild->closeRow();
+
+		echo $this->PageBuild->openRow('usage-details-row');
 		echo $this->PageBuild->openButtonGroup("col-xs-24");
 		echo $this->PageBuild->makeButton("Execute", "success", "btn-xs", "dcalc-execute");
 		echo $this->PageBuild->closeButtonGroup();
-		echo $this->PageBuild->closeDiv();
 		echo $this->PageBuild->closeRow();
 	}
 
