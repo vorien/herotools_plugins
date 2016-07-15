@@ -7,5 +7,6 @@ Router::plugin(
     ['path' => '/charactersheet'],
     function (RouteBuilder $routes) {
         $routes->fallbacks('DashedRoute');
+		$routes->connect('/', ['controller' => 'Charactersheets', 'action' => 'index']);
     }
 );

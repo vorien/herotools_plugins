@@ -11,7 +11,7 @@ use Cake\Controller\Component;
  */
 class PCoreComponent extends Component {
 
-	public $components = array('HCParserStandardize', 'HCParserSkillDisplay', 'HCParserSections', 'HCParserArray');
+//	public $components = array('HCParserStandardize', 'HCParserSkillDisplay', 'HCParserSections', 'HCParserArray');
 
 	function getRollFromLevels($levels) {
 		if ($levels == 1) {

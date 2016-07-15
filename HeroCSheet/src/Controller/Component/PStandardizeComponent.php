@@ -4,127 +4,110 @@ namespace Vorien\HeroCSheet\Controller\Component;
 
 use Cake\Controller\Component;
 
-
 /**
  * CakePHP PStandardizeComponent
  * @author Michael
  */
 class PStandardizeComponent extends Component {
 
-	public $components = ['PCore'];
+	public $components = ['PCore', 'PArray'];
 
-	function standardizeTemplate($template, $returnarray = array()) {
-		foreach ($template as $key => $value) {
-			if (!is_array($value)) {
-				$returnarray[$key] = $value;
-			} else {
-				debug("key: $key");
-				if (is_int($key) === false) {
-					$newkey = $key;
-				} else {
-					if ($attributes = $this->PCore->hasAttributes($value)) {
-						if ($xmlid = $this->PCore->getAttributeValue($attributes, 'XMLID')) {
-							$newkey = $xmlid;
-						} else {
-							if ($display = $this->PCore->getAttributeValue($attributes, 'DISPLAY')) {
-								$newkey = strtoupper($display);
-							} else {
-								if ($characteristic = $this->PCore->getAttributeValue($attributes, 'CHARACTERISTIC')) {
-									$newkey = strtoupper($display);
-								} else {
-									$newkey = "NO XMLID, DISPLAY or CHARACTERISTIC";
-									debug("ERROR: key: $key is int(), no xmlid, display or characteristic");
-									debug($attributes);
-								}
-							}
-						}
-					} else {
-						if (!is_array($value[$key])) {
-							$newkey = $value[$key];
-						} else {
-							$newkey = $value;
-							debug("ERROR: key: $key is int(), no attributes");
-						}
-					}
-				}
-				$returnarray = $this->standardizeTemplate($value, $returnarray);
+	function getNewKey(&$value) {
+		$keys = ['@XMLID', '@CHARACTERISTIC', '@TYPE', '@DISPLAY'];
+		foreach ($keys as $key) {
+			if (isset($value[$key])) {
+				return $key;
 			}
 		}
-		return $returnarray;
+		return false;
 	}
 
-	function checkDuplicateXMLID($main, $returnarray = array('depth' => 0, 'newarray' => array())) {
-		$displaystep = 5;
-		if (is_array($main)) {
-			foreach ($main as $key => $value) {
-				debug(str_repeat(" ", $returnarray['depth'] * $displaystep) . "key: $key");
-				if ($attributes = $this->PCore->hasAttributes($value)) {
-					if ($xmlid = $this->PCore->getAttributeValue($attributes, 'XMLID')) {
-						debug(str_repeat(" ", $returnarray['depth'] * $displaystep) . "xmlid: $xmlid");
-					} else {
-						if ($xmlid = $this->PCore->getAttributeValue($attributes, 'DISPLAY')) {
-							$xmlid = strtoupper($xmlid);
-							debug(str_repeat(" ", $returnarray['depth'] * $displaystep) . "display: $xmlid");
-						} else {
-							$xmlid = "NO XMLID OR DISPLAY";
-							debug(str_repeat(" ", $returnarray['depth'] * $displaystep) . "display: $xmlid");
-//							debug($key);
-//							debug($attributes);
-						}
-					}
-					if (array_key_exists($xmlid, $returnarray['newarray'])) {
-						$returnarray['newarray'][$xmlid] += 1;
-					} else {
-						$returnarray['newarray'][$xmlid] = 1;
-					}
-				} else {
-					$returnarray['depth'] = $returnarray['depth'] + 1;
-					$returnarray = $this->checkDuplicateXMLID($value, $returnarray);
-				}
-			}
-		}
-		$returnarray['depth'] = $returnarray['depth'] - 1;
-		return $returnarray;
-	}
-
-	function standardizeArraySkills(array $array) {
+	function standardizeArray(array $array, $prevkey = null) {
+		$keystowatch = array();
 		$outarray = array();
-		foreach ($array['SKILLS'] as $key => $value) {
-			if (is_array($value) && array_key_exists(0, $value)) {
-				foreach ($value as $subvalue) {
-					if (is_array($subvalue)) {
-						if (isset($subvalue['attributes']['XMLID'])) {
-							$extendkey = "";
-							if (isset($subvalue['attributes']['OPTION'])) {
-								$extendkey = $subvalue['attributes']['OPTION'];
-								if (!empty($subvalue['attributes']['NAME'])) {
-									$extendkey .= ": " . $subvalue['attributes']['NAME'];
-								}
-							} else if (isset($subvalue['attributes']['INPUT'])) {
-								$extendkey = $subvalue['attributes']['ALIAS'] . ": " . $subvalue['attributes']['INPUT'];
-							}
-							if ($extendkey) {
-								$outarray[$subvalue['attributes']['XMLID']][$extendkey] = $subvalue;
-							} else {
-								$outarray[$subvalue['attributes']['XMLID']] = $subvalue;
-							}
-						} else {
-							$outarray[$value] = $subvalue;
-						}
+		foreach ($array as $key => $value) {
+			$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "Start");
+			if (!is_array($value)) {
+				if (is_numeric($key)) {
+					$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as value to value");
+					$outarray[$value] = $value;
+				} else {
+					$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as key to value");
+					$outarray[$key] = $value;
+				}
+			} else {
+				if (is_numeric($key)) {
+					$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "is numeric");
+					$newkey = $this->getNewKey($value);
+					if ($newkey) {
+						$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "has newkey: " . $newkey);
+						$outarray[$value[$newkey]] = $this->standardizeArray($value);
 					} else {
-						$outarray[$subkey] = $subvalue;
+						debug(array_key_exists('@TYPE', $value) ? 'Exists' : 'Does Not Exist');
+						foreach ($value as $vkey => $vvalue) {
+							debug($vkey);
+						}
+						debug($value);
+						die('Numeric key without newkey');
+					}
+				} else {
+					$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "is not numeric");
+					switch ($key) {
+						case 'ADDER':
+						case 'MODIFIER':
+							$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "processing $key");
+							if (!$this->getNewKey($value)) {
+								$outarray[$key] = $this->standardizeArray($value);
+							} else {
+								$outarray[$key][$value[$this->getNewKey($value)]] = $this->standardizeArray($value);
+							}
+							break;
+						default:
+							if ((count($value) == count($value, COUNT_RECURSIVE))) {
+								$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "no children");
+								switch ($key) {
+									//							case 'ADDER':
+									//							case 'MODIFIER':
+									//								$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "processing singleton $key");
+									//								debug($this->getNewKey($value));
+									//								debug($value);
+									//								debug($value[$this->getNewKey($value)]);
+									//								$outarray[$key][$value[$this->getNewKey($value)]] = $this->standardizeArray($value);
+									//								break;
+									case 'ITEM':
+										$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "processing unnecessary level");
+										$outarray[$value[$this->getNewKey($value)]] = $this->standardizeArray($value);
+										break;
+									default:
+										$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "processing value");
+										$outarray[$key] = $this->standardizeArray($value);
+										break;
+								}
+							} else {
+								$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "has children");
+								switch ($key) {
+									case 'CHARACTERISTIC_CHOICE':
+										$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "processing as CHARACTERISTIC");
+										$outarray['CHARACTERISTIC'] = $this->standardizeArray($value);
+										break;
+									case 'PERK':
+										$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "processing unnecessary level");
+										$outarray = $this->standardizeArray($value);
+										break;
+									default:
+										$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "processing value");
+										$outarray[$key] = $this->standardizeArray($value);
+								}
+							}
+							break;
 					}
 				}
-			} else if ($key == 'attributes') {
-				$outarray['attributes'] = $value;
-			} else {
-				$outarray[$key] = $value;
 			}
 		}
 		return $outarray;
 	}
 
-	function standardizeArray(array $array, $prevkey = null) {
+	function standardizeArrayOld(array $array, $prevkey = null) {
 		$keystowatch = array();
 		$outarray = array();
 		foreach ($array as $key => $value) {
@@ -232,6 +215,117 @@ class PStandardizeComponent extends Component {
 				}
 			} else {
 				$this->PCore->debugoutbyvalue($keystowatch, $key, $prevkey, "dumped as key to value");
+				$outarray[$key] = $value;
+			}
+		}
+		return $outarray;
+	}
+
+	function standardizeTemplate($template, $returnarray = array()) {
+		foreach ($template as $key => $value) {
+			if (!is_array($value)) {
+				$returnarray[$key] = $value;
+			} else {
+				debug("key: $key");
+				if (is_int($key) === false) {
+					$newkey = $key;
+				} else {
+					if ($attributes = $this->PCore->hasAttributes($value)) {
+						if ($xmlid = $this->PCore->getAttributeValue($attributes, 'XMLID')) {
+							$newkey = $xmlid;
+						} else {
+							if ($display = $this->PCore->getAttributeValue($attributes, 'DISPLAY')) {
+								$newkey = strtoupper($display);
+							} else {
+								if ($characteristic = $this->PCore->getAttributeValue($attributes, 'CHARACTERISTIC')) {
+									$newkey = strtoupper($display);
+								} else {
+									$newkey = "NO XMLID, DISPLAY or CHARACTERISTIC";
+									debug("ERROR: key: $key is int(), no xmlid, display or characteristic");
+									debug($attributes);
+								}
+							}
+						}
+					} else {
+						if (!is_array($value[$key])) {
+							$newkey = $value[$key];
+						} else {
+							$newkey = $value;
+							debug("ERROR: key: $key is int(), no attributes");
+						}
+					}
+				}
+				$returnarray = $this->standardizeTemplate($value, $returnarray);
+			}
+		}
+		return $returnarray;
+	}
+
+	function checkDuplicateXMLID($main, $returnarray = array('depth' => 0, 'newarray' => array())) {
+		$displaystep = 5;
+		if (is_array($main)) {
+			foreach ($main as $key => $value) {
+				debug(str_repeat(" ", $returnarray['depth'] * $displaystep) . "key: $key");
+				if ($attributes = $this->PCore->hasAttributes($value)) {
+					if ($xmlid = $this->PCore->getAttributeValue($attributes, 'XMLID')) {
+						debug(str_repeat(" ", $returnarray['depth'] * $displaystep) . "xmlid: $xmlid");
+					} else {
+						if ($xmlid = $this->PCore->getAttributeValue($attributes, 'DISPLAY')) {
+							$xmlid = strtoupper($xmlid);
+							debug(str_repeat(" ", $returnarray['depth'] * $displaystep) . "display: $xmlid");
+						} else {
+							$xmlid = "NO XMLID OR DISPLAY";
+							debug(str_repeat(" ", $returnarray['depth'] * $displaystep) . "display: $xmlid");
+//							debug($key);
+//							debug($attributes);
+						}
+					}
+					if (array_key_exists($xmlid, $returnarray['newarray'])) {
+						$returnarray['newarray'][$xmlid] += 1;
+					} else {
+						$returnarray['newarray'][$xmlid] = 1;
+					}
+				} else {
+					$returnarray['depth'] = $returnarray['depth'] + 1;
+					$returnarray = $this->checkDuplicateXMLID($value, $returnarray);
+				}
+			}
+		}
+		$returnarray['depth'] = $returnarray['depth'] - 1;
+		return $returnarray;
+	}
+
+	function standardizeArraySkills(array $array) {
+		$outarray = array();
+		foreach ($array['SKILLS'] as $key => $value) {
+			if (is_array($value) && array_key_exists(0, $value)) {
+				foreach ($value as $subvalue) {
+					if (is_array($subvalue)) {
+						if (isset($subvalue['attributes']['XMLID'])) {
+							$extendkey = "";
+							if (isset($subvalue['attributes']['OPTION'])) {
+								$extendkey = $subvalue['attributes']['OPTION'];
+								if (!empty($subvalue['attributes']['NAME'])) {
+									$extendkey .= ": " . $subvalue['attributes']['NAME'];
+								}
+							} else if (isset($subvalue['attributes']['INPUT'])) {
+								$extendkey = $subvalue['attributes']['ALIAS'] . ": " . $subvalue['attributes']['INPUT'];
+							}
+							if ($extendkey) {
+								$outarray[$subvalue['attributes']['XMLID']][$extendkey] = $subvalue;
+							} else {
+								$outarray[$subvalue['attributes']['XMLID']] = $subvalue;
+							}
+						} else {
+							$outarray[$value] = $subvalue;
+						}
+					} else {
+						$outarray[$subkey] = $subvalue;
+					}
+				}
+			} else if ($key == 'attributes') {
+				$outarray['attributes'] = $value;
+			} else {
 				$outarray[$key] = $value;
 			}
 		}

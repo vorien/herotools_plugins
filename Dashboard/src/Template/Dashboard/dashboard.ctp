@@ -19,7 +19,7 @@ foreach ($owncharacters as $character) {
 //	echo $this->PageBuild->makeDiv($this->Html->link(__('View'), array('controller' => 'characters', 'action' => 'view', $character['id']), $btnclass), $btndivclass, null, $btnid);
 //	echo $this->PageBuild->makeDiv($this->Html->link(__('Edit'), array('controller' => 'characters', 'action' => 'edit', $character['id']), $btnclass), $btndivclass, null, $btnid);
 	echo $this->PageBuild->makeDiv($this->Html->link(__('Combat'), array('plugin' => 'Vorien/HeroCombat', 'controller' => 'combat', 'action' => 'index', $character['id']), $btnclass), $btndivclass, null, $btnid);
-	echo $this->PageBuild->makeDiv($this->Html->link(__('Charactersheet'), array('plugin' => 'Vorien/HeroCSheet', 'controller' => 'charactersheet', 'action' => 'index', $character['id']), $btnclass), $btndivclass, null, $btnid);
+	echo $this->PageBuild->makeDiv($this->Html->link(__('Charactersheet'), array('plugin' => 'Vorien/HeroCSheet', 'controller' => 'charactersheets', 'action' => 'index', $character['id']), $btnclass), $btndivclass, null, $btnid);
 	echo $this->PageBuild->closeRow();
 }
 //echo $this->PageBuild->openRow();
@@ -42,7 +42,7 @@ foreach ($gmcharacters as $character) {
 	echo $this->PageBuild->makeDiv($this->Html->link(__('View'), array('plugin' => 'Vorien/HeroCombat', 'controller' => 'characters', 'action' => 'view', $character['id']), $btnclass), $btndivclass, null, $btnid);
 	echo $this->PageBuild->makeDiv($this->Html->link(__('Edit'), array('plugin' => 'Vorien/HeroCombat', 'controller' => 'characters', 'action' => 'edit', $character['id']), $btnclass), $btndivclass, null, $btnid);
 	echo $this->PageBuild->makeDiv($this->Html->link(__('Combat'), array('plugin' => 'Vorien/HeroCombat', 'controller' => 'combat', 'action' => 'index', $character['id']), $btnclass), $btndivclass, null, $btnid);
-	echo $this->PageBuild->makeDiv($this->Html->link(__('Charactersheet'), array('plugin' => 'Vorien/HeroCSheet', 'controller' => 'charactersheet', 'action' => 'index', $character['id']), $btnclass), $btndivclass, null, $btnid);
+	echo $this->PageBuild->makeDiv($this->Html->link(__('Charactersheet'), array('plugin' => 'Vorien/HeroCSheet', 'controller' => 'charactersheets', 'action' => 'index', $character['id']), $btnclass), $btndivclass, null, $btnid);
 	echo $this->PageBuild->closeRow();
 }
 echo $this->PageBuild->closeDiv();

@@ -15,6 +15,7 @@ Router::plugin(
     ['path' => '/npcdata'],
     function (RouteBuilder $routes) {
         $routes->fallbacks('DashedRoute');
+		$routes->connect('/', ['controller' => 'Playerdata', 'action' => 'index']);
     }
 );
 

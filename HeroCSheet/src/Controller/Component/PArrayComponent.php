@@ -4,7 +4,6 @@ namespace Vorien\HeroCSheet\Controller\Component;
 
 use Cake\Controller\Component;
 
-
 /**
  * CakePHP PArrayComponent
  * @author Michael
@@ -12,6 +11,10 @@ use Cake\Controller\Component;
 class PArrayComponent extends Component {
 
 //	public $components = array();
+
+	function arrayHasArrays($array) {
+		return (count($array) != count($array, COUNT_RECURSIVE));
+	}
 
 	function multiKeyExists(Array $array, $key) {
 		if (array_key_exists($key, $array)) {
@@ -42,24 +45,24 @@ class PArrayComponent extends Component {
 
 	function getEmptySectionArray($type = null) {
 		return array(
-			'xmlid' => null, 
-			'display' => null, 
-			'alias' => null, 
-			'cost' => 0, 
-			'roll' => null, 
-			'levels' => 0, 
-			'lvlcost' => 0, 
-			'option' => null, 
-			'option' => null, 
-			'optionid' => null, 
-			'optionalias' => null, 
-			'option' => null, 
-			'inputlabel' => null, 
-			'input' => null, 
-			'name' => null, 
-			'type' => $type, 
+			'xmlid' => null,
+			'display' => null,
+			'alias' => null,
+			'cost' => 0,
+			'roll' => null,
+			'levels' => 0,
+			'lvlcost' => 0,
+			'option' => null,
+			'option' => null,
+			'optionid' => null,
+			'optionalias' => null,
+			'option' => null,
+			'inputlabel' => null,
+			'input' => null,
+			'name' => null,
+			'type' => $type,
 			'extras' => array()
-			);
+		);
 	}
 
 	function getEmptyAaMArray() {
@@ -314,9 +317,9 @@ class PArrayComponent extends Component {
 	}
 
 	function objectToArray($object) {
-		if (!is_object($object) && !is_array($object))
+		if (!is_object($object) && !is_array($object)) {
 			return $object;
-
+		}
 		return array_map(array($this, 'objectToArray'), (array) $object);
 	}
 
@@ -353,6 +356,5 @@ class PArrayComponent extends Component {
 
 		return $keys;
 	}
-
 
 }
