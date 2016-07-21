@@ -39,102 +39,8 @@ class CharactersheetsController extends AppController {
 		$this->viewBuilder()->helpers(['Vorien/Dashboard.Display']);
 	}
 
-	function getMatchingNodeList(&$node, $targetxpath) {
-		$nodepath = preg_replace('/\[[0-9]+\]/', '', $node->getNodePath());
-		$tnodelist = $targetxpath->query($nodepath);
-		return tnodelist;
-	}
-
-	function processNodeList(&$targetnodelist) {
-		switch ($targetnodelist->length) {
-			case 0:
-				return false;
-				break;
-			case 1:
-				debug("One main node found");
-				$this->mergeNodes();
-				$mnodepath = preg_replace('/\[[0-9]+\]/', '', $targetnodelist->item(0)->getNodePath());
-				debug($mnodepath);
-				$this->compareNodes($mnodepath, $this->cpath, $this->mpath, $this->tpath, $depth + 1);
-				break;
-			default:
-				break;
-		}
-	}
-
-	function compareNodes($xpath, $depth = 0) {
-		debug($xpath);
-		$cnodequery = $xpath . $this->skipemptynodes;
-		$cnodelist = $this->cpath->query($cnodequery);
-		switch ($cnodelist->length) {
-			case 0:
-				debug("Query: $cnodequery produced no nodes");
-				break;
-			case 1:
-				$node = $cnodelist->item(0);
-				$nodelist = $this->getMatchingNodeList($node, $this->mpath);
-				if ($mnode = $this->processNodeList($node, $nodelist)) {
-					
-				}
-				break;
-				deault:
-				foreach ($cnodelist as $cnode) {
-					$nodelist = $this->getMatchingNodeList($cnode, $this->mpath);
-					foreach ($matchingnodelist as $matchingnode) {
-						$this->processNodeList($matchingnode);
-					}
-				}
-				break;
-		}
-//		debug("xpath: " . $xpath);
-//		if (($mnodelist = $this->mpath->query($xpath))) {
-////			debug($mnodelist);
-//			switch ($mnodelist->length) {
-//				case 0:
-//					debug("No main node found");
-//					break;
-//				case 1:
-//					debug("One main node found");
-//					break;
-//				default:
-//					debug($mnodelist->length . " main nodes found");
-//					break;
-//			}
-//			if ($mnodelist->length) {
-//				foreach ($mnodelist as $mnode) {
-//					$mnodepath = $mnode->getNodePath();
-//					debug("mnode-nodeName: " . $mnode->nodeName);
-//					debug("mnodepath: " . $mnodepath . "");
-//					if (($snodelist = $spath->query($mnodepath))) {
-//						switch ($snodelist->length) {
-//							case 0:
-//								echo "No match found";
-//								break;
-//							case 1:
-//								echo "Found 1 match";
-//								break;
-//							default:
-//								echo $snodelist->length, "found in template_xml", "";
-//								break;
-//						}
-//					}
-//					if ($mnode->hasChildNodes()) {
-//						foreach ($mnode->childNodes as $cnode) {
-//							if ($cnode->nodeType != XML_TEXT_NODE) {
-//								$cnodepath = $mnodepath . "/" . $cnode->nodeName;
-//								debug("cnodepath: " . $cnodepath);
-//								$this->compareNodes($cnodepath, $this->mpath, $spath, $depth + 1);
-//							}
-//						}
-//					}
-//				}
-//			}
-//		} else {
-//			echo "An error occurred in querying $xpath on mpath, depth: $depth";
-//		}
-	}
-
 	function compareXML($character_id) {
+
 		$xmlfiles = $this->getXMLFilesForCharacterID($character_id);
 
 		$template_xml = new \DOMDocument;
@@ -162,219 +68,102 @@ class CharactersheetsController extends AppController {
 		$this->PXML->standardizeTemplate($this->mpath);
 		$this->PXML->standardizeTemplate($this->tpath);
 
+		$removenames = ['EXAMPLE'];
+		$this->PXML->removeNamedTags($character_xml, $removenames);
+		$this->PXML->removeNamedTags($main_xml, $removenames);
+		$this->PXML->removeNamedTags($template_xml, $removenames);
 
 		$this->PXML->removeEmptyTags($character_xml);
 		$this->PXML->removeEmptyTags($main_xml);
 		$this->PXML->removeEmptyTags($template_xml);
 		$this->PXML->removeEmptyTags($rules_xml);
 
-		file_put_contents($this->PFiles . 'character_standardized.xml', $character_xml->saveXML());
 		file_put_contents($this->PFiles . 'main_standardized.xml', $main_xml->saveXML());
 		file_put_contents($this->PFiles . 'template_standardized.xml', $template_xml->saveXML());
+		file_put_contents($this->PFiles . 'character_standardized.xml', $character_xml->saveXML());
 		file_put_contents($this->PFiles . 'rules_standardized.xml', $rules_xml->saveXML());
 
-		/*
-		  $nodequery = "//POWER[@XMLID = 'DETECT']";
-		  $cnodelist = $this->cpath->query($nodequery);
-		  $cnode = $cnodelist->item(0);
-		  $cdoc = new \DOMDocument;
-		  $child = $cdoc->importNode($cnode, false);
-		  $cdoc->appendChild($child);
-		  //		debug(Xml::toArray($cdoc));
-		  $mnodelist = $this->mpath->query($nodequery);
-		  $mnode = $mnodelist->item(0);
-		  $mdoc = new \DOMDocument;
-		  $child = $mdoc->importNode($mnode, true);
-		  $mdoc->appendChild($child);
-		  //		debug(Xml::toArray($mdoc));
-		  $this->cpath = new \DOMXPath($cdoc);
-		  $this->mpath = new \DOMXPath($mdoc);
-		  $this->mergeAttributes('/POWER');
-		  //		debug(Xml::toArray($cdoc));
-		  $cnode = $cdoc->documentElement;
-		  if($cnode->hasAttribute('OPTIONID')){
-		  $newquery = $nodequery . "/OPTION[@XMLID = '" . $cnode->getAttribute('OPTIONID') . "']";
-		  //			debug($newquery);
-		  $nnodelist = $this->mpath->query($newquery);
-		  //			debug($nnodelist->length);
-		  if($nnodelist->length == 1){
-		  $nnode = $nnodelist->item(0);
-		  $cnode->setAttribute('LVLCOST', $nnode->getAttribute('LVLCOST'));
-		  $cnode->setAttribute('LVLVAL', $nnode->getAttribute('LVLVAL'));
-		  }else{
-		  debug("nnodelist has " . $nnodelist->length . " records");
-		  }
-		  }
-		  debug(Xml::toArray($cdoc));
-		  exit;
+		$this->loadComponent('Vorien/HeroCSheet.PMergeTemplates', [
+			'to_xml' => $main_xml,
+			'from_xml' => $template_xml,
+			'basequery' => '/HEROCSHEET'
+				]
+		);
+		$merge_xml = $this->PMergeTemplates->mergeTemplates();
+		file_put_contents($this->PFiles . 'merged_templates.xml', $merge_xml->saveXML());
+
+		$mpath = new \DomXPath($merge_xml);
 		
-		$nodearray = [];
-		$nodelist = $this->mpath->query('//MODIFIER');
-		debug($nodelist->length);
-		foreach ($nodelist as $node) {
-			foreach($node->attributes as $attribute){
-				$nodearray[$attribute->name] = null;
-			}
-		}
-		debug($nodearray);
-		exit;
- */
-		
-/*
-		$tempdoc = new \DOMDocument();
-		$attributes = [
-			'REQUIRED',
-			'BASECOST', //KEEP
-			'LVLCOST', //KEEP
-			'LVLVAL', //KEEP
-//			'ID', 
-//			'ALLOWSOTHERADDERS', 
-//			'ALLOWSOTHERMODIFIERS',
-			'MINCOST', //Keep?
-			'MAXCOST', //Keep?
-			'FIXEDVALUE',
-			'ALIAS',
-			'SHOWALIAS',
-			'LVLMULTIPLIER', //KEEP
-			'LVLPOWER', //KEEP
-			'LEVELSTART', //KEEP
-			'LVLSTART', //KEEP
-//			'LEVELSLABEL', //Keep?
-			'MINVAL', //Keep?
-			'MAXVAL', //Keep?
-			'DISPLAYINSTRING',
-			'ABBREVIATION',
-			'WGABBREVIATION',
-			'ADDERSEPARATOR', //Keep?
-//			'USESEND',
-//			'CLIPSLEVEL', //KEEP
-//			'CLIPSMULTIPLIER', //KEEP
-//			'CLIPSADVANTAGEMULTIPLIER', //KEEP
-//			'CLIPSMAXADVANTAGE', //KEEP
-//			'RECOVERABLELEVEL', //KEEP
-//			'BOOSTABLELEVEL', //KEEP
-//			'MULTIPLIER', //KEEP
-			'EXCLUSIVE',
-//			'DISLAY', //TYPO
-//			'SHOWINPUTINPARENS',
-//			'SHOWOPTION', //Keep?
-//			'SHOWOPTIONINPARENS',
-//			'SHOWOPTIONONLY', //Keep?
-			'INPUTLABEL',
-			'OTHERINPUT',
-//			'CONSTANTPOWERWITHACTIVATION', //KEEP
-//			'LESSERVALUE', //KEEP
-			'OPTIONLABEL',
-//			'REQUIRESALL',
-//			'EXLUSIVE', //TYPO
-//			'ISLIMITATION', //KEEP
-			'INCLUDEINBASE', //KEEP
-			'WARNSIGN', //KEEP
-			'STOPSIGN', //KEEP
-			'XMLID',
-			'DISPLAY'
-		];
-		$nodelist = $this->mpath->query('//ADDER');
-		debug($nodelist->length);
-		foreach ($nodelist as $node) {
-			$child = $tempdoc->importNode($node, false);
-			$clone = $child->cloneNode();
-			foreach ($attributes as $attribute) {
-				if ($clone->hasAttribute($attribute)) {
-					$clone->removeAttribute($attribute);
-				}
-			}
-			if ($clone->attributes->length) {
-				$tempdoc->appendChild($clone);
-				debug(Xml::toArray($tempdoc));
-			}
-//			foreach($node->attributes as $attribute){
-//				$anodequery = '//OPTION[@' . $attribute->name . ']';
-//				debug($anodequery);
-//				$anodelist = $this->mpath->query($anodequery);
-//				$marray[$attribute->name] = $anodelist->length;
-//			}
-		}
-//		debug($marray);
-
-		exit;
-
-		$carray = $marray = $tarray = [];
-		$nodelist = $this->cpath->query('//*');
-		foreach ($nodelist as $node) {
-			//$carray[$node->nodeName] = 1;
-			foreach ($node->attributes as $attribute) {
-				$cnodequery = '//*[@' . $attribute->name . ']';
-				debug($cnodequery);
-				$cnodelist = $this->cpath->query($cnodequery);
-				$carray[$attribute->name] = $cnodelist->length;
-			}
-		}
-		debug($carray);
-		exit;
-		$nodelist = $this->mpath->query('//*');
-		foreach ($nodelist as $node) {
-			$marray[$node->nodeName] = 1;
-		}
-		debug(array_keys($marray));
-		$nodelist = $this->tpath->query('//*');
-		foreach ($nodelist as $node) {
-			$tarray[$node->nodeName] = 1;
-		}
-		debug(array_keys($tarray));
-		exit;
-
-//$query = '/HEROCSHEET/*[not(@XMLID)]';
-//$qnodelist = $this->mpath->query($query);
-//debug($qnodelist->length);
-//foreach($qnodelist as $qnode){
-//	debug($qnode->parentNode->parentNode->nodeName);
-//	debug($qnode->parentNode->nodeName);
-//	debug($qnode->nodeName);
-//}
-//exit;
-//		debug(json_encode(Xml::toArray($character_xml)['HEROCSHEET']['POWERS'], JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT));
-//		debug(json_encode(Xml::toArray($main_xml)['HEROCSHEET']['POWERS'], JSON_NUMERIC_CHECK | JSON_PRETTY_PRINT));
+//		$testitem = $mpath->query('/HEROCSHEET')->item(0);
+//		debug();
+//		$testitem = $mpath;
+//		debug(gettype($testitem) !== 'object' ?gettype($testitem): get_class($testitem));
+//		$testitem = $main_xml;
+//		debug(gettype($testitem) !== 'object' ?gettype($testitem): get_class($testitem));
+//		$testitem = 'blah blah';
+//		debug(gettype($testitem) !== 'object' ?gettype($testitem): get_class($testitem));
+//		$testitem = '#blah blah';
+//		debug(gettype($testitem) !== 'object' ?gettype($testitem): get_class($testitem));
+//		$testitem = 247;
+//		debug(gettype($testitem) !== 'object' ?gettype($testitem): get_class($testitem));
 //		exit;
-//		debug(Xml::toArray($main_xml)['HEROCSHEET']['PERKS']);
+//		
+//		$xpatharray = [
+//			'//DOESNOTXIST'
+////			,'//ADDER/ADDER'
+////			,'//ADDER/MODIFIER'
+////			,'//ADDER/OPTION'
+//			,'//ADDER/OPTION/ADDER'
+//			,'//ADDER/OPTION/MODIFIER'
+////			,'//MODIFIER/ADDER'
+////			,'//MODIFIER/MODIFIER'
+////			,'//MODIFIER/OPTION'
+//			,'//MODIFIER/OPTION/ADDER'
+//			,'//MODIFIER/OPTION/MODIFIER'
+////			,'//OPTION/ADDER'
+////			,'//OPTION/MODIFIER'
+////			,'//OPTION/OPTION'
+////			,'//ADDER[@OPTIONID]'
+////			,'//ADDER[@OPTIONID]/ADDER'
+////			,'//ADDER[@OPTIONID]/MODIFIER'
+////			,'//ADDER[@OPTIONID]/ADDER/ADDER'
+////			,'//ADDER[@OPTIONID]/ADDER/MODIFIER'
+////			,'//ADDER[@OPTIONID]/MODIFIER/ADDER'
+////			,'//ADDER[@OPTIONID]/MODIFIER/MODIFIER'
+//
+////			,'//MODIFIER[@OPTIONID]'
+////			,'//MODIFIER[@OPTIONID]/ADDER'
+////			,'//MODIFIER[@OPTIONID]/MODIFIER'
+////			,'//MODIFIER[@OPTIONID]/ADDER/ADDER'
+////			,'//MODIFIER[@OPTIONID]/ADDER/MODIFIER'
+////			,'//MODIFIER[@OPTIONID]/MODIFIER/ADDER'
+////			,'//MODIFIER[@OPTIONID]/MODIFIER/MODIFIER'
+//
+//			];
+//		foreach ($xpatharray as $xpath) {
+//			$nodelist = $this->mpath->query($xpath);
+//			echo $xpath, ',', $nodelist->length, '<br>';
+//			foreach ($nodelist as $node) {
+//				while($node->parentNode){
+//					echo $node->getNodePath(), ': ', $node->getAttribute('XMLID'), ' / ', $node->getAttribute('OPTIONID'), '<br>';
+//					$node = $node->parentNode;
+//				}
+//			}
+//		}
 
-		$xpath = '/HEROCSHEET/POWERS';
-		$this->mergeAttributes($xpath);
-//		$this->mergeNodes('/HEROCSHEET/PERKS');
-		debug(Xml::toArray($character_xml)['HEROCSHEET']['POWERS']);
-//		debug(Xml::toArray($main_xml)['HEROCSHEET']['CHARACTERISTICS']['DEX']);
-//		debug(Xml::toArray($template_xml)['HEROCSHEET']['CHARACTERISTICS']['DEX']);
-//		$character_array = Xml::toArray($character_xml);
-//		debug($this->checkXMLID($character_array, 'ROOT'));
-//		$main_array = Xml::toArray($main_xml);
-//		debug($this->checkXMLID($main_array, 'ROOT'));
-//		$this->compareNodes('/* /node()', $this->mpath, $this->tpath);
-//		$this->compareNodes('/TEMPLATE', $this->mpath, $this->tpath);
- */
-	}
 
-	function getMatchingNode(&$node, $xpath, &$gpath) {
-		debug($xpath);
-		$nodelist = $gpath->query($xpath);
-		switch ($nodelist->length) {
-			case 0:
-				return false;
-				break;
-			case 1:
-//				$return = $nodelist->item(0);
-//				debug(json_encode($return));
-//				return $return;
-//				break;
-			default:
-				debug($nodelist->length);
-				debug($node->getAttribute('XMLID'));
-				if (!$node->hasAttribute('XMLID')) {
-					return false;
-				} else {
-					return $this->getNodeByXmlid($node->getAttribute('XMLID'), $nodelist);
-				}
-				break;
-		}
+
+
+
+		$this->loadComponent('Vorien/HeroCSheet.PMergeCharacter', [
+			'character_xml' => $character_xml,
+			'merged_xml' => $merge_xml,
+			'basequery' => '/HEROCSHEET/POWERS'
+				]
+		);
+		$mergedcharacter_xml = $this->PMergeCharacter->mergeCharacter();
+		debug($mergedcharacter_xml->saveXML());
+		file_put_contents($this->PFiles . 'merged_character.xml', $mergedcharacter_xml->saveXML());
 	}
 
 	function getNodeByXmlid($xmlid, $nodelist) {
@@ -391,62 +180,77 @@ class CharactersheetsController extends AppController {
 		return false;
 	}
 
-	function mergeAttributes($xpath) {
-		debug($xpath);
-		$mergedocument = new \DOMDocument();
-		$mergeelement = $mergedocument->createElement('MERGE_ELEMENT');
-		$mergedocument->appendChild($mergeelement);
-
-		$cnodequery = $xpath . $this->PXML->skipemptynodes;
-		$cnodelist = $this->cpath->query($cnodequery);
-		foreach ($cnodelist as $cnode) {
-			if (!$cnode->hasAttributes() || $cnode->nodeType == XML_TEXT_NODE) {
-				echo '<br><span style="font-size: 3em; font-weight: bold;">', $cnode->nodeName, '</span><br><br>';
-				continue;
-			} else {
-				debug($cnode->getNodePath());
-				$nodequery = preg_replace('/\[[0-9]+\]/', '', $cnode->getNodePath()) . $this->PXML->skipempty;
-				debug($nodequery);
-				if ($mnode = $this->getMatchingNode($cnode, $nodequery, $this->mpath)) {
-					foreach ($mnode->attributes as $attribute) {
-						$mergeelement->setAttribute($attribute->name, $attribute->value);
-					}
-				} else {
-					debug('No matching item in main_xml for ' . $cnode->nodeName . ' at ' . $cnode->getNodePath());
-					echo $cnode->nodeName, ' -> ', $cnode->getAttribute('XMLID'), '<br>';
-					echo $cnode->parentNode->nodeName, ' -> ', $cnode->parentNode->getAttribute('XMLID'), '<br>';
-					echo $cnode->parentNode->parentNode->nodeName, ' -> ', $cnode->parentNode->parentNode->getAttribute('XMLID'), '<br>';
-					echo $cnode->parentNode->parentNode->parentNode->nodeName, ' -> ', $cnode->parentNode->parentNode->parentNode->getAttribute('XMLID'), '<br>';
-					echo $cnode->parentNode->parentNode->parentNode->parentNode->nodeName, ' -> ', $cnode->parentNode->parentNode->parentNode->parentNode->getAttribute('XMLID'), '<br>';
-					$bt = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10);
-					$btline = [];
-					for ($ctr = 0; $ctr < 10; $ctr++) {
-						$btline[$ctr] = array_shift($bt);
-					}
-					debug($btline);
-					die();
-				}
-				if ($tnode = $this->getMatchingNode($cnode, $nodequery, $this->tpath)) {
-					foreach ($tnode->attributes as $attribute) {
-						$mergeelement->setAttribute($attribute->name, $attribute->value);
-					}
-				}
-
-				foreach ($cnode->attributes as $attribute) {
-					$mergeelement->setAttribute($attribute->name, $attribute->value);
-				}
-				foreach ($mergeelement->attributes as $attribute) {
-					$cnode->setAttribute($attribute->name, $attribute->value);
-				}
-//			if ($cnode->hasChildNodes()) {
-				foreach ($cnode->childNodes as $child) {
-					$childquery = preg_replace('/\[[0-9]+\]/', '', $child->getNodePath());
-					$this->mergeAttributes($childquery);
-				}
-//			}
-			}
+	function getXMLID($node) {
+		if ($node->hasAttribute('XMLID')) {
+			return $node->getAttribute('XMLID');
+		} else {
+			return null;
 		}
 	}
+
+	function showParentNodes($node, $showxmlid = false) {
+		while (substr($node->parentNode->nodeName, 0, 1) != '#') {
+			$xmlid = $pxmlid = '';
+			if ($showxmlid) {
+				if ($xmlid = $this->getXMLID($node)) {
+					$xmlid = " [$xmlid]";
+				}
+				if ($pxmlid = $this->getXMLID($node->parentNode)) {
+					$pxmlid = " [$xmlid]";
+				}
+			}
+			echo $node->nodeName, $xmlid, ' -> ', $node->parentNode->nodeName, $pxmlid, '<br>';
+			$node = $node->parentNode;
+		}
+	}
+
+//	function mergeAttributes($xpath) {
+//		debug($xpath);
+//		$mergedocument = new \DOMDocument();
+//		$mergeelement = $mergedocument->createElement('MERGE_ELEMENT');
+//		$mergedocument->appendChild($mergeelement);
+//
+//		$cnodequery = $xpath . $this->PXML->skipemptynodes;
+//		$cnodelist = $this->cpath->query($cnodequery);
+//		foreach ($cnodelist as $cnode) {
+//			if (!$cnode->hasAttributes() || $cnode->nodeType == XML_TEXT_NODE) {
+//				echo '<br><span style="font-size: 3em; font-weight: bold;">', $cnode->nodeName, '</span><br><br>';
+//				continue;
+//			} else {
+//				debug($cnode->getNodePath());
+//				$nodequery = preg_replace('/\[[0-9]+\]/', '', $cnode->getNodePath()) . $this->PXML->skipempty;
+//				debug($nodequery);
+//				if ($mnode = $this->getMatchingNode($cnode, $nodequery, $this->mpath)) {
+//					foreach ($mnode->attributes as $attribute) {
+//						$mergeelement->setAttribute($attribute->name, $attribute->value);
+//					}
+//				} else {
+//					debug('No matching item in merged_xml for ' . $cnode->nodeName . ' at ' . $cnode->getNodePath());
+//					$this->showParentNodes($cnode, true);
+//					$bt = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10);
+//					$btline = [];
+//					for ($ctr = 0; $ctr < 10; $ctr++) {
+//						$btline[$ctr] = array_shift($bt);
+//					}
+//					debug($btline);
+//					die();
+//				}
+//
+//				foreach ($cnode->attributes as $attribute) {
+//					$mergeelement->setAttribute($attribute->name, $attribute->value);
+//				}
+//				foreach ($mergeelement->attributes as $attribute) {
+//					$cnode->setAttribute($attribute->name, $attribute->value);
+//				}
+////			if ($cnode->hasChildNodes()) {
+//				foreach ($cnode->childNodes as $child) {
+//					$childquery = preg_replace('/\[[0-9]+\]/', '', $child->getNodePath());
+//					$this->mergeAttributes($childquery);
+//				}
+////			}
+//			}
+//		}
+//	}
 
 	function getXMLFilesForCharacterID($character_id) {
 		if (empty($character_id)) {

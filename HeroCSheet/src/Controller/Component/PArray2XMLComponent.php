@@ -55,7 +55,7 @@ class PArray2XMLComponent extends Component{
 	
 
     public static function init($version = '1.0', $encoding = 'UTF-8', $format_output = true) {
-        self::$xml = new DomDocument($version, $encoding);
+        self::$xml = new \DOMDocument($version, $encoding);
         self::$xml->formatOutput = $format_output;
 		self::$encoding = $encoding;
     }
@@ -64,7 +64,7 @@ class PArray2XMLComponent extends Component{
      * Convert an Array to XML
      * @param string $node_name - name of the root node to be converted
      * @param array $arr - aray to be converterd
-     * @return DomDocument
+     * @return DOMDocument
      */
     public static function &createXML($node_name, $arr=array()) {
         $xml = self::getXMLRoot();
@@ -91,7 +91,7 @@ class PArray2XMLComponent extends Component{
             if(isset($arr['@attributes'])) {
                 foreach($arr['@attributes'] as $key => $value) {
                     if(!self::isValidTagName($key)) {
-                        throw new Exception('[Array2XML] Illegal character in attribute name. attribute: '.$key.' in node: '.$node_name);
+                        throw new \Exception('[Array2XML] Illegal character in attribute name. attribute: '.$key.' in node: '.$node_name);
                     }
                     $node->setAttribute($key, self::bool2str($value));
                 }
@@ -118,7 +118,7 @@ class PArray2XMLComponent extends Component{
             // recurse to get the node for that key
             foreach($arr as $key=>$value){
                 if(!self::isValidTagName($key)) {
-                    throw new Exception('[Array2XML] Illegal character in tag name. tag: '.$key.' in node: '.$node_name);
+                    throw new \Exception('[Array2XML] Illegal character in tag name. tag: '.$key.' in node: '.$node_name);
                 }
                 if(is_array($value) && is_numeric(key($value))) {
                     // MORE THAN ONE NODE OF ITS KIND;
@@ -173,4 +173,3 @@ class PArray2XMLComponent extends Component{
         return preg_match($pattern, $tag, $matches) && $matches[0] == $tag;
     }
 }
-?>

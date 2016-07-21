@@ -73,3 +73,7 @@ div.actions{
 .row{
 	clear: both;
 }
+
+.cake-debug-output > span{
+	position:relative;
+}

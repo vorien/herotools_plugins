@@ -3,14 +3,16 @@
 namespace Vorien\HeroCSheet\Controller\Component;
 
 use Cake\Controller\Component;
-
+use Cake\Utility\Xml;
 
 /*
  * CakePHP PXMLComponent
  * @author Michael
-*/ 
+ */
+
 class PXMLComponent extends Component {
 
+	public $components = [];
 	public $skipemptynodes = '/node()[not(self::text()[not(normalize-space())])]';
 	public $skipempty = '[not(self::text()[not(normalize-space())])]';
 
@@ -30,14 +32,27 @@ class PXMLComponent extends Component {
 			}
 			$i--;
 		}
-		$cxml->appendChild($enhancersnode);
+		$cxml->documentElement->appendChild($enhancersnode);
+	}
+
+	function removeNamedTags(&$xml, $namearray = []) {
+		$xpath = new \DOMXPath($xml);
+		foreach ($namearray as $name) {
+			$xpathquery = '//' . $name;
+			while (($nodelist = $xpath->query($xpathquery)) && $nodelist->length) {
+				foreach ($nodelist as $skillNode) {
+					$skillNode->parentNode->removeChild($skillNode);
+				}
+			}
+		}
 	}
 
 	function removeEmptyTags(&$xml) {
 		$xpath = new \DOMXPath($xml);
-		while (($nodelist = $xpath->query('//*[not(*) and not(@*) and not(text()[normalize-space()])]')) && $nodelist->length) {
-			foreach ($nodelist as $node) {
-				$node->parentNode->removeChild($node);
+		$xpathquery = '//*[not(*) and not(@*) and not(text()[normalize-space()])]';
+		while (($nodelist = $xpath->query($xpathquery)) && $nodelist->length) {
+			foreach ($nodelist as $skillNode) {
+				$skillNode->parentNode->removeChild($skillNode);
 			}
 		}
 	}
@@ -103,18 +118,26 @@ class PXMLComponent extends Component {
 		}
 	}
 
-	function templateXmlidToDisplay($nodelist, $name) {
+	function templateXmlidToDisplay($nodelist, $name = null) {
 		foreach ($nodelist as $node) {
-			if ($node->nodeName == $name) {
+			if (!$name || $node->nodeName == $name) {
 				$node->setAttribute('XMLID', $this->cleanForXmlid($node->getAttribute('DISPLAY')));
 			}
 		}
 	}
 
-	function cleanForXmlid($string){
+	function templateXmlidToNodeValue($nodelist) {
+		foreach ($nodelist as $node) {
+			if ($node->nodeType == XML_TEXT_NODE) {
+				$node->parentNode->setAttribute('XMLID', $this->cleanForXmlid($node->nodeValue));
+			}
+		}
+	}
+
+	function cleanForXmlid($string) {
 		return strtoupper(str_replace(' ', '_', $string));
 	}
-	
+
 	function standardizeTemplate(&$gpath) {
 		$update = [
 			'PERKS' => 'PERK',
@@ -127,8 +150,12 @@ class PXMLComponent extends Component {
 			$nodelist = $this->getNodeList("/HEROCSHEET/$ukey", $gpath);
 			$this->templateNodesToTag($nodelist, $uvalue);
 		}
-		$nodelist = $this->getNodeList('/HEROCSHEET/MARTIAL_ARTS',$gpath);
+		$nodelist = $this->getNodeList('/HEROCSHEET/MARTIAL_ARTS', $gpath);
 		$this->templateXmlidToDisplay($nodelist, 'MANEUVER');
+		$nodelist = $this->getNodeList('/HEROCSHEET/CHARACTERISTICS', $gpath);
+		$this->templateXmlidToDisplay($nodelist);
+		$nodelist = $this->getNodeList('//TYPE', $gpath);
+		$this->templateXmlidToNodeValue($nodelist);
 	}
 
 	function cleanNodePath(&$node) {
@@ -199,6 +226,4 @@ class PXMLComponent extends Component {
 		return $attributes;
 	}
 
-
-	 
 }

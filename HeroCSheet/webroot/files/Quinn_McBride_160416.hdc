@@ -717,6 +717,7 @@ No attacker is considered to be attacking “from behind"</NOTES>
       </DENSITYINCREASE>
     </POWERS>
     <MODIFIERS>
+		<MODIFIER XMLID="MODIFIER" DISPLAY="Custom Modifier"></MODIFIER> 
       <MODIFIER XMLID="REQUIRESASKILLROLL" DISPLAY="Requires A Roll" MINCOST="-2.75" MAXCOST="-.25" EXCLUSIVE="Yes" SHOWOPTIONINPARENS="Yes">
         <OPTION XMLID="11" BASECOST="-.5" DISPLAY="11- roll" />
         <OPTION XMLID="8" BASECOST="-1.25" DISPLAY="8- roll" />

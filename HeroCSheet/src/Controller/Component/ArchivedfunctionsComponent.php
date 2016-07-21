@@ -13,6 +13,101 @@ class ArchivedfunctionsComponent extends Component {
 
 /* XML Functions
 
+	function getMatchingNodeList(&$node, $targetxpath) {
+		$nodepath = preg_replace('/\[[0-9]+\]/', '', $node->getNodePath());
+		$tnodelist = $targetxpath->query($nodepath);
+		return tnodelist;
+	}
+
+	function processNodeList(&$targetnodelist) {
+		switch ($targetnodelist->length) {
+			case 0:
+				return false;
+				break;
+			case 1:
+				debug("One main node found");
+				$this->mergeNodes();
+				$mnodepath = preg_replace('/\[[0-9]+\]/', '', $targetnodelist->item(0)->getNodePath());
+				debug($mnodepath);
+				$this->compareNodes($mnodepath, $this->cpath, $this->mpath, $this->tpath, $depth + 1);
+				break;
+			default:
+				break;
+		}
+	}
+
+	function compareNodes($xpath, $depth = 0) {
+		debug($xpath);
+		$cnodequery = $xpath . $this->skipemptynodes;
+		$cnodelist = $this->cpath->query($cnodequery);
+		switch ($cnodelist->length) {
+			case 0:
+				debug("Query: $cnodequery produced no nodes");
+				break;
+			case 1:
+				$node = $cnodelist->item(0);
+				$nodelist = $this->getMatchingNodeList($node, $this->mpath);
+				if ($mnode = $this->processNodeList($node, $nodelist)) {
+					
+				}
+				break;
+				deault:
+				foreach ($cnodelist as $cnode) {
+					$nodelist = $this->getMatchingNodeList($cnode, $this->mpath);
+					foreach ($matchingnodelist as $matchingnode) {
+						$this->processNodeList($matchingnode);
+					}
+				}
+				break;
+		}
+//		debug("xpath: " . $xpath);
+//		if (($mnodelist = $this->mpath->query($xpath))) {
+////			debug($mnodelist);
+//			switch ($mnodelist->length) {
+//				case 0:
+//					debug("No main node found");
+//					break;
+//				case 1:
+//					debug("One main node found");
+//					break;
+//				default:
+//					debug($mnodelist->length . " main nodes found");
+//					break;
+//			}
+//			if ($mnodelist->length) {
+//				foreach ($mnodelist as $mnode) {
+//					$mnodepath = $mnode->getNodePath();
+//					debug("mnode-nodeName: " . $mnode->nodeName);
+//					debug("mnodepath: " . $mnodepath . "");
+//					if (($snodelist = $spath->query($mnodepath))) {
+//						switch ($snodelist->length) {
+//							case 0:
+//								echo "No match found";
+//								break;
+//							case 1:
+//								echo "Found 1 match";
+//								break;
+//							default:
+//								echo $snodelist->length, "found in template_xml", "";
+//								break;
+//						}
+//					}
+//					if ($mnode->hasChildNodes()) {
+//						foreach ($mnode->childNodes as $cnode) {
+//							if ($cnode->nodeType != XML_TEXT_NODE) {
+//								$cnodepath = $mnodepath . "/" . $cnode->nodeName;
+//								debug("cnodepath: " . $cnodepath);
+//								$this->compareNodes($cnodepath, $this->mpath, $spath, $depth + 1);
+//							}
+//						}
+//					}
+//				}
+//			}
+//		} else {
+//			echo "An error occurred in querying $xpath on mpath, depth: $depth";
+//		}
+	}
+
 
 
 //	function append_simplexml(&$simplexml_to, &$simplexml_from) {

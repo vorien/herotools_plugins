@@ -23,27 +23,28 @@
 		<title>
 			<?= $title_for_layout; ?>
 		</title>
-		<?php
-		echo $this->Html->meta('icon');
 
-		echo $this->Html->css('Vorien/HeroCSheet.cake.generic');
-		echo $this->Html->css('Vorien/HeroCSheet.jqueryui/jquery-ui.min');
-		echo $this->Html->css('Vorien/HeroCSheet.bootstrap/bootstrap');
-		echo $this->Html->css('Vorien/HeroCSheet.main');
-		echo $this->Html->css('Vorien/HeroCSheet.herocombat');
-		echo $this->Html->css('Vorien/HeroCSheet.herocombat-margins');
+		<?= $this->Html->meta('icon') ?>
 
-		echo $this->Html->script('Vorien/HeroCSheet.jquery/jquery-2.1.1.min');
-		echo $this->Html->script('Vorien/HeroCSheet.jqueryui/jquery-ui.min');
-		echo $this->Html->script('Vorien/HeroCSheet.jqueryui/jquery.ui.touch-punch.min');
-		echo $this->Html->script('Vorien/HeroCSheet.bootstrap/bootstrap.min');
-		echo $this->Html->script('Vorien/HeroCSheet.herocombat');
-		echo $this->Html->script('Vorien/HeroCSheet.tracing/tracing');
+		<?= $this->Html->css('base.css') ?>
+		<?= $this->Html->css('cake.css') ?>
+		<?= $this->Html->css('Vorien/Dashboard.jqueryui/jquery-ui.min') ?>
+		<?= $this->Html->css('Vorien/Dashboard.bootstrap/bootstrap') ?>
+		<?= $this->Html->css('Vorien/Dashboard.main') ?>
+		<?= $this->Html->css('Vorien/HeroCSheet.herocombat') ?>
+		<?= $this->Html->css('Vorien/HeroCSheet.herocombat-margins') ?>
 
-		echo $this->fetch('meta');
-		echo $this->fetch('css');
-		echo $this->fetch('script');
-		?>
+		<?= $this->Html->script('Vorien/Dashboard.jquery/jquery-2.2.4.min') ?>
+		<?= $this->Html->script('Vorien/Dashboard.jqueryui/jquery-ui.min') ?>
+		<?= $this->Html->script('Vorien/Dashboard.bootstrap/bootstrap.min') ?>
+		<?= $this->Html->script('Vorien/HeroCSheet.jqueryui/jquery.ui.touch-punch.min') ?>
+		<?= $this->Html->script('Vorien/HeroCSheet.herocombat') ?>
+		<?= $this->Html->script('Vorien/HeroCSheet.tracing/tracing') ?>
+
+		<?= $this->fetch('meta') ?>
+		<?= $this->fetch('css') ?>
+		<?= $this->fetch('script') ?>
+
 	</head>
 
 	<body>
