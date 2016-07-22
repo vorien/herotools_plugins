@@ -1,18 +1,21 @@
 <?php
 
-namespace Vorien\HeroCSheet\Controller\Component;
-
-use Cake\Controller\Component;
-
 /**
- * CakePHP PNodeStack Component
- * @author Michael
+ * CakePHP NodeStack Class
+ * @author Michael Coury
  */
-class PNodeStackComponent extends Component {
+class NodeStack {
 
 	public $skipemptynodes = '/node()[not(self::text()[not(normalize-space())])]';
 	public $skipempty = '[not(self::text()[not(normalize-space())])]';
+	public $tag;
+	public $attributes;
+	public $node;
 
+	function __construct(){
+		
+	}
+	
 	function findInStack(&$nodestack, $tag) {
 		$tagkey = false;
 		foreach ($nodestack as $npkey => $npvalue) {
@@ -136,4 +139,8 @@ class PNodeStackComponent extends Component {
 		return $nodestring;
 	}
 
+}
+
+function testNodeStackClassLoad(){
+	debug('Load successful');
 }

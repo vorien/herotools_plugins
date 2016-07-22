@@ -40,7 +40,9 @@ class CharactersheetsController extends AppController {
 	}
 
 	function compareXML($character_id) {
-
+//		debug(App::path('Lib','Vorien/HeroCSheet')[0] . 'NodeStack.php');
+//		die();
+		
 		$xmlfiles = $this->getXMLFilesForCharacterID($character_id);
 
 		$template_xml = new \DOMDocument;
@@ -158,7 +160,7 @@ class CharactersheetsController extends AppController {
 		$this->loadComponent('Vorien/HeroCSheet.PMergeCharacter', [
 			'character_xml' => $character_xml,
 			'merged_xml' => $merge_xml,
-			'basequery' => '/HEROCSHEET/POWERS'
+			'basequery' => '/HEROCSHEET'
 				]
 		);
 		$mergedcharacter_xml = $this->PMergeCharacter->mergeCharacter();

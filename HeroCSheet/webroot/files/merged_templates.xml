@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<HEROCSHEET version="2.0" extends="builtIn.Heroic6E.hdt" id="C:\Users\Michael\Documents\MyFiles\Projects\Gaming\Hero Designer\Character Files\Hawthorne_160713.hdc" originalPath="C:\Users\Michael\Documents\MyFiles\Projects\Gaming\Hero Designer\Templates\HykeruStats.hdt">
+<HEROCSHEET version="2.0" extends="builtIn.Heroic6E.hdt" id="C:\Users\Michael\Documents\MyFiles\Projects\Gaming\Hero Designer\Character Files\Quinn_McBride_160129.hdc" originalPath="C:\Users\Michael\Documents\MyFiles\Projects\Gaming\Hero Designer\Templates\HykeruStats.hdt">
 	<MAINAPP BACKGROUND_TAB="Yes" HEIGHT="Yes" WEIGHT="Yes" NCM_COST_MULTIPLIER="2" GENERAL_LEVEL="10">
 		<NAME1>Character Name</NAME1>
 		<NAME2>Alternate IDs</NAME2>
@@ -16506,7 +16506,7 @@
 				a set total of Limitations values, but the character can alter the exact type of 
 				Limitations to fit the circumstance. </DEFINITION>
 		</MODIFIER>
-	<MODIFIER XMLID="SHAREDFOCUS" DISPLAY="Shared Focus" BASECOST="-0.5" MAXCOST="-0.5" EXCLUSIVE="Yes"/></MODIFIERS>
+	<MODIFIER XMLID="MODIFIER" DISPLAY="Custom Modifier"/></MODIFIERS>
 	<DISADVANTAGES>
 		<DISAD XMLID="ACCIDENTALCHANGE" DISPLAY="Accidental Change" BASECOST="0" EXCLUSIVE="No" MINCOST="0" INPUTLABEL="Situation" OTHERINPUT="Yes">
 			<ADDER XMLID="CHANCETOCHANGE" REQUIRED="Yes" DISPLAY="Chance To Change" BASECOST="0">

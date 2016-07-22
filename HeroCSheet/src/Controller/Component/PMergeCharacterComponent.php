@@ -5,13 +5,20 @@ namespace Vorien\HeroCSheet\Controller\Component;
 use Cake\Controller\Component;
 use Cake\Controller\ComponentRegistry;
 use Cake\Utility\Xml;
+use Cake\Core\App;
 
+//
+require_once(App::path('Lib', 'Vorien/HeroCSheet')[0] . 'NodeStack.php');
+
+use NodeStack;
+
+//use App\Plugins\Vorien\HeroCSheet\Lib\NodeStack;
 /**
  * PMergeCharacter component
  */
 class PMergeCharacterComponent extends Component {
 
-	public $components = ['Vorien/HeroCSheet.PNodeStack'];
+	public $components = [];
 	public $basequery = 'HEROCSHEET';
 	public $character_xml;
 	public $merged_xml;
@@ -19,10 +26,11 @@ class PMergeCharacterComponent extends Component {
 	public $tpath;
 	public $idattribute = 'XMLID';
 	public $errorstack = [];
-	public $nodestack = [];
+	public $nodestack;
 
 	public function initialize(array $config) {
 		parent::initialize($config);
+		$this->nodestack = new NodeStack();
 		$this->character_xml = new \DOMDocument();
 		$this->character_xml->preserveWhiteSpace = false;
 		$this->character_xml->loadXML($config['character_xml']->saveXML());
@@ -50,86 +58,27 @@ class PMergeCharacterComponent extends Component {
 //		debug($xquery);
 //		die(' ');
 	}
-
-	function runMatchingTests(&$nodestack, &$node, $checkmodifier = false) {
-		if (!($matchednode = $this->getMatchingNode($nodestack))) { //Exact match
-			if (!($matchednode = $this->testWithOption($nodestack, $node))) {// Match OPTION child node
-				if (!($matchednode = $this->testWithInjectOption($nodestack, $node))) {// Parent has OPTION before node
-					if ($checkmodifier && $this->PNodeStack->findInStack($nodestack, 'MODIFIER') && !($matchednode = $this->checkInModifiersNodePath($nodestack, $node))) {
-						return false;
-					}
-				}
-			}
+	
+	function ignoreNode(&$node){
+		if($node->hasAttribute($this->idattribute) && $node->getAttribute($this->idattribute) == 'MAKEASENSE'){
+			return true;
+		} else {
+			return false;
 		}
-		return $matchednode;
-	}
-
-	function getMatchingNode(&$nodestack) {
-		$nodequery = $this->PNodeStack->buildNodeString($nodestack, true);
-		$nodelist = $this->tpath->query($nodequery);
-		switch ($nodelist->length) {
-			case 0:
-				// No match found, return to caller for processing
-//					debug($nodestack);
-					$this->errorstack[] = $nodequery;
-				return false;
-				break;
-			case 1:
-				// Match found, return matching node in $xpath
-				return $nodelist->item(0);
-				break;
-			default:
-				// This means that there are multiple matching tag/xmlid combinations
-				// TODO Handle multiple matches.  It looks like they're all empty nodes
-				$this->errorstack[] = 'Multiple tag/xmlid matches found';
-				$this->errorstack[] = 'nodelist length: ' . $nodelist->length;
-				$this->errorstack[] = $this->PNodeStack->buildNodeString($nodestack, $usebrackets, true);
-				$this->errorstack[] = $nodestack;
-				$this->showErrorStack();
-				die(' ');
-				break;
-		}
-	}
-
-	function testWithOption(&$nodestack, &$node) {
-			if ($node->hasAttribute('OPTIONID')) {
-				$optionstack = $nodestack;
-				$optionstack[] = [
-					'tag' => 'OPTION',
-					['@' . $this->idattribute . " = '" . $node->getAttribute('OPTIONID') . "'"]
-				];
-				if ($matchednode = $this->getMatchingNode($optionstack)) {
-					return $matchednode;
-//				} else {
-//					debug($optionstack);
-//					debug($this->PNodeStack->buildNodeString($optionstack, true));
-				}
-			}
-		return false;
-	}
-
-	function testWithInjectOption(&$nodestack, &$node) {
-		if ($optionstack = $this->injectOptionNode($nodestack, $node)) {
-			if ($matchednode = $this->getMatchingNode($optionstack)) { // Match parent/OPTION/node
-				return $matchednode;
-//			} else {
-//				debug($optionstack);
-//				debug($this->PNodeStack->buildNodeString($optionstack, true));
-			}
-		}
-		return false;
 	}
 
 	function mergeCharacter($nodestack = null, $depth = 0) {
+		$this->errorstack[] = 'mergeCharacter';
 		if (!$nodestack) {
 			$nodestack = $this->PNodeStack->parseNodeString($this->basequery);
 		}
 		$nodelist = $this->cpath->query($this->PNodeStack->buildNodeString($nodestack, true));
 		foreach ($nodelist as $node) {
+			if(!$this->ignorenode($node)){
 			if ($matchednode = $this->runMatchingTests($nodestack, $node, true)) {
-				$this->errorstack = [];
 //				$this->displayText('Match found', $node->getNodePath(), $matchednode->getNodePath());
 				$success = $this->updateAttributes($node, $matchednode);
+				$this->errorstack = [];
 			} else {
 				$errorstack[] = 'No matching node found';
 //				debug('nodeType (3 is TEXT): ' . $node->nodeType);
@@ -137,7 +86,7 @@ class PMergeCharacterComponent extends Component {
 				$errorstack[] = $nodestack;
 //				debug($this->PNodeStack->buildNodeString($nodestack,false, true));
 				$this->showErrorStack();
-				die();
+//				die();
 			}
 			if ($node->hasChildNodes()) {
 				foreach ($node->childNodes as $child) {
@@ -152,15 +101,90 @@ class PMergeCharacterComponent extends Component {
 					}
 				}
 			}
+			}
 		}
 		return $this->character_xml;
 	}
 
+	function runMatchingTests(&$nodestack, &$node, $checkmodifier = false) {
+		$this->errorstack[] = 'runMatchingTests';
+		if (!($matchednode = $this->getMatchingNode($nodestack))) { //Exact match
+			if (!($matchednode = $this->testWithOption($nodestack, $node))) {// Match OPTION child node
+				if (!($matchednode = $this->testWithInjectOption($nodestack, $node))) {// Parent has OPTION before node
+					if ($checkmodifier && $this->PNodeStack->findInStack($nodestack, 'MODIFIER') && !($matchednode = $this->checkInModifiersNodePath($nodestack, $node))) {
+						return false;
+					}
+				}
+			}
+		}
+		return $matchednode;
+	}
+
+	function getMatchingNode(&$nodestack) {
+		$this->errorstack[] = 'getMatchingNode';
+		$nodequery = $this->PNodeStack->buildNodeString($nodestack, true);
+		$nodelist = $this->tpath->query($nodequery);
+		switch ($nodelist->length) {
+			case 0:
+				// No match found, return to caller for processing
+//					debug($nodestack);
+				$this->errorstack[] = $nodequery;
+				return false;
+				break;
+			case 1:
+				// Match found, return matching node in $xpath
+				return $nodelist->item(0);
+				break;
+			default:
+				// This means that there are multiple matching tag/xmlid combinations
+				// TODO Handle multiple matches.  It looks like they're all empty nodes
+				$this->errorstack[] = 'Multiple tag/xmlid matches found';
+				$this->errorstack[] = 'nodelist length: ' . $nodelist->length;
+				$this->errorstack[] = $nodequery;
+				$this->errorstack[] = $nodestack;
+				$this->showErrorStack();
+				die(' ');
+				break;
+		}
+	}
+
+	function testWithOption(&$nodestack, &$node) {
+		$this->errorstack[] = 'testWithOption';
+		if ($node->hasAttribute('OPTIONID')) {
+			$optionstack = $nodestack;
+			$optionstack[] = [
+				'tag' => 'OPTION',
+				'attributes' => ['@' . $this->idattribute . " = '" . $node->getAttribute('OPTIONID') . "'"]
+			];
+			if ($matchednode = $this->getMatchingNode($optionstack)) {
+				return $matchednode;
+//				} else {
+//					debug($optionstack);
+//					debug($this->PNodeStack->buildNodeString($optionstack, true));
+			}
+		}
+		return false;
+	}
+
+	function testWithInjectOption(&$nodestack, &$node) {
+		$this->errorstack[] = 'testWithInjectOption';
+		if ($optionstack = $this->injectOptionNode($nodestack, $node)) {
+			if ($matchednode = $this->getMatchingNode($optionstack)) { // Match parent/OPTION/node
+				return $matchednode;
+//			} else {
+//				debug($optionstack);
+//				debug($this->PNodeStack->buildNodeString($optionstack, true));
+			}
+		}
+		return false;
+	}
+
 	function checkInModifiersNodePath(&$nodestack, &$node) {
+		$this->errorstack[] = 'checkIntModifiersNodePath';
 		if ($modifierstack = $this->PNodeStack->getRebasedNodeStack($nodestack, 'MODIFIER', '/HEROCSHEET/MODIFIERS')) {
 			$this->errorstack[] = $modifierstack;
 			$matchednode = $this->runMatchingTests($modifierstack, $node);
-			if($matchednode){
+			if ($matchednode) {
 				$this->errorstack[] = $matchednode->getNodePath();
 			}
 			return $matchednode;
@@ -172,6 +196,9 @@ class PMergeCharacterComponent extends Component {
 	}
 
 	function updateAttributes(&$tonode, &$fromnode) {
+		debug($tonode->getNodePath());
+		debug($fromnode->getNodePath());
+		$this->errorstack[] = 'updateAttributes';
 		if (!$tonode->hasAttributes() || !$fromnode->hasAttributes()) {
 			return 'No Attributes to merge';
 		}
@@ -185,28 +212,29 @@ class PMergeCharacterComponent extends Component {
 			$tonode->setAttribute($attribute->name, $attribute->value);
 //			}
 		}
-//		$this->displayAttributes($tonode);
+		$this->displayAttributes($tonode);
 		return 'Success';
 	}
 
 	function injectOptionNode(&$nodestack, &$node) {
-			if ($node->parentNode) {
-				$parentnode = $node->parentNode;
-				if ($parentnode->hasAttribute('OPTIONID')) {
-					$newstack = $nodestack;
-					$lastlevel = array_pop($newstack);
-					$newstack[] = [
-						'tag' => 'OPTION',
-						['@' . $this->idattribute . " = '" . $parentnode->getAttribute('OPTIONID') . "'"]
-					];
-					array_push($newstack, $lastlevel);
-					return $newstack;
-				} else {
-//					debug('Parent node has no option id');
-				}
+		$this->errorstack[] = 'injectOptionNode';
+		if ($node->parentNode) {
+			$parentnode = $node->parentNode;
+			if ($parentnode->hasAttribute('OPTIONID')) {
+				$newstack = $nodestack;
+				$lastlevel = array_pop($newstack);
+				$newstack[] = [
+					'tag' => 'OPTION',
+					'attributes' => ['@' . $this->idattribute . " = '" . $parentnode->getAttribute('OPTIONID') . "'"]
+				];
+				array_push($newstack, $lastlevel);
+				return $newstack;
 			} else {
-				debug('Matched node has no parent node');
+//					debug('Parent node has no option id');
 			}
+		} else {
+			$this->errorstack[] = 'Matched node has no parent node';
+		}
 		return false;
 	}
 
@@ -290,10 +318,11 @@ class PMergeCharacterComponent extends Component {
 		}
 	}
 
-	function showErrorStack(){
-		foreach($this->errorstack as $error){
+	function showErrorStack() {
+		foreach ($this->errorstack as $error) {
 			debug($error);
 		}
 		$this->errorstack = [];
 	}
+
 }
