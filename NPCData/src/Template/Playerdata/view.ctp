@@ -15,7 +15,9 @@ $this->set('title', 'Dossier Data');
 		<div id="main" class="tab-pane fade in active">
 			<div class="row">
 				<div class="col-xs-12">
-					<div class='row'><div class='col-xs-8'><?= $this->Html->image('baldemar/' . $persona->picture) ?></div></div>
+					<div class='row' style='height: 15em;'><div class='col-xs-8'>
+							<img class='resizedatserver' data-image="<?= $persona->picture ?>">
+						</div></div>
 					<div class='row'>&nbsp;</div>
 					<div class='row'><div class='col-xs-6 text-primary'><?= __('Name') ?></div><div class='col-xs-12'><?= $persona->has('person') ? $persona->person->name : '' ?></div></div>
 					<!--			<div class='row'><div class='col-xs-6 text-primary'><?= __('Agenda') ?></div><div class='col-xs-12'><?= $persona->has('agenda') ? $persona->agenda->name : '' ?></div></div>-->

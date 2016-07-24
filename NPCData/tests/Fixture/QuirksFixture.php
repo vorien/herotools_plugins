@@ -40,8 +40,8 @@ class QuirksFixture extends TestFixture
         [
             'id' => 1,
             'name' => 'Lorem ipsum dolor sit amet',
-            'created' => '2016-06-19 19:28:32',
-            'modified' => '2016-06-19 19:28:32'
+            'created' => '2016-07-23 21:51:41',
+            'modified' => '2016-07-23 21:51:41'
         ],
     ];
 }

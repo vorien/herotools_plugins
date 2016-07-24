@@ -141,7 +141,7 @@ ul.nav{
 	border: 1px solid lightgrey;
 }
 
-li.select2-search{
-	display: none;
+.resizedatserver{
+	width: 100%;
 }
 

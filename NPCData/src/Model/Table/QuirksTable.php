@@ -34,7 +34,7 @@ class QuirksTable extends Table
         $this->belongsToMany('Personas', [
             'foreignKey' => 'quirk_id',
             'targetForeignKey' => 'persona_id',
-            'through' => 'Vorien/NPCData.PersonasQuirks',
+            'joinTable' => 'personas_quirks',
             'className' => 'Vorien/NPCData.Personas'
         ]);
     }

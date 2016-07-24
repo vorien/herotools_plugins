@@ -34,7 +34,7 @@ class QualitiesTable extends Table
         $this->belongsToMany('Personas', [
             'foreignKey' => 'quality_id',
             'targetForeignKey' => 'persona_id',
-            'through' => 'Vorien/NPCData.PersonasQualities',
+            'joinTable' => 'personas_qualities',
             'className' => 'Vorien/NPCData.Personas'
         ]);
     }

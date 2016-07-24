@@ -44,8 +44,8 @@ class GuildsFixture extends TestFixture
             'name' => 'Lorem ipsum dolor sit amet',
             'incidence' => 1,
             'normalized' => 1,
-            'created' => '2016-06-19 19:28:31',
-            'modified' => '2016-06-19 19:28:31'
+            'created' => '2016-07-23 21:51:37',
+            'modified' => '2016-07-23 21:51:37'
         ],
     ];
 }

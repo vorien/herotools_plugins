@@ -50,8 +50,8 @@ class ProfessionsFixture extends TestFixture
             'normalized' => 1,
             'low' => 1,
             'high' => 1,
-            'created' => '2016-06-19 19:28:32',
-            'modified' => '2016-06-19 19:28:32'
+            'created' => '2016-07-23 21:51:40',
+            'modified' => '2016-07-23 21:51:40'
         ],
     ];
 }

@@ -44,8 +44,8 @@ class PeopleFixture extends TestFixture
             'name' => 'Lorem ipsum dolor sit amet',
             'given_name' => 'Lorem ipsum dolor sit a',
             'family_name' => 'Lorem ipsum dolor sit a',
-            'created' => '2016-06-19 19:28:31',
-            'modified' => '2016-06-19 19:28:31'
+            'created' => '2016-07-23 21:51:38',
+            'modified' => '2016-07-23 21:51:38'
         ],
     ];
 }

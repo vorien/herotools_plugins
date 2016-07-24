@@ -26,7 +26,7 @@ class ArchetypesTable extends Table
         parent::initialize($config);
 
         $this->table('archetypes');
-        $this->displayField('name');
+        $this->displayField('SelectValue');
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
@@ -34,7 +34,7 @@ class ArchetypesTable extends Table
         $this->belongsToMany('Personas', [
             'foreignKey' => 'archetype_id',
             'targetForeignKey' => 'persona_id',
-            'through' => 'Vorien/NPCData.ArchetypesPersonas',
+            'through' => 'personas_archetypes',
             'className' => 'Vorien/NPCData.Personas'
         ]);
     }

@@ -26,7 +26,7 @@ class MotivationsTable extends Table
         parent::initialize($config);
 
         $this->table('motivations');
-        $this->displayField('name');
+        $this->displayField('SelectValue');
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
@@ -34,7 +34,7 @@ class MotivationsTable extends Table
         $this->belongsToMany('Personas', [
             'foreignKey' => 'motivation_id',
             'targetForeignKey' => 'persona_id',
-            'through' => 'Vorien/NPCData.MotivationsPersonas',
+            'through' => 'personas_motivations',
             'className' => 'Vorien/NPCData.Personas'
         ]);
     }

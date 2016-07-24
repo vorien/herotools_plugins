@@ -82,8 +82,8 @@ class PersonasFixture extends TestFixture
             'spirit' => 1,
             'gregariousness' => 1,
             'conformity' => 1,
-            'created' => '2016-06-19 19:28:32',
-            'modified' => '2016-06-19 19:28:32'
+            'created' => '2016-07-23 21:51:38',
+            'modified' => '2016-07-23 21:51:38'
         ],
     ];
 }

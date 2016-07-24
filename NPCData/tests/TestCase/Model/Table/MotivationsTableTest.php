@@ -26,7 +26,7 @@ class MotivationsTableTest extends TestCase
     public $fixtures = [
         'plugin.vorien/n_p_c_data.motivations',
         'plugin.vorien/n_p_c_data.personas',
-        'plugin.vorien/n_p_c_data.motivations_personas'
+        'plugin.vorien/n_p_c_data.personas_motivations'
     ];
 
     /**

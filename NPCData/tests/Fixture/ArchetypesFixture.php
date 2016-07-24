@@ -42,8 +42,8 @@ class ArchetypesFixture extends TestFixture
             'id' => 1,
             'name' => 'Lorem ipsum dolor sit amet',
             'description' => 'Lorem ipsum dolor sit amet',
-            'created' => '2016-06-19 19:28:31',
-            'modified' => '2016-06-19 19:28:31'
+            'created' => '2016-07-23 21:51:37',
+            'modified' => '2016-07-23 21:51:37'
         ],
     ];
 }

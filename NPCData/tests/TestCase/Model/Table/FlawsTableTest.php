@@ -26,7 +26,7 @@ class FlawsTableTest extends TestCase
     public $fixtures = [
         'plugin.vorien/n_p_c_data.flaws',
         'plugin.vorien/n_p_c_data.personas',
-        'plugin.vorien/n_p_c_data.flaws_personas'
+        'plugin.vorien/n_p_c_data.personas_flaws'
     ];
 
     /**

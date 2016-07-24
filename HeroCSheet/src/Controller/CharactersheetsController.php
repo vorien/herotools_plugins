@@ -42,6 +42,11 @@ class CharactersheetsController extends AppController {
 	function compareXML($character_id) {
 //		debug(App::path('Lib','Vorien/HeroCSheet')[0] . 'NodeStack.php');
 //		die();
+		$test = new \DOMDocument();
+		$new = $test->createElement('TEST/PURPLE/PICKLES');
+		$test->appendChild($new);
+		debut($test->saveXML());
+		die();
 		
 		$xmlfiles = $this->getXMLFilesForCharacterID($character_id);
 

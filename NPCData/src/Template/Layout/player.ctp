@@ -23,25 +23,26 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 			<?= $this->fetch('title') ?>
         </title>
 		<?= $this->Html->meta('icon') ?>
+
+
 		<?= $this->Html->css('base.css') ?>
 		<?= $this->Html->css('cake.css') ?>
-		<?= $this->Html->css('jqueryui/jquery-ui.css') ?>
-		<?= $this->Html->css('jqueryui/jquery-ui.theme.css') ?>
-		<?= $this->Html->css('bootstrap/bootstrap.css') ?>
-		<?= $this->Html->css('bootstrap/bootstrap-theme.css') ?>
-		<?= $this->Html->css('select2/select2.css') ?>
-		<?= $this->Html->css('npcdata.css') ?>
+		<?= $this->Html->css('Vorien/Dashboard.jqueryui/jquery-ui.min') ?>
+		<?= $this->Html->css('Vorien/Dashboard.bootstrap/bootstrap') ?>
+		<?= $this->Html->css('Vorien/Dashboard.main') ?>
+		<?= $this->Html->css('Vorien/Dashboard.select3/select2.css') ?>
+		<?= $this->Html->css('Vorien/NPCData.npcdata.css') ?>
+
+		<?= $this->Html->script('Vorien/Dashboard.jquery/jquery-2.2.4.min') ?>
+		<?= $this->Html->script('Vorien/Dashboard.jqueryui/jquery-ui.min') ?>
+		<?= $this->Html->script('Vorien/Dashboard.bootstrap/bootstrap.min') ?>
+		<?= $this->Html->script('Vorien/Dashboard.select2/jquery.select2.js') ?>
 
 		<?= $this->fetch('meta') ?>
 		<?= $this->fetch('css') ?>
 		<?= $this->fetch('script') ?>
     </head>
     <body>
-		<?= $this->Html->script("jquery/jquery-2.2.4.min.js") ?>
-		<?= $this->Html->script('jqueryui/jquery-ui.min.js') ?>
-		<?= $this->Html->script('bootstrap/bootstrap.min.js') ?>
-		<?= $this->Html->script('select2/select2.js') ?>
-		<?= $this->fetch('script') ?>
 		<?php // debug($this->request); ?>
 		<?php // debug($this->request->params); ?>
 		<?php // debug($this->request->params['action']); ?>
@@ -90,12 +91,18 @@ $cakeDescription = 'CakePHP: the rapid development php framework';
 					});
 				});
 				$('.selectmultiple').select2({
-						dropdownAutoWidth: false,
-						closeOnSelect: false,
-						tags: true,
-						width: '100%',
-						minimumResultsForSearch: Infinity
-					});
+  minimumResultsForSearch: Infinity,
+});
+$('.selectmultiple').on("select2:closing", function () { return false; });
+
+				$('.resizedatserver').each(function () {
+					var imagelocation = '<?= $this->Url->build([ 'plugin' => 'Vorien/NPCData', "controller" => "Playerdata", "action" => "getResizedImage"]) ?>';
+					console.log($(this));
+					var imageinfo = '/' + $(this).data('image') + '/' + $(this).width() + '/' + $(this).parent().parent().height();
+					console.log(imagelocation);
+					console.log(imageinfo);
+					$(this).attr('src', imagelocation + imageinfo);
+				});
 			});
         </script>
     </body>

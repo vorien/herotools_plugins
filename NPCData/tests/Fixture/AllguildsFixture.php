@@ -46,8 +46,8 @@ class AllguildsFixture extends TestFixture
             'profession' => 'Lorem ipsum dolor sit amet',
             'incidence' => 1,
             'normalized' => 1,
-            'created' => '2016-06-19 19:28:30',
-            'modified' => '2016-06-19 19:28:30'
+            'created' => '2016-07-23 21:51:37',
+            'modified' => '2016-07-23 21:51:37'
         ],
     ];
 }

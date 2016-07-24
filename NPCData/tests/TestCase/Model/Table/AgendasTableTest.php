@@ -59,8 +59,7 @@ class AgendasTableTest extends TestCase
      */
     public function testInitialize()
     {
-		return true;
-//        $this->markTestIncomplete('Not implemented yet.');
+        $this->markTestIncomplete('Not implemented yet.');
     }
 
     /**

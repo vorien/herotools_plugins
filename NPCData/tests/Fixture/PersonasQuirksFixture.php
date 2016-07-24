@@ -45,8 +45,8 @@ class PersonasQuirksFixture extends TestFixture
             'persona_id' => 1,
             'quirk_id' => 1,
             'severity' => 1,
-            'created' => '2016-06-19 19:28:32',
-            'modified' => '2016-06-19 19:28:32'
+            'created' => '2016-07-23 21:51:40',
+            'modified' => '2016-07-23 21:51:40'
         ],
     ];
 }

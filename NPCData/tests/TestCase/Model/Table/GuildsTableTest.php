@@ -27,7 +27,7 @@ class GuildsTableTest extends TestCase
         'plugin.vorien/n_p_c_data.guilds',
         'plugin.vorien/n_p_c_data.professions',
         'plugin.vorien/n_p_c_data.personas',
-        'plugin.vorien/n_p_c_data.guilds_personas'
+        'plugin.vorien/n_p_c_data.personas_guilds'
     ];
 
     /**

@@ -26,7 +26,7 @@ class ArchetypesTableTest extends TestCase
     public $fixtures = [
         'plugin.vorien/n_p_c_data.archetypes',
         'plugin.vorien/n_p_c_data.personas',
-        'plugin.vorien/n_p_c_data.archetypes_personas'
+        'plugin.vorien/n_p_c_data.personas_archetypes'
     ];
 
     /**

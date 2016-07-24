@@ -26,7 +26,7 @@ class FlawsTable extends Table
         parent::initialize($config);
 
         $this->table('flaws');
-        $this->displayField('name');
+        $this->displayField('SelectValue');
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
@@ -34,7 +34,7 @@ class FlawsTable extends Table
         $this->belongsToMany('Personas', [
             'foreignKey' => 'flaw_id',
             'targetForeignKey' => 'persona_id',
-            'through' => 'flaws_personas',
+            'through' => 'personas_flaws',
             'className' => 'Vorien/NPCData.Personas'
         ]);
     }
