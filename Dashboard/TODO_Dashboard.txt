@@ -1,0 +1,8 @@
+TODO:
+
+07/25/16
+	Make login display smaller because it's so sparse.
+	When user is not logged in, change flash message to "You need to log in to access that page."
+	Clean up layout, remove header.
+	Clean up dashboard page, adjust for user not being GM.
+

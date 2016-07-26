@@ -1,0 +1,6 @@
+TODO:
+
+07/25/16
+	Fix join table issue in queries
+	Restructure dropdowns on edit/details tab to either more items or multiple columns
+

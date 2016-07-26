@@ -1,0 +1,19 @@
+TODO:
+
+07/25/16
+	Finish converting code to use libraries:
+		NodeStack
+		XMLFunctions
+
+	Finish parser
+		Match tags
+			Ignore list
+				Tag names
+				Partial tag names
+				ID ($documentelementid)
+		Merge attributes
+			Base on ADDER/MODIFIER/OPTION
+			Add DEFINITION from template
+
+		Process character data for display on charactersheet page.
+		Mouseovers for skills to show definitions.

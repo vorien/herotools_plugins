@@ -1,0 +1,7 @@
+TODO:
+
+07/25/16
+	Possible redesign: Move top row to left, tabs to right.
+	Make all the pieces modular so that it's easy to change the layout.
+	Allow player to save maneuver/level settings for recall.
+
