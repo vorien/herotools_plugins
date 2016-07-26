@@ -34,7 +34,7 @@ class ArchetypesTable extends Table
         $this->belongsToMany('Personas', [
             'foreignKey' => 'archetype_id',
             'targetForeignKey' => 'persona_id',
-            'through' => 'personas_archetypes',
+            'through' => 'Vorien/NPCData.PersonasArchetypes',
             'className' => 'Vorien/NPCData.Personas'
         ]);
     }

@@ -39,7 +39,7 @@ class GuildsTable extends Table
         $this->belongsToMany('Personas', [
             'foreignKey' => 'guild_id',
             'targetForeignKey' => 'persona_id',
-            'joinTable' => 'personas_guilds',
+            'through' => 'Vorien/NPCData.PersonasGuilds',
             'className' => 'Vorien/NPCData.Personas'
         ]);
     }

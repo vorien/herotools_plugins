@@ -1,4 +1,5 @@
 <?php
+debug($persona);
 $this->set('title', 'Modify Dossier Data'); 
 ?>
 <div class="personas form large-9 medium-8 columns content">

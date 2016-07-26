@@ -34,7 +34,7 @@ class FlawsTable extends Table
         $this->belongsToMany('Personas', [
             'foreignKey' => 'flaw_id',
             'targetForeignKey' => 'persona_id',
-            'through' => 'personas_flaws',
+            'through' => 'Vorien/NPCData.PersonasFlaws',
             'className' => 'Vorien/NPCData.Personas'
         ]);
     }

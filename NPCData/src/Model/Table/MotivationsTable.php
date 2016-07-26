@@ -34,7 +34,7 @@ class MotivationsTable extends Table
         $this->belongsToMany('Personas', [
             'foreignKey' => 'motivation_id',
             'targetForeignKey' => 'persona_id',
-            'through' => 'personas_motivations',
+            'through' => 'Vorien/NPCData.PersonasMotivations',
             'className' => 'Vorien/NPCData.Personas'
         ]);
     }

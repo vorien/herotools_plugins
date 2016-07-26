@@ -54,37 +54,37 @@ class PersonasTable extends Table
         $this->belongsToMany('Archetypes', [
             'foreignKey' => 'persona_id',
             'targetForeignKey' => 'archetype_id',
-            'through' => 'personas_archetypes',
+            'through' => 'Vorien/NPCData.PersonasArchetypes',
             'className' => 'Vorien/NPCData.Archetypes'
         ]);
         $this->belongsToMany('Flaws', [
             'foreignKey' => 'persona_id',
             'targetForeignKey' => 'flaw_id',
-            'through' => 'personas_flaws',
+            'through' => 'Vorien/NPCData.PersonasFlaws',
             'className' => 'Vorien/NPCData.Flaws'
         ]);
         $this->belongsToMany('Guilds', [
             'foreignKey' => 'persona_id',
             'targetForeignKey' => 'guild_id',
-            'through' => 'personas_guilds',
+            'through' => 'Vorien/NPCData.PersonasGuilds',
             'className' => 'Vorien/NPCData.Guilds'
         ]);
         $this->belongsToMany('Motivations', [
             'foreignKey' => 'persona_id',
             'targetForeignKey' => 'motivation_id',
-            'through' => 'personas_motivations',
+            'through' => 'Vorien/NPCData.PersonasMotivations',
             'className' => 'Vorien/NPCData.Motivations'
         ]);
         $this->belongsToMany('Qualities', [
             'foreignKey' => 'persona_id',
             'targetForeignKey' => 'quality_id',
-            'through' => 'personas_qualities',
+            'through' => 'Vorien/NPCData.PersonasQualities',
             'className' => 'Vorien/NPCData.Qualities'
         ]);
         $this->belongsToMany('Quirks', [
             'foreignKey' => 'persona_id',
             'targetForeignKey' => 'quirk_id',
-            'through' => 'personas_quirks',
+            'through' => 'Vorien/NPCData.PersonasQuirks',
             'className' => 'Vorien/NPCData.Quirks'
         ]);
     }

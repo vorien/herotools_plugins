@@ -1,6 +1,6 @@
 TODO:
 
-07/25/16
-	Fix join table issue in queries
-	Restructure dropdowns on edit/details tab to either more items or multiple columns
+07/25/16: Fix join table issue in queries - FIXED 07/26/16
+07/25/16: Implement Select2 as the custom dropdown
+07/25/16: Restructure dropdowns on edit/details tab to either more items or multiple columns
 
