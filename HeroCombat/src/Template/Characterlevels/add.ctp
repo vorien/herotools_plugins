@@ -2,8 +2,8 @@
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
         <li><?= $this->Html->link(__('List Characterlevels'), ['action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('List Characters'), ['controller' => 'Characters', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Character'), ['controller' => 'Characters', 'action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('List Characterstats'), ['controller' => 'Characterstats', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('New Characterstat'), ['controller' => 'Characterstats', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Levels'), ['controller' => 'Levels', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Level'), ['controller' => 'Levels', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Characterweapons'), ['controller' => 'Characterweapons', 'action' => 'index']) ?></li>
@@ -15,7 +15,7 @@
     <fieldset>
         <legend><?= __('Add Characterlevel') ?></legend>
         <?php
-            echo $this->Form->input('character_id', ['options' => $characters, 'empty' => true]);
+            echo $this->Form->input('characterstat_id', ['options' => $characterstats, 'empty' => true]);
             echo $this->Form->input('level_id', ['options' => $levels, 'empty' => true]);
             echo $this->Form->input('name');
             echo $this->Form->input('qty');

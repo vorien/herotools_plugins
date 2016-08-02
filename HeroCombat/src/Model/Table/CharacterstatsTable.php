@@ -5,19 +5,27 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Vorien\HeroCombat\Model\Entity\Character;
 
 /**
- * Characters Model
+ * Characterstats Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Users
- * @property \Cake\ORM\Association\BelongsTo $Gms
+ * @property \Cake\ORM\Association\BelongsTo $Characters
  * @property \Cake\ORM\Association\HasMany $Characterlevels
  * @property \Cake\ORM\Association\HasMany $Charactermaneuvers
  * @property \Cake\ORM\Association\HasMany $Characterprotections
  * @property \Cake\ORM\Association\HasMany $Characterweapons
+ *
+ * @method \Vorien\HeroCombat\Model\Entity\Characterstat get($primaryKey, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Characterstat newEntity($data = null, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Characterstat[] newEntities(array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Characterstat|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Characterstat patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Characterstat[] patchEntities($entities, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Characterstat findOrCreate($search, callable $callback = null)
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class CharactersTable extends Table
+class CharacterstatsTable extends Table
 {
 
     /**
@@ -30,38 +38,30 @@ class CharactersTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('herocombat.characters');
-        $this->displayField('name');
+        $this->table('characterstats');
+        $this->displayField('id');
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Charactersheets', [
-            'foreignKey' => 'userdata_id',
-            'className' => 'Vorien/HeroCSheet.Charactersheets'
-        ]);
-        $this->belongsTo('Userdata', [
-            'foreignKey' => 'userdata_id',
-            'className' => 'Vorien/Dashboard.Userdata'
-        ]);
-        $this->belongsTo('Gms', [
-            'foreignKey' => 'gm_id',
-            'className' => 'Vorien/Dashboard.Userdata'
+        $this->belongsTo('Characters', [
+            'foreignKey' => 'character_id',
+            'className' => 'Vorien/HeroCombat.Characters'
         ]);
         $this->hasMany('Characterlevels', [
-            'foreignKey' => 'character_id',
+            'foreignKey' => 'characterstat_id',
             'className' => 'Vorien/HeroCombat.Characterlevels'
         ]);
         $this->hasMany('Charactermaneuvers', [
-            'foreignKey' => 'character_id',
+            'foreignKey' => 'characterstat_id',
             'className' => 'Vorien/HeroCombat.Charactermaneuvers'
         ]);
         $this->hasMany('Characterprotections', [
-            'foreignKey' => 'character_id',
+            'foreignKey' => 'characterstat_id',
             'className' => 'Vorien/HeroCombat.Characterprotections'
         ]);
         $this->hasMany('Characterweapons', [
-            'foreignKey' => 'character_id',
+            'foreignKey' => 'characterstat_id',
             'className' => 'Vorien/HeroCombat.Characterweapons'
         ]);
     }
@@ -77,12 +77,6 @@ class CharactersTable extends Table
         $validator
             ->integer('id')
             ->allowEmpty('id', 'create');
-
-        $validator
-            ->allowEmpty('name');
-
-        $validator
-            ->allowEmpty('player');
 
         $validator
             ->integer('str')
@@ -156,8 +150,8 @@ class CharactersTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['user_id'], 'Users'));
-        $rules->add($rules->existsIn(['gm_id'], 'Gms'));
+        $rules->add($rules->existsIn(['character_id'], 'Characters'));
+
         return $rules;
     }
 

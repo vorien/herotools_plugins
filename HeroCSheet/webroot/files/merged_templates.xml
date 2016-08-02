@@ -1,5 +1,5 @@
 <?xml version="1.0"?>
-<HEROCSHEET version="2.0" extends="builtIn.Heroic6E.hdt" id="C:\Users\Michael\Documents\MyFiles\Projects\Gaming\Hero Designer\Character Files\Quinn_McBride_160129.hdc" originalPath="C:\Users\Michael\Documents\MyFiles\Projects\Gaming\Hero Designer\Templates\HykeruStats.hdt">
+<HEROCSHEET version="2.0" extends="builtIn.Heroic6E.hdt" id="C:\Users\Michael\Documents\MyFiles\Projects\Gaming\Hero Designer\Character Files\Kellara_160416.hdc" originalPath="G:\Dropbox\MFC\GameStuff\HeroSystem\Hero Designer\Templates\HykeruStats.hdt">
 	<MAINAPP BACKGROUND_TAB="Yes" HEIGHT="Yes" WEIGHT="Yes" NCM_COST_MULTIPLIER="2" GENERAL_LEVEL="10">
 		<NAME1>Character Name</NAME1>
 		<NAME2>Alternate IDs</NAME2>

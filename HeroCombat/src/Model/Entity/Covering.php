@@ -4,12 +4,13 @@ namespace Vorien\HeroCombat\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Covering Entity.
+ * Covering Entity
  *
  * @property int $id
  * @property string $name
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ *
  * @property \Vorien\HeroCombat\Model\Entity\Characterprotection[] $characterprotections
  * @property \Vorien\HeroCombat\Model\Entity\Coveringlocation[] $coveringlocations
  */
@@ -27,6 +28,6 @@ class Covering extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'id' => false,
+        'id' => false
     ];
 }

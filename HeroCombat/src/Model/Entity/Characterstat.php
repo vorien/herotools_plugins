@@ -4,11 +4,10 @@ namespace Vorien\HeroCombat\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Character Entity.
+ * Characterstat Entity
  *
  * @property int $id
- * @property string $name
- * @property string $player
+ * @property int $character_id
  * @property int $str
  * @property int $con
  * @property int $ocv
@@ -24,18 +23,16 @@ use Cake\ORM\Entity;
  * @property int $stun
  * @property int $endurance
  * @property int $recovery
- * @property int $user_id
- * @property \Vorien\HeroCombat\Model\Entity\User $user
- * @property int $gm_id
- * @property \Vorien\HeroCombat\Model\Entity\Gm $gm
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ *
+ * @property \Vorien\HeroCombat\Model\Entity\Character $character
  * @property \Vorien\HeroCombat\Model\Entity\Characterlevel[] $characterlevels
  * @property \Vorien\HeroCombat\Model\Entity\Charactermaneuver[] $charactermaneuvers
  * @property \Vorien\HeroCombat\Model\Entity\Characterprotection[] $characterprotections
  * @property \Vorien\HeroCombat\Model\Entity\Characterweapon[] $characterweapons
  */
-class Character extends Entity
+class Characterstat extends Entity
 {
 
     /**
@@ -49,6 +46,6 @@ class Character extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'id' => false,
+        'id' => false
     ];
 }

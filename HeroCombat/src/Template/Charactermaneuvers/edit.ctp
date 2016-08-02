@@ -8,8 +8,8 @@
             )
         ?></li>
         <li><?= $this->Html->link(__('List Charactermaneuvers'), ['action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('List Characters'), ['controller' => 'Characters', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Character'), ['controller' => 'Characters', 'action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('List Characterstats'), ['controller' => 'Characterstats', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('New Characterstat'), ['controller' => 'Characterstats', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Maneuvers'), ['controller' => 'Maneuvers', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Maneuver'), ['controller' => 'Maneuvers', 'action' => 'add']) ?></li>
     </ul>
@@ -19,7 +19,7 @@
     <fieldset>
         <legend><?= __('Edit Charactermaneuver') ?></legend>
         <?php
-            echo $this->Form->input('character_id', ['options' => $characters, 'empty' => true]);
+            echo $this->Form->input('characterstat_id', ['options' => $characterstats, 'empty' => true]);
             echo $this->Form->input('maneuver_id', ['options' => $maneuvers, 'empty' => true]);
         ?>
     </fieldset>

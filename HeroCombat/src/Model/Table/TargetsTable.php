@@ -5,12 +5,21 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Vorien\HeroCombat\Model\Entity\Target;
 
 /**
  * Targets Model
  *
  * @property \Cake\ORM\Association\HasMany $Locations
+ *
+ * @method \Vorien\HeroCombat\Model\Entity\Target get($primaryKey, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Target newEntity($data = null, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Target[] newEntities(array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Target|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Target patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Target[] patchEntities($entities, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Target findOrCreate($search, callable $callback = null)
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class TargetsTable extends Table
 {
@@ -48,6 +57,13 @@ class TargetsTable extends Table
         $validator
             ->integer('id')
             ->allowEmpty('id', 'create');
+
+        $validator
+            ->allowEmpty('type');
+
+        $validator
+            ->integer('sort_order')
+            ->allowEmpty('sort_order');
 
         $validator
             ->allowEmpty('roll');

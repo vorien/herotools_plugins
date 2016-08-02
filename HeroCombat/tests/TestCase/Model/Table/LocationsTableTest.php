@@ -28,6 +28,8 @@ class LocationsTableTest extends TestCase
         'plugin.vorien/hero_combat.targets',
         'plugin.vorien/hero_combat.characterprotections',
         'plugin.vorien/hero_combat.characters',
+        'plugin.vorien/hero_combat.charactersheets',
+        'plugin.vorien/hero_combat.userdata',
         'plugin.vorien/hero_combat.users',
         'plugin.vorien/hero_combat.gms',
         'plugin.vorien/hero_combat.characterlevels',

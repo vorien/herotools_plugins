@@ -4,9 +4,11 @@ namespace Vorien\HeroCombat\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Target Entity.
+ * Target Entity
  *
  * @property int $id
+ * @property string $type
+ * @property int $sort_order
  * @property string $roll
  * @property string $location
  * @property int $penalty
@@ -15,6 +17,7 @@ use Cake\ORM\Entity;
  * @property float $nstun
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ *
  * @property \Vorien\HeroCombat\Model\Entity\Location[] $locations
  */
 class Target extends Entity
@@ -31,6 +34,6 @@ class Target extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'id' => false,
+        'id' => false
     ];
 }

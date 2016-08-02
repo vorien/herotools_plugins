@@ -4,7 +4,7 @@ namespace Vorien\HeroCombat\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Weapon Entity.
+ * Weapon Entity
  *
  * @property int $id
  * @property string $weapon
@@ -34,6 +34,7 @@ use Cake\ORM\Entity;
  * @property float $str_overage_old
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ *
  * @property \Vorien\HeroCombat\Model\Entity\Characterweapon[] $characterweapons
  */
 class Weapon extends Entity
@@ -50,6 +51,6 @@ class Weapon extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'id' => false,
+        'id' => false
     ];
 }

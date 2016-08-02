@@ -16,11 +16,11 @@
     <table class="vertical-table">
         <tr>
             <th><?= __('Armor') ?></th>
-            <td><?= $armormaterial->has('armor') ? $this->Html->link($armormaterial->armor->ArmorData, ['controller' => 'Armors', 'action' => 'view', $armormaterial->armor->id]) : '' ?></td>
+            <td><?= $armormaterial->has('armor') ? $this->Html->link($armormaterial->armor->id, ['controller' => 'Armors', 'action' => 'view', $armormaterial->armor->id]) : '' ?></td>
         </tr>
         <tr>
             <th><?= __('Material') ?></th>
-            <td><?= $armormaterial->has('material') ? $this->Html->link($armormaterial->material->MaterialData, ['controller' => 'Materials', 'action' => 'view', $armormaterial->material->id]) : '' ?></td>
+            <td><?= $armormaterial->has('material') ? $this->Html->link($armormaterial->material->id, ['controller' => 'Materials', 'action' => 'view', $armormaterial->material->id]) : '' ?></td>
         </tr>
         <tr>
             <th><?= __('Id') ?></th>

@@ -26,6 +26,8 @@ class CharacterweaponsTableTest extends TestCase
     public $fixtures = [
         'plugin.vorien/hero_combat.characterweapons',
         'plugin.vorien/hero_combat.characters',
+        'plugin.vorien/hero_combat.charactersheets',
+        'plugin.vorien/hero_combat.userdata',
         'plugin.vorien/hero_combat.users',
         'plugin.vorien/hero_combat.gms',
         'plugin.vorien/hero_combat.characterlevels',
@@ -35,6 +37,8 @@ class CharacterweaponsTableTest extends TestCase
         'plugin.vorien/hero_combat.maneuvers',
         'plugin.vorien/hero_combat.characterprotections',
         'plugin.vorien/hero_combat.locations',
+        'plugin.vorien/hero_combat.targets',
+        'plugin.vorien/hero_combat.coveringlocations',
         'plugin.vorien/hero_combat.coverings',
         'plugin.vorien/hero_combat.armors',
         'plugin.vorien/hero_combat.armormaterials',

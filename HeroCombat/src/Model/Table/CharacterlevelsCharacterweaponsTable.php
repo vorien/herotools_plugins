@@ -5,13 +5,22 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Vorien\HeroCombat\Model\Entity\CharacterlevelsCharacterweapon;
 
 /**
  * CharacterlevelsCharacterweapons Model
  *
  * @property \Cake\ORM\Association\BelongsTo $Characterlevels
  * @property \Cake\ORM\Association\BelongsTo $Characterweapons
+ *
+ * @method \Vorien\HeroCombat\Model\Entity\CharacterlevelsCharacterweapon get($primaryKey, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\CharacterlevelsCharacterweapon newEntity($data = null, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\CharacterlevelsCharacterweapon[] newEntities(array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\CharacterlevelsCharacterweapon|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\CharacterlevelsCharacterweapon patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\CharacterlevelsCharacterweapon[] patchEntities($entities, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\CharacterlevelsCharacterweapon findOrCreate($search, callable $callback = null)
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class CharacterlevelsCharacterweaponsTable extends Table
 {
@@ -68,6 +77,7 @@ class CharacterlevelsCharacterweaponsTable extends Table
     {
         $rules->add($rules->existsIn(['characterlevel_id'], 'Characterlevels'));
         $rules->add($rules->existsIn(['characterweapon_id'], 'Characterweapons'));
+
         return $rules;
     }
 

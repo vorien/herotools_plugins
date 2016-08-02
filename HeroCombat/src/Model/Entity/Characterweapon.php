@@ -4,13 +4,11 @@ namespace Vorien\HeroCombat\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Characterweapon Entity.
+ * Characterweapon Entity
  *
  * @property int $id
- * @property int $character_id
- * @property \Vorien\HeroCombat\Model\Entity\Character $character
+ * @property int $characterstat_id
  * @property int $weapon_id
- * @property \Vorien\HeroCombat\Model\Entity\Weapon $weapon
  * @property string $name
  * @property int $ocv_modifier
  * @property int $dcv_modifier
@@ -25,6 +23,9 @@ use Cake\ORM\Entity;
  * @property string $notes
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ *
+ * @property \Vorien\HeroCombat\Model\Entity\Characterstat $characterstat
+ * @property \Vorien\HeroCombat\Model\Entity\Weapon $weapon
  * @property \Vorien\HeroCombat\Model\Entity\Characterlevel[] $characterlevels
  */
 class Characterweapon extends Entity
@@ -41,6 +42,6 @@ class Characterweapon extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'id' => false,
+        'id' => false
     ];
 }

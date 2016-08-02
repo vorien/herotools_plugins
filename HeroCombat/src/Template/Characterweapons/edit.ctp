@@ -8,8 +8,8 @@
             )
         ?></li>
         <li><?= $this->Html->link(__('List Characterweapons'), ['action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('List Characters'), ['controller' => 'Characters', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Character'), ['controller' => 'Characters', 'action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('List Characterstats'), ['controller' => 'Characterstats', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('New Characterstat'), ['controller' => 'Characterstats', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Weapons'), ['controller' => 'Weapons', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Weapon'), ['controller' => 'Weapons', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Characterlevels'), ['controller' => 'Characterlevels', 'action' => 'index']) ?></li>
@@ -21,7 +21,7 @@
     <fieldset>
         <legend><?= __('Edit Characterweapon') ?></legend>
         <?php
-            echo $this->Form->input('character_id', ['options' => $characters, 'empty' => true]);
+            echo $this->Form->input('characterstat_id', ['options' => $characterstats, 'empty' => true]);
             echo $this->Form->input('weapon_id', ['options' => $weapons, 'empty' => true]);
             echo $this->Form->input('name');
             echo $this->Form->input('ocv_modifier');

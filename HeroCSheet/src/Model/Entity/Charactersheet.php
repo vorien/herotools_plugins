@@ -4,15 +4,26 @@ namespace Vorien\HeroCSheet\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Charactersheet Entity.
+ * Charactersheet Entity
  *
  * @property int $id
  * @property int $character_id
- * @property \Vorien\HeroCSheet\Model\Entity\Character $character
  * @property string $characterfile
  * @property string $mainfile
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ * @property string $basic_configuration
+ * @property string $character_info
+ * @property string $characteristics
+ * @property string $skills
+ * @property string $perks
+ * @property string $talents
+ * @property string $powers
+ * @property string $disadvantages
+ * @property string $equipment
+ * @property string $skill_enhancers
+ *
+ * @property \Vorien\HeroCSheet\Model\Entity\Character $character
  */
 class Charactersheet extends Entity
 {
@@ -28,6 +39,6 @@ class Charactersheet extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'id' => false,
+        'id' => false
     ];
 }

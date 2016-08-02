@@ -12,6 +12,8 @@
         <thead>
             <tr>
                 <th><?= $this->Paginator->sort('id') ?></th>
+                <th><?= $this->Paginator->sort('type') ?></th>
+                <th><?= $this->Paginator->sort('sort_order') ?></th>
                 <th><?= $this->Paginator->sort('roll') ?></th>
                 <th><?= $this->Paginator->sort('location') ?></th>
                 <th><?= $this->Paginator->sort('penalty') ?></th>
@@ -27,6 +29,8 @@
             <?php foreach ($targets as $target): ?>
             <tr>
                 <td><?= $this->Number->format($target->id) ?></td>
+                <td><?= h($target->type) ?></td>
+                <td><?= $this->Number->format($target->sort_order) ?></td>
                 <td><?= h($target->roll) ?></td>
                 <td><?= h($target->location) ?></td>
                 <td><?= $this->Number->format($target->penalty) ?></td>

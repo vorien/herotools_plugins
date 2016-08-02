@@ -42,8 +42,8 @@ class CharacterlevelsCharacterweaponsFixture extends TestFixture
             'id' => 1,
             'characterlevel_id' => 1,
             'characterweapon_id' => 1,
-            'created' => '2016-06-19 17:39:03',
-            'modified' => '2016-06-19 17:39:03'
+            'created' => '2016-08-02 19:37:51',
+            'modified' => '2016-08-02 19:37:51'
         ],
     ];
 }

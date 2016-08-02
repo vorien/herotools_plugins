@@ -27,6 +27,8 @@ class CoveringsTableTest extends TestCase
         'plugin.vorien/hero_combat.coverings',
         'plugin.vorien/hero_combat.characterprotections',
         'plugin.vorien/hero_combat.characters',
+        'plugin.vorien/hero_combat.charactersheets',
+        'plugin.vorien/hero_combat.userdata',
         'plugin.vorien/hero_combat.users',
         'plugin.vorien/hero_combat.gms',
         'plugin.vorien/hero_combat.characterlevels',
@@ -37,10 +39,11 @@ class CoveringsTableTest extends TestCase
         'plugin.vorien/hero_combat.charactermaneuvers',
         'plugin.vorien/hero_combat.maneuvers',
         'plugin.vorien/hero_combat.locations',
+        'plugin.vorien/hero_combat.targets',
+        'plugin.vorien/hero_combat.coveringlocations',
         'plugin.vorien/hero_combat.armors',
         'plugin.vorien/hero_combat.armormaterials',
-        'plugin.vorien/hero_combat.materials',
-        'plugin.vorien/hero_combat.coveringlocations'
+        'plugin.vorien/hero_combat.materials'
     ];
 
     /**

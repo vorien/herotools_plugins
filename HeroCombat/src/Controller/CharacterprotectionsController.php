@@ -19,7 +19,7 @@ class CharacterprotectionsController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Characters', 'Locations', 'Coverings', 'Armors', 'Materials']
+            'contain' => ['Characterstats', 'Locations', 'Coverings', 'Armors', 'Materials']
         ];
         $characterprotections = $this->paginate($this->Characterprotections);
 
@@ -37,7 +37,7 @@ class CharacterprotectionsController extends AppController
     public function view($id = null)
     {
         $characterprotection = $this->Characterprotections->get($id, [
-            'contain' => ['Characters', 'Locations', 'Coverings', 'Armors', 'Materials']
+            'contain' => ['Characterstats', 'Locations', 'Coverings', 'Armors', 'Materials']
         ]);
 
         $this->set('characterprotection', $characterprotection);
@@ -56,17 +56,18 @@ class CharacterprotectionsController extends AppController
             $characterprotection = $this->Characterprotections->patchEntity($characterprotection, $this->request->data);
             if ($this->Characterprotections->save($characterprotection)) {
                 $this->Flash->success(__('The characterprotection has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The characterprotection could not be saved. Please, try again.'));
             }
         }
-        $characters = $this->Characterprotections->Characters->find('list', ['limit' => 200]);
+        $characterstats = $this->Characterprotections->Characterstats->find('list', ['limit' => 200]);
         $locations = $this->Characterprotections->Locations->find('list', ['limit' => 200]);
         $coverings = $this->Characterprotections->Coverings->find('list', ['limit' => 200]);
         $armors = $this->Characterprotections->Armors->find('list', ['limit' => 200]);
         $materials = $this->Characterprotections->Materials->find('list', ['limit' => 200]);
-        $this->set(compact('characterprotection', 'characters', 'locations', 'coverings', 'armors', 'materials'));
+        $this->set(compact('characterprotection', 'characterstats', 'locations', 'coverings', 'armors', 'materials'));
         $this->set('_serialize', ['characterprotection']);
     }
 
@@ -86,17 +87,18 @@ class CharacterprotectionsController extends AppController
             $characterprotection = $this->Characterprotections->patchEntity($characterprotection, $this->request->data);
             if ($this->Characterprotections->save($characterprotection)) {
                 $this->Flash->success(__('The characterprotection has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The characterprotection could not be saved. Please, try again.'));
             }
         }
-        $characters = $this->Characterprotections->Characters->find('list', ['limit' => 200]);
+        $characterstats = $this->Characterprotections->Characterstats->find('list', ['limit' => 200]);
         $locations = $this->Characterprotections->Locations->find('list', ['limit' => 200]);
         $coverings = $this->Characterprotections->Coverings->find('list', ['limit' => 200]);
         $armors = $this->Characterprotections->Armors->find('list', ['limit' => 200]);
         $materials = $this->Characterprotections->Materials->find('list', ['limit' => 200]);
-        $this->set(compact('characterprotection', 'characters', 'locations', 'coverings', 'armors', 'materials'));
+        $this->set(compact('characterprotection', 'characterstats', 'locations', 'coverings', 'armors', 'materials'));
         $this->set('_serialize', ['characterprotection']);
     }
 
@@ -116,6 +118,7 @@ class CharacterprotectionsController extends AppController
         } else {
             $this->Flash->error(__('The characterprotection could not be deleted. Please, try again.'));
         }
+
         return $this->redirect(['action' => 'index']);
     }
 }

@@ -4,17 +4,18 @@ namespace Vorien\HeroCombat\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Characterlevel Entity.
+ * Characterlevel Entity
  *
  * @property int $id
- * @property int $character_id
- * @property \Vorien\HeroCombat\Model\Entity\Character $character
+ * @property int $characterstat_id
  * @property int $level_id
- * @property \Vorien\HeroCombat\Model\Entity\Level $level
  * @property string $name
  * @property int $qty
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ *
+ * @property \Vorien\HeroCombat\Model\Entity\Characterstat $characterstat
+ * @property \Vorien\HeroCombat\Model\Entity\Level $level
  * @property \Vorien\HeroCombat\Model\Entity\Characterweapon[] $characterweapons
  */
 class Characterlevel extends Entity
@@ -31,6 +32,6 @@ class Characterlevel extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'id' => false,
+        'id' => false
     ];
 }

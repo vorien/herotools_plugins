@@ -1,9 +1,7 @@
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('List Characters'), ['action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('List Users'), ['controller' => 'Users', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New User'), ['controller' => 'Users', 'action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('List Characterstats'), ['action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('List Characterlevels'), ['controller' => 'Characterlevels', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Characterlevel'), ['controller' => 'Characterlevels', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Charactermaneuvers'), ['controller' => 'Charactermaneuvers', 'action' => 'index']) ?></li>
@@ -14,13 +12,12 @@
         <li><?= $this->Html->link(__('New Characterweapon'), ['controller' => 'Characterweapons', 'action' => 'add']) ?></li>
     </ul>
 </nav>
-<div class="characters form large-9 medium-8 columns content">
-    <?= $this->Form->create($character) ?>
+<div class="characterstats form large-9 medium-8 columns content">
+    <?= $this->Form->create($characterstat) ?>
     <fieldset>
-        <legend><?= __('Add Character') ?></legend>
+        <legend><?= __('Add Characterstat') ?></legend>
         <?php
-            echo $this->Form->input('name');
-            echo $this->Form->input('player');
+            echo $this->Form->input('character_id');
             echo $this->Form->input('str');
             echo $this->Form->input('con');
             echo $this->Form->input('ocv');
@@ -36,8 +33,6 @@
             echo $this->Form->input('stun');
             echo $this->Form->input('endurance');
             echo $this->Form->input('recovery');
-            echo $this->Form->input('user_id', ['options' => $users, 'empty' => true]);
-            echo $this->Form->input('gm_id');
         ?>
     </fieldset>
     <?= $this->Form->button(__('Submit')) ?>

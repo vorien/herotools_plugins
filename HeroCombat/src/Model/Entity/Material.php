@@ -4,7 +4,7 @@ namespace Vorien\HeroCombat\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Material Entity.
+ * Material Entity
  *
  * @property int $id
  * @property string $material
@@ -16,6 +16,7 @@ use Cake\ORM\Entity;
  * @property float $grade
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ *
  * @property \Vorien\HeroCombat\Model\Entity\Armormaterial[] $armormaterials
  * @property \Vorien\HeroCombat\Model\Entity\Characterprotection[] $characterprotections
  */
@@ -33,15 +34,6 @@ class Material extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'id' => false,
+        'id' => false
     ];
-	
-	protected function _getMaterialData() {
-			return $this->
-				_properties['material'] . ' - ' .
-				(!empty($this->_properties['manufacture']) ? ' (' . $this->_properties['manufacture'] .
-						(!empty($this->_properties['option']) ? ' / ' . $this->_properties['option'] : '') .
-						')' : '');
-	}
-
 }

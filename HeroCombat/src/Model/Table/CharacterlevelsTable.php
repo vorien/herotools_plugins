@@ -5,14 +5,23 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Vorien\HeroCombat\Model\Entity\Characterlevel;
 
 /**
  * Characterlevels Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Characters
+ * @property \Cake\ORM\Association\BelongsTo $Characterstats
  * @property \Cake\ORM\Association\BelongsTo $Levels
  * @property \Cake\ORM\Association\BelongsToMany $Characterweapons
+ *
+ * @method \Vorien\HeroCombat\Model\Entity\Characterlevel get($primaryKey, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Characterlevel newEntity($data = null, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Characterlevel[] newEntities(array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Characterlevel|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Characterlevel patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Characterlevel[] patchEntities($entities, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Characterlevel findOrCreate($search, callable $callback = null)
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class CharacterlevelsTable extends Table
 {
@@ -33,9 +42,9 @@ class CharacterlevelsTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Characters', [
-            'foreignKey' => 'character_id',
-            'className' => 'Vorien/HeroCombat.Characters'
+        $this->belongsTo('Characterstats', [
+            'foreignKey' => 'characterstat_id',
+            'className' => 'Vorien/HeroCombat.Characterstats'
         ]);
         $this->belongsTo('Levels', [
             'foreignKey' => 'level_id',
@@ -44,7 +53,7 @@ class CharacterlevelsTable extends Table
         $this->belongsToMany('Characterweapons', [
             'foreignKey' => 'characterlevel_id',
             'targetForeignKey' => 'characterweapon_id',
-            'through' => 'Vorien/HeroCombat.CharacterlevelsCharacterweapons',
+            'joinTable' => 'characterlevels_characterweapons',
             'className' => 'Vorien/HeroCombat.Characterweapons'
         ]);
     }
@@ -80,8 +89,9 @@ class CharacterlevelsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['character_id'], 'Characters'));
+        $rules->add($rules->existsIn(['characterstat_id'], 'Characterstats'));
         $rules->add($rules->existsIn(['level_id'], 'Levels'));
+
         return $rules;
     }
 

@@ -12,7 +12,7 @@
     </ul>
 </nav>
 <div class="armors view large-9 medium-8 columns content">
-    <h3><?= h($armor->ArmorData) ?></h3>
+    <h3><?= h($armor->id) ?></h3>
     <table class="vertical-table">
         <tr>
             <th><?= __('Type') ?></th>
@@ -91,7 +91,7 @@
             <tr>
                 <th><?= __('Id') ?></th>
                 <th><?= __('Active') ?></th>
-                <th><?= __('Character Id') ?></th>
+                <th><?= __('Characterstat Id') ?></th>
                 <th><?= __('Location Id') ?></th>
                 <th><?= __('Covering Id') ?></th>
                 <th><?= __('Armor Id') ?></th>
@@ -99,8 +99,8 @@
                 <th><?= __('Name') ?></th>
                 <th><?= __('N Pd Modifier') ?></th>
                 <th><?= __('N Ed Modifier') ?></th>
-                <th><?= __('R Pd Modifiers') ?></th>
-                <th><?= __('R Ed Modifiers') ?></th>
+                <th><?= __('R Pd Modifier') ?></th>
+                <th><?= __('R Ed Modifier') ?></th>
                 <th><?= __('Stealth Penalty') ?></th>
                 <th><?= __('Weight Modifier') ?></th>
                 <th><?= __('Training Penalty Offset') ?></th>
@@ -115,7 +115,7 @@
             <tr>
                 <td><?= h($characterprotections->id) ?></td>
                 <td><?= h($characterprotections->active) ?></td>
-                <td><?= h($characterprotections->character_id) ?></td>
+                <td><?= h($characterprotections->characterstat_id) ?></td>
                 <td><?= h($characterprotections->location_id) ?></td>
                 <td><?= h($characterprotections->covering_id) ?></td>
                 <td><?= h($characterprotections->armor_id) ?></td>
@@ -123,8 +123,8 @@
                 <td><?= h($characterprotections->name) ?></td>
                 <td><?= h($characterprotections->n_pd_modifier) ?></td>
                 <td><?= h($characterprotections->n_ed_modifier) ?></td>
-                <td><?= h($characterprotections->r_pd_modifiers) ?></td>
-                <td><?= h($characterprotections->r_ed_modifiers) ?></td>
+                <td><?= h($characterprotections->r_pd_modifier) ?></td>
+                <td><?= h($characterprotections->r_ed_modifier) ?></td>
                 <td><?= h($characterprotections->stealth_penalty) ?></td>
                 <td><?= h($characterprotections->weight_modifier) ?></td>
                 <td><?= h($characterprotections->training_penalty_offset) ?></td>

@@ -25,8 +25,8 @@
             <?php foreach ($armormaterials as $armormaterial): ?>
             <tr>
                 <td><?= $this->Number->format($armormaterial->id) ?></td>
-                <td><?= $armormaterial->has('armor') ? $this->Html->link($armormaterial->armor->ArmorData, ['controller' => 'Armors', 'action' => 'view', $armormaterial->armor->id]) : '' ?></td>
-                <td><?= $armormaterial->has('material') ? $this->Html->link($armormaterial->material->MaterialData, ['controller' => 'Materials', 'action' => 'view', $armormaterial->material->id]) : '' ?></td>
+                <td><?= $armormaterial->has('armor') ? $this->Html->link($armormaterial->armor->id, ['controller' => 'Armors', 'action' => 'view', $armormaterial->armor->id]) : '' ?></td>
+                <td><?= $armormaterial->has('material') ? $this->Html->link($armormaterial->material->id, ['controller' => 'Materials', 'action' => 'view', $armormaterial->material->id]) : '' ?></td>
                 <td><?= h($armormaterial->created) ?></td>
                 <td><?= h($armormaterial->modified) ?></td>
                 <td class="actions">

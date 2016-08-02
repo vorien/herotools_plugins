@@ -5,12 +5,21 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Vorien\HeroCombat\Model\Entity\Weapon;
 
 /**
  * Weapons Model
  *
  * @property \Cake\ORM\Association\HasMany $Characterweapons
+ *
+ * @method \Vorien\HeroCombat\Model\Entity\Weapon get($primaryKey, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Weapon newEntity($data = null, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Weapon[] newEntities(array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Weapon|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Weapon patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Weapon[] patchEntities($entities, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Weapon findOrCreate($search, callable $callback = null)
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class WeaponsTable extends Table
 {

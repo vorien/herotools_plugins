@@ -95,7 +95,7 @@
         <table cellpadding="0" cellspacing="0">
             <tr>
                 <th><?= __('Id') ?></th>
-                <th><?= __('Character Id') ?></th>
+                <th><?= __('Characterstat Id') ?></th>
                 <th><?= __('Maneuver Id') ?></th>
                 <th><?= __('Created') ?></th>
                 <th><?= __('Modified') ?></th>
@@ -104,7 +104,7 @@
             <?php foreach ($maneuver->charactermaneuvers as $charactermaneuvers): ?>
             <tr>
                 <td><?= h($charactermaneuvers->id) ?></td>
-                <td><?= h($charactermaneuvers->character_id) ?></td>
+                <td><?= h($charactermaneuvers->characterstat_id) ?></td>
                 <td><?= h($charactermaneuvers->maneuver_id) ?></td>
                 <td><?= h($charactermaneuvers->created) ?></td>
                 <td><?= h($charactermaneuvers->modified) ?></td>

@@ -5,16 +5,25 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Vorien\HeroCombat\Model\Entity\Characterprotection;
 
 /**
  * Characterprotections Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Characters
+ * @property \Cake\ORM\Association\BelongsTo $Characterstats
  * @property \Cake\ORM\Association\BelongsTo $Locations
  * @property \Cake\ORM\Association\BelongsTo $Coverings
  * @property \Cake\ORM\Association\BelongsTo $Armors
  * @property \Cake\ORM\Association\BelongsTo $Materials
+ *
+ * @method \Vorien\HeroCombat\Model\Entity\Characterprotection get($primaryKey, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Characterprotection newEntity($data = null, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Characterprotection[] newEntities(array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Characterprotection|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Characterprotection patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Characterprotection[] patchEntities($entities, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Characterprotection findOrCreate($search, callable $callback = null)
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class CharacterprotectionsTable extends Table
 {
@@ -35,9 +44,9 @@ class CharacterprotectionsTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Characters', [
-            'foreignKey' => 'character_id',
-            'className' => 'Vorien/HeroCombat.Characters'
+        $this->belongsTo('Characterstats', [
+            'foreignKey' => 'characterstat_id',
+            'className' => 'Vorien/HeroCombat.Characterstats'
         ]);
         $this->belongsTo('Locations', [
             'foreignKey' => 'location_id',
@@ -85,12 +94,12 @@ class CharacterprotectionsTable extends Table
             ->allowEmpty('n_ed_modifier');
 
         $validator
-            ->integer('r_pd_modifiers')
-            ->allowEmpty('r_pd_modifiers');
+            ->integer('r_pd_modifier')
+            ->allowEmpty('r_pd_modifier');
 
         $validator
-            ->integer('r_ed_modifiers')
-            ->allowEmpty('r_ed_modifiers');
+            ->integer('r_ed_modifier')
+            ->allowEmpty('r_ed_modifier');
 
         $validator
             ->integer('stealth_penalty')
@@ -127,11 +136,12 @@ class CharacterprotectionsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['character_id'], 'Characters'));
+        $rules->add($rules->existsIn(['characterstat_id'], 'Characterstats'));
         $rules->add($rules->existsIn(['location_id'], 'Locations'));
         $rules->add($rules->existsIn(['covering_id'], 'Coverings'));
         $rules->add($rules->existsIn(['armor_id'], 'Armors'));
         $rules->add($rules->existsIn(['material_id'], 'Materials'));
+
         return $rules;
     }
 

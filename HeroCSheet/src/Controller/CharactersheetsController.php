@@ -8,6 +8,10 @@ use Cake\Core\Plugin;
 use Cake\Utility\Xml;
 use Cake\Core\App;
 
+require_once(App::path('Lib', 'Vorien/HeroCSheet')[0] . 'XMLFunctions.php');
+
+use XMLFunctions;
+
 /**
  * Charactersheets Controller
  *
@@ -23,6 +27,7 @@ class CharactersheetsController extends AppController {
 
 	public function initialize() {
 		parent::initialize();
+		$this->XMLFunctions = new XMLFunctions();
 		$this->loadComponent('Vorien/Dashboard.Ownership');
 		$this->loadComponent('Vorien/Dashboard.DisplayFunctions');
 //		$this->loadComponent('Vorien/HeroCSheet.PCore');
@@ -39,147 +44,147 @@ class CharactersheetsController extends AppController {
 		$this->viewBuilder()->helpers(['Vorien/Dashboard.Display']);
 	}
 
-	function compareXML($character_id) {
-//		debug(App::path('Lib','Vorien/HeroCSheet')[0] . 'NodeStack.php');
+	function testxml($charactersheet_id) {
+		$characterfile = $this->PFiles . 'merged_character.xml';
+		$character_sxml = simplexml_load_file($characterfile);
+		$character_xml = new \DOMDocument();
+		$character_xml->preserveWhiteSpace = false;
+		$character_xml->load($characterfile);
+		$character_array = Xml::toArray($character_xml);
+		debug(key($character_array));
+		$bychar = [];
+		foreach ($character_array['HEROCSHEET']['SKILLS']['SKILL'] as $skill) {
+			if (!empty($skill['@CHARACTERISTIC']) && $skill['@CHARACTERISTIC'] !== 'GENERAL') {
+				$out = [];
+				$out[] = $skill['@XMLID'];
+				$out[] = empty($skill['@ALIAS']) ? '' : $skill['@ALIAS'];
+				$out[] = empty($skill['@CHARACTERISTIC']) ? '' : $skill['@CHARACTERISTIC'];
+				$out[] = empty($skill['@TYPE']) ? '' : $skill['@TYPE'];
+				$bychar[$skill['@CHARACTERISTIC']][] = implode(' -> ', $out);
+			}
+		}
+		debug($bychar);
+	}
+
+	function index($charactersheet_id) {
+
+		/* Commented out while working on processCharacter
+		  $xmlfiles = $this->getXMLFilesForCharacterID($charactersheet_id);
+
+		  $template_xml = new \DOMDocument;
+		  $template_xml->preserveWhiteSpace = false;
+		  $template_xml->loadXML($xmlfiles['character_sxml']->TEMPLATE->saveXML());
+		  unset($xmlfiles['character_sxml']->TEMPLATE);
+		  $rules_xml = new \DOMDocument;
+		  $rules_xml->preserveWhiteSpace = false;
+		  $rules_xml->loadXML($xmlfiles['character_sxml']->RULES->saveXML());
+		  unset($xmlfiles['character_sxml']->RULES);
+		  $character_xml = dom_import_simplexml($xmlfiles['character_sxml'])->ownerDocument;
+		  $main_xml = dom_import_simplexml($xmlfiles['main_sxml'])->ownerDocument;
+
+		  $this->PXML->renameElement($character_xml->documentElement, 'HEROCSHEET');
+		  $this->PXML->renameElement($main_xml->documentElement, 'HEROCSHEET');
+		  $this->PXML->renameElement($template_xml->documentElement, 'HEROCSHEET');
+
+		  $this->moveEnhancers($character_xml);
+
+
+		  $this->cpath = new \DOMXPath($character_xml);
+		  $this->mpath = new \DOMXPath($main_xml);
+		  $this->tpath = new \DOMXPath($template_xml);
+
+		  $this->PXML->standardizeTemplate($this->mpath);
+		  $this->PXML->standardizeTemplate($this->tpath);
+
+		  $removenames = ['EXAMPLE'];
+		  $this->PXML->removeNamedTags($character_xml, $removenames);
+		  $this->PXML->removeNamedTags($main_xml, $removenames);
+		  $this->PXML->removeNamedTags($template_xml, $removenames);
+
+		  $this->PXML->removeEmptyTags($character_xml);
+		  $this->PXML->removeEmptyTags($main_xml);
+		  $this->PXML->removeEmptyTags($template_xml);
+		  $this->PXML->removeEmptyTags($rules_xml);
+
+
+		  file_put_contents($this->PFiles . 'main_standardized.xml', $main_xml->saveXML());
+		  file_put_contents($this->PFiles . 'template_standardized.xml', $template_xml->saveXML());
+		  file_put_contents($this->PFiles . 'character_standardized.xml', $character_xml->saveXML());
+		  file_put_contents($this->PFiles . 'rules_standardized.xml', $rules_xml->saveXML());
+
+		  $this->loadComponent('Vorien/HeroCSheet.PMergeTemplates', [
+		  'to_xml' => $main_xml,
+		  'from_xml' => $template_xml,
+		  'basequery' => '/HEROCSHEET'
+		  ]
+		  );
+		  $merge_xml = $this->PMergeTemplates->mergeTemplates();
+		  file_put_contents($this->PFiles . 'merged_templates.xml', $merge_xml->saveXML());
+
+		  $mpath = new \DomXPath($merge_xml);
+
+		  $this->loadComponent('Vorien/HeroCSheet.PMergeCharacter', [
+		  'character_xml' => $character_xml,
+		  'merged_xml' => $merge_xml,
+		  'rules_xml' => $rules_xml,
+		  'basequery' => '/HEROCSHEET'
+		  ]
+		  );
+		  $mergedcharacter_xml = $this->PMergeCharacter->mergeCharacter();
+		  file_put_contents($this->PFiles . 'merged_character.xml', $mergedcharacter_xml->saveXML());
+
+		  End Temporary Commenting */
+
+		/* Load merged_character.xml directly for testing */
+		$mergedcharacter_xml = new \DOMDocument();
+		$mergedcharacter_xml->preserveWhiteSpace = false;
+		$mergedcharacter_xml->load($this->PFiles . 'merged_character.xml');
+		/* End Load */
+
+//		debug(Xml::toArray($mergedcharacter_xml));
 //		die();
-		$test = new \DOMDocument();
-		$new = $test->createElement('TEST/PURPLE/PICKLES');
-		$test->appendChild($new);
-		debut($test->saveXML());
-		die();
-		
-		$xmlfiles = $this->getXMLFilesForCharacterID($character_id);
+		$this->loadComponent('Vorien/HeroCSheet.PProcessCharacter', [
+			'character_xml' => $mergedcharacter_xml
+		]);
+//		$firstpass = $this->PProcessCharacter->firstPass();
+//		$standardized = $this->DisplayFunctions->standardizeArray($firstpass);
+//		$this->DisplayFunctions->echo2DArrayAsTable($standardized);
 
-		$template_xml = new \DOMDocument;
-		$template_xml->preserveWhiteSpace = false;
-		$template_xml->loadXML($xmlfiles['character_sxml']->TEMPLATE->saveXML());
-		unset($xmlfiles['character_sxml']->TEMPLATE);
-		$rules_xml = new \DOMDocument;
-		$rules_xml->preserveWhiteSpace = false;
-		$rules_xml->loadXML($xmlfiles['character_sxml']->RULES->saveXML());
-		unset($xmlfiles['character_sxml']->RULES);
-		$character_xml = dom_import_simplexml($xmlfiles['character_sxml'])->ownerDocument;
-		$main_xml = dom_import_simplexml($xmlfiles['main_sxml'])->ownerDocument;
+		$charactersheet = $this->Charactersheets->get($charactersheet_id);
+		if ($charactersheet) {
+			$this->PProcessCharacter->processCharacter();
+			$character_sxml = simplexml_load_string($this->PProcessCharacter->character_xml->saveXML());
 
-		$this->PXML->moveEnhancers($character_xml);
+			foreach ($character_sxml->children() as $child) {
+				$child_xml = $child->asXML();
+				$child_name = $child->getName();
+				$charactersheet->$child_name = $child_xml;
+				$this->Charactersheets->save($charactersheet);
+			}
+		} else {
+			debug('Charactersheet id: ' . $charactersheet_id . ' not found');
+		}
+		debug('Process Complete');
+	}
 
-		$this->PXML->renameElement($character_xml->documentElement, 'HEROCSHEET');
-		$this->PXML->renameElement($main_xml->documentElement, 'HEROCSHEET');
-		$this->PXML->renameElement($template_xml->documentElement, 'HEROCSHEET');
-
-
-		$this->cpath = new \DOMXPath($character_xml);
-		$this->mpath = new \DOMXPath($main_xml);
-		$this->tpath = new \DOMXPath($template_xml);
-
-		$this->PXML->standardizeTemplate($this->mpath);
-		$this->PXML->standardizeTemplate($this->tpath);
-
-		$removenames = ['EXAMPLE'];
-		$this->PXML->removeNamedTags($character_xml, $removenames);
-		$this->PXML->removeNamedTags($main_xml, $removenames);
-		$this->PXML->removeNamedTags($template_xml, $removenames);
-
-		$this->PXML->removeEmptyTags($character_xml);
-		$this->PXML->removeEmptyTags($main_xml);
-		$this->PXML->removeEmptyTags($template_xml);
-		$this->PXML->removeEmptyTags($rules_xml);
-
-		file_put_contents($this->PFiles . 'main_standardized.xml', $main_xml->saveXML());
-		file_put_contents($this->PFiles . 'template_standardized.xml', $template_xml->saveXML());
-		file_put_contents($this->PFiles . 'character_standardized.xml', $character_xml->saveXML());
-		file_put_contents($this->PFiles . 'rules_standardized.xml', $rules_xml->saveXML());
-
-		$this->loadComponent('Vorien/HeroCSheet.PMergeTemplates', [
-			'to_xml' => $main_xml,
-			'from_xml' => $template_xml,
-			'basequery' => '/HEROCSHEET'
-				]
-		);
-		$merge_xml = $this->PMergeTemplates->mergeTemplates();
-		file_put_contents($this->PFiles . 'merged_templates.xml', $merge_xml->saveXML());
-
-		$mpath = new \DomXPath($merge_xml);
-		
-//		$testitem = $mpath->query('/HEROCSHEET')->item(0);
-//		debug();
-//		$testitem = $mpath;
-//		debug(gettype($testitem) !== 'object' ?gettype($testitem): get_class($testitem));
-//		$testitem = $main_xml;
-//		debug(gettype($testitem) !== 'object' ?gettype($testitem): get_class($testitem));
-//		$testitem = 'blah blah';
-//		debug(gettype($testitem) !== 'object' ?gettype($testitem): get_class($testitem));
-//		$testitem = '#blah blah';
-//		debug(gettype($testitem) !== 'object' ?gettype($testitem): get_class($testitem));
-//		$testitem = 247;
-//		debug(gettype($testitem) !== 'object' ?gettype($testitem): get_class($testitem));
-//		exit;
-//		
-//		$xpatharray = [
-//			'//DOESNOTXIST'
-////			,'//ADDER/ADDER'
-////			,'//ADDER/MODIFIER'
-////			,'//ADDER/OPTION'
-//			,'//ADDER/OPTION/ADDER'
-//			,'//ADDER/OPTION/MODIFIER'
-////			,'//MODIFIER/ADDER'
-////			,'//MODIFIER/MODIFIER'
-////			,'//MODIFIER/OPTION'
-//			,'//MODIFIER/OPTION/ADDER'
-//			,'//MODIFIER/OPTION/MODIFIER'
-////			,'//OPTION/ADDER'
-////			,'//OPTION/MODIFIER'
-////			,'//OPTION/OPTION'
-////			,'//ADDER[@OPTIONID]'
-////			,'//ADDER[@OPTIONID]/ADDER'
-////			,'//ADDER[@OPTIONID]/MODIFIER'
-////			,'//ADDER[@OPTIONID]/ADDER/ADDER'
-////			,'//ADDER[@OPTIONID]/ADDER/MODIFIER'
-////			,'//ADDER[@OPTIONID]/MODIFIER/ADDER'
-////			,'//ADDER[@OPTIONID]/MODIFIER/MODIFIER'
-//
-////			,'//MODIFIER[@OPTIONID]'
-////			,'//MODIFIER[@OPTIONID]/ADDER'
-////			,'//MODIFIER[@OPTIONID]/MODIFIER'
-////			,'//MODIFIER[@OPTIONID]/ADDER/ADDER'
-////			,'//MODIFIER[@OPTIONID]/ADDER/MODIFIER'
-////			,'//MODIFIER[@OPTIONID]/MODIFIER/ADDER'
-////			,'//MODIFIER[@OPTIONID]/MODIFIER/MODIFIER'
-//
-//			];
-//		foreach ($xpatharray as $xpath) {
-//			$nodelist = $this->mpath->query($xpath);
-//			echo $xpath, ',', $nodelist->length, '<br>';
-//			foreach ($nodelist as $node) {
-//				while($node->parentNode){
-//					echo $node->getNodePath(), ': ', $node->getAttribute('XMLID'), ' / ', $node->getAttribute('OPTIONID'), '<br>';
-//					$node = $node->parentNode;
-//				}
-//			}
-//		}
-
-
-
-
-
-		$this->loadComponent('Vorien/HeroCSheet.PMergeCharacter', [
-			'character_xml' => $character_xml,
-			'merged_xml' => $merge_xml,
-			'basequery' => '/HEROCSHEET'
-				]
-		);
-		$mergedcharacter_xml = $this->PMergeCharacter->mergeCharacter();
-		debug($mergedcharacter_xml->saveXML());
-		file_put_contents($this->PFiles . 'merged_character.xml', $mergedcharacter_xml->saveXML());
+	public function moveEnhancers(&$cxml) {
+		$skillsnode = $cxml->getElementsByTagName('SKILLS')->item(0);
+		$nodepath = $skillsnode->getNodePath();
+		$tagsremovedcount = $this->XMLFunctions->removeTags($cxml, $nodepath . $this->XMLFunctions->buildSkipEmptyNodes(['starts-with(name(),"HYKERU")']));
+		if ($movednodes = $this->XMLFunctions->moveNodes($cxml, '/HEROCSHEET/SKILL_ENHANCERS', $skillsnode, $this->XMLFunctions->buildSkipEmptyNodes(['not(self::SKILL)']))) {
+			$this->XMLFunctions->renameElements($movednodes, 'ENHANCER');
+			return $movednodes;
+		} else {
+			//Either there was an error (null), or there were no Elements to move
+			return $movednodes;
+		}
 	}
 
 	function getNodeByXmlid($xmlid, $nodelist) {
-		debug($xmlid);
 		foreach ($nodelist as $item) {
 			if ($item->nodeType == XML_TEXT_NODE) {
 				continue;
 			}
-			debug($item->getAttribute('XMLID'));
 			if ($item->getAttribute('XMLID') == $xmlid) {
 				return $item;
 			}
@@ -211,60 +216,12 @@ class CharactersheetsController extends AppController {
 		}
 	}
 
-//	function mergeAttributes($xpath) {
-//		debug($xpath);
-//		$mergedocument = new \DOMDocument();
-//		$mergeelement = $mergedocument->createElement('MERGE_ELEMENT');
-//		$mergedocument->appendChild($mergeelement);
-//
-//		$cnodequery = $xpath . $this->PXML->skipemptynodes;
-//		$cnodelist = $this->cpath->query($cnodequery);
-//		foreach ($cnodelist as $cnode) {
-//			if (!$cnode->hasAttributes() || $cnode->nodeType == XML_TEXT_NODE) {
-//				echo '<br><span style="font-size: 3em; font-weight: bold;">', $cnode->nodeName, '</span><br><br>';
-//				continue;
-//			} else {
-//				debug($cnode->getNodePath());
-//				$nodequery = preg_replace('/\[[0-9]+\]/', '', $cnode->getNodePath()) . $this->PXML->skipempty;
-//				debug($nodequery);
-//				if ($mnode = $this->getMatchingNode($cnode, $nodequery, $this->mpath)) {
-//					foreach ($mnode->attributes as $attribute) {
-//						$mergeelement->setAttribute($attribute->name, $attribute->value);
-//					}
-//				} else {
-//					debug('No matching item in merged_xml for ' . $cnode->nodeName . ' at ' . $cnode->getNodePath());
-//					$this->showParentNodes($cnode, true);
-//					$bt = debug_backtrace(DEBUG_BACKTRACE_IGNORE_ARGS, 10);
-//					$btline = [];
-//					for ($ctr = 0; $ctr < 10; $ctr++) {
-//						$btline[$ctr] = array_shift($bt);
-//					}
-//					debug($btline);
-//					die();
-//				}
-//
-//				foreach ($cnode->attributes as $attribute) {
-//					$mergeelement->setAttribute($attribute->name, $attribute->value);
-//				}
-//				foreach ($mergeelement->attributes as $attribute) {
-//					$cnode->setAttribute($attribute->name, $attribute->value);
-//				}
-////			if ($cnode->hasChildNodes()) {
-//				foreach ($cnode->childNodes as $child) {
-//					$childquery = preg_replace('/\[[0-9]+\]/', '', $child->getNodePath());
-//					$this->mergeAttributes($childquery);
-//				}
-////			}
-//			}
-//		}
-//	}
-
-	function getXMLFilesForCharacterID($character_id) {
-		if (empty($character_id)) {
+	function getXMLFilesForCharacterID($charactersheet_id) {
+		if (empty($charactersheet_id)) {
 			$this->Flash->set('No character was selected');
 			return $this->redirect(['plugin' => 'Vorien/Dashboard', 'controller' => 'dashboard']);
 		}
-		$charactersheet = $this->Charactersheets->find('all')->where(['character_id' => $character_id])->first();
+		$charactersheet = $this->Charactersheets->find('all')->where(['character_id' => $charactersheet_id])->first();
 		if (empty($charactersheet)) {
 			$this->Flash->set('There is no entry in the table for that character');
 			return $this->redirect(['plugin' => 'Vorien/Dashboard', 'controller' => 'dashboard']);
@@ -297,7 +254,7 @@ class CharactersheetsController extends AppController {
 	}
 
 	/*
-	  public function display($character_id) {
+	  public function display($charactersheet_id) {
 	  $skillenhancers = array("KS" => 0, "AK" => 0, "PS" => 0, "CuK" => 0);
 	  foreach ($mergedCharacter['SKILL_ENHANCERS'] as $key => $characteristic) {
 	  switch ($key) {

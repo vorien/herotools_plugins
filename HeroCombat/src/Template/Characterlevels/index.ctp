@@ -2,8 +2,8 @@
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
         <li><?= $this->Html->link(__('New Characterlevel'), ['action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Characters'), ['controller' => 'Characters', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Character'), ['controller' => 'Characters', 'action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('List Characterstats'), ['controller' => 'Characterstats', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('New Characterstat'), ['controller' => 'Characterstats', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Levels'), ['controller' => 'Levels', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Level'), ['controller' => 'Levels', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Characterweapons'), ['controller' => 'Characterweapons', 'action' => 'index']) ?></li>
@@ -16,7 +16,7 @@
         <thead>
             <tr>
                 <th><?= $this->Paginator->sort('id') ?></th>
-                <th><?= $this->Paginator->sort('character_id') ?></th>
+                <th><?= $this->Paginator->sort('characterstat_id') ?></th>
                 <th><?= $this->Paginator->sort('level_id') ?></th>
                 <th><?= $this->Paginator->sort('name') ?></th>
                 <th><?= $this->Paginator->sort('qty') ?></th>
@@ -29,7 +29,7 @@
             <?php foreach ($characterlevels as $characterlevel): ?>
             <tr>
                 <td><?= $this->Number->format($characterlevel->id) ?></td>
-                <td><?= $characterlevel->has('character') ? $this->Html->link($characterlevel->character->name, ['controller' => 'Characters', 'action' => 'view', $characterlevel->character->id]) : '' ?></td>
+                <td><?= $characterlevel->has('characterstat') ? $this->Html->link($characterlevel->characterstat->id, ['controller' => 'Characterstats', 'action' => 'view', $characterlevel->characterstat->id]) : '' ?></td>
                 <td><?= $characterlevel->has('level') ? $this->Html->link($characterlevel->level->id, ['controller' => 'Levels', 'action' => 'view', $characterlevel->level->id]) : '' ?></td>
                 <td><?= h($characterlevel->name) ?></td>
                 <td><?= $this->Number->format($characterlevel->qty) ?></td>

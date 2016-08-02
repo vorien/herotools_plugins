@@ -2,8 +2,8 @@
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
         <li><?= $this->Html->link(__('List Characterprotections'), ['action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('List Characters'), ['controller' => 'Characters', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Character'), ['controller' => 'Characters', 'action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('List Characterstats'), ['controller' => 'Characterstats', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('New Characterstat'), ['controller' => 'Characterstats', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Locations'), ['controller' => 'Locations', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Location'), ['controller' => 'Locations', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Coverings'), ['controller' => 'Coverings', 'action' => 'index']) ?></li>
@@ -20,7 +20,7 @@
         <legend><?= __('Add Characterprotection') ?></legend>
         <?php
             echo $this->Form->input('active');
-            echo $this->Form->input('character_id', ['options' => $characters, 'empty' => true]);
+            echo $this->Form->input('characterstat_id', ['options' => $characterstats, 'empty' => true]);
             echo $this->Form->input('location_id', ['options' => $locations, 'empty' => true]);
             echo $this->Form->input('covering_id', ['options' => $coverings, 'empty' => true]);
             echo $this->Form->input('armor_id', ['options' => $armors, 'empty' => true]);
@@ -28,8 +28,8 @@
             echo $this->Form->input('name');
             echo $this->Form->input('n_pd_modifier');
             echo $this->Form->input('n_ed_modifier');
-            echo $this->Form->input('r_pd_modifiers');
-            echo $this->Form->input('r_ed_modifiers');
+            echo $this->Form->input('r_pd_modifier');
+            echo $this->Form->input('r_ed_modifier');
             echo $this->Form->input('stealth_penalty');
             echo $this->Form->input('weight_modifier');
             echo $this->Form->input('training_penalty_offset');

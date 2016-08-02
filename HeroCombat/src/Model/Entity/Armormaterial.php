@@ -4,15 +4,16 @@ namespace Vorien\HeroCombat\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Armormaterial Entity.
+ * Armormaterial Entity
  *
  * @property int $id
  * @property int $armor_id
- * @property \Vorien\HeroCombat\Model\Entity\Armor $armor
  * @property int $material_id
- * @property \Vorien\HeroCombat\Model\Entity\Material $material
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ *
+ * @property \Vorien\HeroCombat\Model\Entity\Armor $armor
+ * @property \Vorien\HeroCombat\Model\Entity\Material $material
  */
 class Armormaterial extends Entity
 {
@@ -28,6 +29,6 @@ class Armormaterial extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'id' => false,
+        'id' => false
     ];
 }

@@ -1,12 +1,10 @@
 <nav class="large-3 medium-4 columns" id="actions-sidebar">
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
-        <li><?= $this->Html->link(__('Edit Character'), ['action' => 'edit', $character->id]) ?> </li>
-        <li><?= $this->Form->postLink(__('Delete Character'), ['action' => 'delete', $character->id], ['confirm' => __('Are you sure you want to delete # {0}?', $character->id)]) ?> </li>
-        <li><?= $this->Html->link(__('List Characters'), ['action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Character'), ['action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Users'), ['controller' => 'Userdata', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New User'), ['controller' => 'Userdata', 'action' => 'add']) ?> </li>
+        <li><?= $this->Html->link(__('Edit Characterstat'), ['action' => 'edit', $characterstat->id]) ?> </li>
+        <li><?= $this->Form->postLink(__('Delete Characterstat'), ['action' => 'delete', $characterstat->id], ['confirm' => __('Are you sure you want to delete # {0}?', $characterstat->id)]) ?> </li>
+        <li><?= $this->Html->link(__('List Characterstats'), ['action' => 'index']) ?> </li>
+        <li><?= $this->Html->link(__('New Characterstat'), ['action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Characterlevels'), ['controller' => 'Characterlevels', 'action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New Characterlevel'), ['controller' => 'Characterlevels', 'action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Charactermaneuvers'), ['controller' => 'Charactermaneuvers', 'action' => 'index']) ?> </li>
@@ -17,105 +15,93 @@
         <li><?= $this->Html->link(__('New Characterweapon'), ['controller' => 'Characterweapons', 'action' => 'add']) ?> </li>
     </ul>
 </nav>
-<div class="characters view large-9 medium-8 columns content">
-    <h3><?= h($character->name) ?></h3>
+<div class="characterstats view large-9 medium-8 columns content">
+    <h3><?= h($characterstat->id) ?></h3>
     <table class="vertical-table">
         <tr>
-            <th><?= __('Name') ?></th>
-            <td><?= h($character->name) ?></td>
-        </tr>
-        <tr>
-            <th><?= __('Player') ?></th>
-            <td><?= h($character->player) ?></td>
-        </tr>
-<!--        <tr>
-            <th><?= __('User') ?></th>
-            <td><?= $character->has('user') ? $this->Html->link($character->user->id, ['controller' => 'Users', 'action' => 'view', $character->user->id]) : '' ?></td>
-        </tr>-->
-        <tr>
             <th><?= __('Id') ?></th>
-            <td><?= $this->Number->format($character->id) ?></td>
+            <td><?= $this->Number->format($characterstat->id) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Character Id') ?></th>
+            <td><?= $this->Number->format($characterstat->character_id) ?></td>
         </tr>
         <tr>
             <th><?= __('Str') ?></th>
-            <td><?= $this->Number->format($character->str) ?></td>
+            <td><?= $this->Number->format($characterstat->str) ?></td>
         </tr>
         <tr>
             <th><?= __('Con') ?></th>
-            <td><?= $this->Number->format($character->con) ?></td>
+            <td><?= $this->Number->format($characterstat->con) ?></td>
         </tr>
         <tr>
             <th><?= __('Ocv') ?></th>
-            <td><?= $this->Number->format($character->ocv) ?></td>
+            <td><?= $this->Number->format($characterstat->ocv) ?></td>
         </tr>
         <tr>
             <th><?= __('Dcv') ?></th>
-            <td><?= $this->Number->format($character->dcv) ?></td>
+            <td><?= $this->Number->format($characterstat->dcv) ?></td>
         </tr>
         <tr>
             <th><?= __('Omcv') ?></th>
-            <td><?= $this->Number->format($character->omcv) ?></td>
+            <td><?= $this->Number->format($characterstat->omcv) ?></td>
         </tr>
         <tr>
             <th><?= __('Dmcv') ?></th>
-            <td><?= $this->Number->format($character->dmcv) ?></td>
+            <td><?= $this->Number->format($characterstat->dmcv) ?></td>
         </tr>
         <tr>
             <th><?= __('Ma Dc') ?></th>
-            <td><?= $this->Number->format($character->ma_dc) ?></td>
+            <td><?= $this->Number->format($characterstat->ma_dc) ?></td>
         </tr>
         <tr>
             <th><?= __('N Pd') ?></th>
-            <td><?= $this->Number->format($character->n_pd) ?></td>
+            <td><?= $this->Number->format($characterstat->n_pd) ?></td>
         </tr>
         <tr>
             <th><?= __('N Ed') ?></th>
-            <td><?= $this->Number->format($character->n_ed) ?></td>
+            <td><?= $this->Number->format($characterstat->n_ed) ?></td>
         </tr>
         <tr>
             <th><?= __('R Pd') ?></th>
-            <td><?= $this->Number->format($character->r_pd) ?></td>
+            <td><?= $this->Number->format($characterstat->r_pd) ?></td>
         </tr>
         <tr>
             <th><?= __('R Ed') ?></th>
-            <td><?= $this->Number->format($character->r_ed) ?></td>
+            <td><?= $this->Number->format($characterstat->r_ed) ?></td>
         </tr>
         <tr>
             <th><?= __('Body') ?></th>
-            <td><?= $this->Number->format($character->body) ?></td>
+            <td><?= $this->Number->format($characterstat->body) ?></td>
         </tr>
         <tr>
             <th><?= __('Stun') ?></th>
-            <td><?= $this->Number->format($character->stun) ?></td>
+            <td><?= $this->Number->format($characterstat->stun) ?></td>
         </tr>
         <tr>
             <th><?= __('Endurance') ?></th>
-            <td><?= $this->Number->format($character->endurance) ?></td>
+            <td><?= $this->Number->format($characterstat->endurance) ?></td>
         </tr>
         <tr>
             <th><?= __('Recovery') ?></th>
-            <td><?= $this->Number->format($character->recovery) ?></td>
-        </tr>
-        <tr>
-            <th><?= __('Gm Id') ?></th>
-            <td><?= $this->Number->format($character->gm_id) ?></td>
+            <td><?= $this->Number->format($characterstat->recovery) ?></td>
         </tr>
         <tr>
             <th><?= __('Created') ?></th>
-            <td><?= h($character->created) ?></td>
+            <td><?= h($characterstat->created) ?></td>
         </tr>
         <tr>
             <th><?= __('Modified') ?></th>
-            <td><?= h($character->modified) ?></td>
+            <td><?= h($characterstat->modified) ?></td>
         </tr>
     </table>
     <div class="related">
         <h4><?= __('Related Characterlevels') ?></h4>
-        <?php if (!empty($character->characterlevels)): ?>
+        <?php if (!empty($characterstat->characterlevels)): ?>
         <table cellpadding="0" cellspacing="0">
             <tr>
                 <th><?= __('Id') ?></th>
-                <th><?= __('Character Id') ?></th>
+                <th><?= __('Characterstat Id') ?></th>
                 <th><?= __('Level Id') ?></th>
                 <th><?= __('Name') ?></th>
                 <th><?= __('Qty') ?></th>
@@ -123,10 +109,10 @@
                 <th><?= __('Modified') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
             </tr>
-            <?php foreach ($character->characterlevels as $characterlevels): ?>
+            <?php foreach ($characterstat->characterlevels as $characterlevels): ?>
             <tr>
                 <td><?= h($characterlevels->id) ?></td>
-                <td><?= h($characterlevels->character_id) ?></td>
+                <td><?= h($characterlevels->characterstat_id) ?></td>
                 <td><?= h($characterlevels->level_id) ?></td>
                 <td><?= h($characterlevels->name) ?></td>
                 <td><?= h($characterlevels->qty) ?></td>
@@ -144,20 +130,20 @@
     </div>
     <div class="related">
         <h4><?= __('Related Charactermaneuvers') ?></h4>
-        <?php if (!empty($character->charactermaneuvers)): ?>
+        <?php if (!empty($characterstat->charactermaneuvers)): ?>
         <table cellpadding="0" cellspacing="0">
             <tr>
                 <th><?= __('Id') ?></th>
-                <th><?= __('Character Id') ?></th>
+                <th><?= __('Characterstat Id') ?></th>
                 <th><?= __('Maneuver Id') ?></th>
                 <th><?= __('Created') ?></th>
                 <th><?= __('Modified') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
             </tr>
-            <?php foreach ($character->charactermaneuvers as $charactermaneuvers): ?>
+            <?php foreach ($characterstat->charactermaneuvers as $charactermaneuvers): ?>
             <tr>
                 <td><?= h($charactermaneuvers->id) ?></td>
-                <td><?= h($charactermaneuvers->character_id) ?></td>
+                <td><?= h($charactermaneuvers->characterstat_id) ?></td>
                 <td><?= h($charactermaneuvers->maneuver_id) ?></td>
                 <td><?= h($charactermaneuvers->created) ?></td>
                 <td><?= h($charactermaneuvers->modified) ?></td>
@@ -173,12 +159,12 @@
     </div>
     <div class="related">
         <h4><?= __('Related Characterprotections') ?></h4>
-        <?php if (!empty($character->characterprotections)): ?>
+        <?php if (!empty($characterstat->characterprotections)): ?>
         <table cellpadding="0" cellspacing="0">
             <tr>
                 <th><?= __('Id') ?></th>
                 <th><?= __('Active') ?></th>
-                <th><?= __('Character Id') ?></th>
+                <th><?= __('Characterstat Id') ?></th>
                 <th><?= __('Location Id') ?></th>
                 <th><?= __('Covering Id') ?></th>
                 <th><?= __('Armor Id') ?></th>
@@ -186,8 +172,8 @@
                 <th><?= __('Name') ?></th>
                 <th><?= __('N Pd Modifier') ?></th>
                 <th><?= __('N Ed Modifier') ?></th>
-                <th><?= __('R Pd Modifiers') ?></th>
-                <th><?= __('R Ed Modifiers') ?></th>
+                <th><?= __('R Pd Modifier') ?></th>
+                <th><?= __('R Ed Modifier') ?></th>
                 <th><?= __('Stealth Penalty') ?></th>
                 <th><?= __('Weight Modifier') ?></th>
                 <th><?= __('Training Penalty Offset') ?></th>
@@ -198,11 +184,11 @@
                 <th><?= __('Modified') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
             </tr>
-            <?php foreach ($character->characterprotections as $characterprotections): ?>
+            <?php foreach ($characterstat->characterprotections as $characterprotections): ?>
             <tr>
                 <td><?= h($characterprotections->id) ?></td>
                 <td><?= h($characterprotections->active) ?></td>
-                <td><?= h($characterprotections->character_id) ?></td>
+                <td><?= h($characterprotections->characterstat_id) ?></td>
                 <td><?= h($characterprotections->location_id) ?></td>
                 <td><?= h($characterprotections->covering_id) ?></td>
                 <td><?= h($characterprotections->armor_id) ?></td>
@@ -210,8 +196,8 @@
                 <td><?= h($characterprotections->name) ?></td>
                 <td><?= h($characterprotections->n_pd_modifier) ?></td>
                 <td><?= h($characterprotections->n_ed_modifier) ?></td>
-                <td><?= h($characterprotections->r_pd_modifiers) ?></td>
-                <td><?= h($characterprotections->r_ed_modifiers) ?></td>
+                <td><?= h($characterprotections->r_pd_modifier) ?></td>
+                <td><?= h($characterprotections->r_ed_modifier) ?></td>
                 <td><?= h($characterprotections->stealth_penalty) ?></td>
                 <td><?= h($characterprotections->weight_modifier) ?></td>
                 <td><?= h($characterprotections->training_penalty_offset) ?></td>
@@ -232,11 +218,11 @@
     </div>
     <div class="related">
         <h4><?= __('Related Characterweapons') ?></h4>
-        <?php if (!empty($character->characterweapons)): ?>
+        <?php if (!empty($characterstat->characterweapons)): ?>
         <table cellpadding="0" cellspacing="0">
             <tr>
                 <th><?= __('Id') ?></th>
-                <th><?= __('Character Id') ?></th>
+                <th><?= __('Characterstat Id') ?></th>
                 <th><?= __('Weapon Id') ?></th>
                 <th><?= __('Name') ?></th>
                 <th><?= __('Ocv Modifier') ?></th>
@@ -254,10 +240,10 @@
                 <th><?= __('Modified') ?></th>
                 <th class="actions"><?= __('Actions') ?></th>
             </tr>
-            <?php foreach ($character->characterweapons as $characterweapons): ?>
+            <?php foreach ($characterstat->characterweapons as $characterweapons): ?>
             <tr>
                 <td><?= h($characterweapons->id) ?></td>
-                <td><?= h($characterweapons->character_id) ?></td>
+                <td><?= h($characterweapons->characterstat_id) ?></td>
                 <td><?= h($characterweapons->weapon_id) ?></td>
                 <td><?= h($characterweapons->name) ?></td>
                 <td><?= h($characterweapons->ocv_modifier) ?></td>

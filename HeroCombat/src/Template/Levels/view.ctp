@@ -47,7 +47,7 @@
         <table cellpadding="0" cellspacing="0">
             <tr>
                 <th><?= __('Id') ?></th>
-                <th><?= __('Character Id') ?></th>
+                <th><?= __('Characterstat Id') ?></th>
                 <th><?= __('Level Id') ?></th>
                 <th><?= __('Name') ?></th>
                 <th><?= __('Qty') ?></th>
@@ -58,7 +58,7 @@
             <?php foreach ($level->characterlevels as $characterlevels): ?>
             <tr>
                 <td><?= h($characterlevels->id) ?></td>
-                <td><?= h($characterlevels->character_id) ?></td>
+                <td><?= h($characterlevels->characterstat_id) ?></td>
                 <td><?= h($characterlevels->level_id) ?></td>
                 <td><?= h($characterlevels->name) ?></td>
                 <td><?= h($characterlevels->qty) ?></td>

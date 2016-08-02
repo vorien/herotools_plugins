@@ -5,8 +5,8 @@
         <li><?= $this->Form->postLink(__('Delete Characterlevel'), ['action' => 'delete', $characterlevel->id], ['confirm' => __('Are you sure you want to delete # {0}?', $characterlevel->id)]) ?> </li>
         <li><?= $this->Html->link(__('List Characterlevels'), ['action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New Characterlevel'), ['action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Characters'), ['controller' => 'Characters', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Character'), ['controller' => 'Characters', 'action' => 'add']) ?> </li>
+        <li><?= $this->Html->link(__('List Characterstats'), ['controller' => 'Characterstats', 'action' => 'index']) ?> </li>
+        <li><?= $this->Html->link(__('New Characterstat'), ['controller' => 'Characterstats', 'action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Levels'), ['controller' => 'Levels', 'action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New Level'), ['controller' => 'Levels', 'action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Characterweapons'), ['controller' => 'Characterweapons', 'action' => 'index']) ?> </li>
@@ -17,8 +17,8 @@
     <h3><?= h($characterlevel->name) ?></h3>
     <table class="vertical-table">
         <tr>
-            <th><?= __('Character') ?></th>
-            <td><?= $characterlevel->has('character') ? $this->Html->link($characterlevel->character->name, ['controller' => 'Characters', 'action' => 'view', $characterlevel->character->id]) : '' ?></td>
+            <th><?= __('Characterstat') ?></th>
+            <td><?= $characterlevel->has('characterstat') ? $this->Html->link($characterlevel->characterstat->id, ['controller' => 'Characterstats', 'action' => 'view', $characterlevel->characterstat->id]) : '' ?></td>
         </tr>
         <tr>
             <th><?= __('Level') ?></th>
@@ -51,7 +51,7 @@
         <table cellpadding="0" cellspacing="0">
             <tr>
                 <th><?= __('Id') ?></th>
-                <th><?= __('Character Id') ?></th>
+                <th><?= __('Characterstat Id') ?></th>
                 <th><?= __('Weapon Id') ?></th>
                 <th><?= __('Name') ?></th>
                 <th><?= __('Ocv Modifier') ?></th>
@@ -72,7 +72,7 @@
             <?php foreach ($characterlevel->characterweapons as $characterweapons): ?>
             <tr>
                 <td><?= h($characterweapons->id) ?></td>
-                <td><?= h($characterweapons->character_id) ?></td>
+                <td><?= h($characterweapons->characterstat_id) ?></td>
                 <td><?= h($characterweapons->weapon_id) ?></td>
                 <td><?= h($characterweapons->name) ?></td>
                 <td><?= h($characterweapons->ocv_modifier) ?></td>

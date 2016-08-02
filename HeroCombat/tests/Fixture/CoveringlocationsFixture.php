@@ -42,8 +42,8 @@ class CoveringlocationsFixture extends TestFixture
             'id' => 1,
             'covering_id' => 1,
             'location_id' => 1,
-            'created' => '2016-06-19 17:39:04',
-            'modified' => '2016-06-19 17:39:04'
+            'created' => '2016-08-02 19:37:51',
+            'modified' => '2016-08-02 19:37:51'
         ],
     ];
 }

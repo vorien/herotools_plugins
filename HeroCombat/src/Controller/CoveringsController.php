@@ -53,6 +53,7 @@ class CoveringsController extends AppController
             $covering = $this->Coverings->patchEntity($covering, $this->request->data);
             if ($this->Coverings->save($covering)) {
                 $this->Flash->success(__('The covering has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The covering could not be saved. Please, try again.'));
@@ -78,6 +79,7 @@ class CoveringsController extends AppController
             $covering = $this->Coverings->patchEntity($covering, $this->request->data);
             if ($this->Coverings->save($covering)) {
                 $this->Flash->success(__('The covering has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The covering could not be saved. Please, try again.'));
@@ -103,6 +105,7 @@ class CoveringsController extends AppController
         } else {
             $this->Flash->error(__('The covering could not be deleted. Please, try again.'));
         }
+
         return $this->redirect(['action' => 'index']);
     }
 }

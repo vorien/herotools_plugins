@@ -26,7 +26,7 @@
             <tr>
                 <td><?= $this->Number->format($coveringlocation->id) ?></td>
                 <td><?= $coveringlocation->has('covering') ? $this->Html->link($coveringlocation->covering->name, ['controller' => 'Coverings', 'action' => 'view', $coveringlocation->covering->id]) : '' ?></td>
-                <td><?= $coveringlocation->has('location') ? $this->Html->link($coveringlocation->location->LocationData, ['controller' => 'Locations', 'action' => 'view', $coveringlocation->location->id]) : '' ?></td>
+                <td><?= $coveringlocation->has('location') ? $this->Html->link($coveringlocation->location->id, ['controller' => 'Locations', 'action' => 'view', $coveringlocation->location->id]) : '' ?></td>
                 <td><?= h($coveringlocation->created) ?></td>
                 <td><?= h($coveringlocation->modified) ?></td>
                 <td class="actions">

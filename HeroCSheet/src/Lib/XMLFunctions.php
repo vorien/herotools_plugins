@@ -7,12 +7,13 @@
 
 class XMLFunctions {
 
-	public $skipemptynodes = '/node()[not(self::text()[not(normalize-space())])]';
-	public $skipempty = '[not(self::text()[not(normalize-space())])]';
-	public $notempty = '[not(*) and not(@*) and not(text()[normalize-space()])]';
+	private $skipemptynodes = '/node()';
+	public $skipempty = ['not(self::text()[not(normalize-space())])'];
+	public $emptynottext = ['not(*) and not(@*) and not(text()[normalize-space()])'];
+	public $empty = ['not(*) and not(@*)'];
 	public $documentelementid = 'ID';
 
-	function __construct($params) {
+	function __construct($params = []) {
 		if (isset($params['SkipEmptyNodes'])) {
 			$this->setSkipEmptyNodes($params['SkipEmptyNodes']);
 		}
@@ -22,16 +23,31 @@ class XMLFunctions {
 	}
 
 	function setSkipEmptyNodes($skip = true) {
-		$this->skipemptynodes = $skip ? '/node()[not(self::text()[not(normalize-space())])]' : '';
-		$this->skipempty = $skip ? '[not(self::text()[not(normalize-space())])]' : '';
+		$this->skipempty = $skip ? ['not(self::text()[not(normalize-space())])'] : [];
+		$this->skipemptynodes = $skip ? '/node()' : '';
 	}
 
-	function setDocumentElementID($id = null) {
-		$this->documentelementid = $id ? : 'ID';
+	function buildOptions($selectarray = []){
+		if ($selectarray) {
+			$built = '[' . implode(' and ', $selectarray) . ']';
+		}
+		return $built ?: '';
+	}
+
+	function buildSkipEmpty($selectarray = []) {
+		$parameters = array_merge($selectarray, $this->skipempty);
+		if ($parameters) {
+			$built = '[' . implode(' and ', $parameters) . ']';
+		}
+		return $built ?: '';
+	}
+
+	function buildSkipEmptyNodes($selectarray = []) {
+		return '/node()' . $this->buildSkipEmpty($selectarray);
 	}
 
 	function removeNamedTags(&$domdocument, $namearray = []) {
-		$domxpath = getDOMXPathFromDOMDocument($domdocument);
+		$domxpath = $this->getDOMXPathFromDOMDocument($domdocument);
 		foreach ($namearray as $name) {
 			$query = '//' . $name;
 			$this->removeTags($domdocument, $query);
@@ -51,13 +67,14 @@ class XMLFunctions {
 				return false;
 			}
 		}
-		$query .= '/*' . $this->notempty;
+		$query .= '/*[not(node())]';
 		$this->removeTags($domdocument, $query);
 		return true;
 	}
 
-	function checkPathExists(&$domdocument, $domxpath) {
-		$element = $domdocument->query($domxpath);
+	function checkPathExists(&$domdocument, $nodepath) {
+		$domxpath = $this->getDOMXPathFromDOMDocument($domdocument);
+		$nodelist = $domxpath->query($nodepath);
 		switch ($nodelist->length) {
 			case 0:
 				return false;
@@ -85,10 +102,10 @@ class XMLFunctions {
 		$renamed = $element->ownerDocument->createElement($name);
 
 		foreach ($element->attributes as $attribute) {
-			if ($domdocumentid !== false || $attribute->nodeName !== 'XMLID')
+			if ($newid !== false || $attribute->nodeName !== $this->documentelementid)
 				$renamed->setAttribute($attribute->nodeName, $attribute->nodeValue);
 		}
-		if ($domdocumentid) {
+		if ($newid) {
 			$renamed->setAttribute($this->documentelementid, $newid);
 		}
 		while ($element->firstChild) {
@@ -97,13 +114,24 @@ class XMLFunctions {
 		return $element->parentNode->replaceChild($renamed, $element);
 	}
 
+	function renameElements(&$nodelist, $newname) {
+		foreach ($nodelist as $element) {
+			if ($element->nodeName != $newname) {
+				$this->renameElement($element, $newname);
+			}
+		}
+	}
+
 	function removeTags(&$domdocument, $query) {
-		$domxpath = $this->getDOMXPathFromDOMDocument($domdocument);
-		while (($nodelist = $domxpath->query($query)) && $nodelist->length) {
+		$nodecount = 0;
+		while (($nodelist = $this->getNodeList($domdocument, $query)) && $nodelist->length) {
+//			debug($nodelist->length);
 			foreach ($nodelist as $element) {
+				$nodecount += 1;
 				$element->parentNode->removeChild($element);
 			}
 		}
+		return $nodecount;
 	}
 
 	function getDOMXPathFromDOMDocument(&$domdocument) {
@@ -112,7 +140,7 @@ class XMLFunctions {
 
 	function getNodeList(&$domdocument, $query) {
 		$domxpath = $this->getDOMXPathFromDOMDocument($domdocument);
-		$nodelist = $domxpath->query($query . $this->skipemptynodes);
+		$nodelist = $domxpath->query($query);
 		return $nodelist;
 	}
 
@@ -142,6 +170,11 @@ class XMLFunctions {
 		}
 	}
 
+	function copyNode(&$tonode, &$node) {
+		$newnode = $tonode->ownerDocument->importNode($node, true);
+		$tonode->appendChild($newnode);
+	}
+
 	function setParentNodeIDToText($nodelist) {
 		foreach ($nodelist as $element) {
 			if ($element->nodeType == XML_TEXT_NODE) {
@@ -168,42 +201,50 @@ class XMLFunctions {
 		return $attributes;
 	}
 
-	function attachElement($parent, $elementname) {
-		$newelement = $parent->createElement($elementName);
-		$newchild = $parent->appendChild($newelement);
+	function attachElement(&$node, $elementname) {
+		$domdocument = $node->ownerDocument;
+		$newelement = $domdocument->createElement($elementname);
+		$newchild = $node->appendChild($newelement);
 		return $newchild;
 	}
 
-	function findOrCreateElementPath(&$domdocument, $elementpath) {
+	function findOrCreateNodePath(&$domdocument, $nodepath) {
 		$domxpath = $this->getDOMXPathFromDOMDocument($domdocument);
-		$checkpath = $this->checkPathExists($domdocument, $elementpath);
+		$checkpath = $this->checkPathExists($domdocument, $nodepath);
 		if ($checkpath === null) {
 			return null;
 		}
 		if ($checkpath === true) {
-			return $domxpath->query($elementpath)->item(0);
+			return $domxpath->query($nodepath)->item(0);
 		}
 		$knownpath = '';
-		$toarray = explode('/', $elementpath);
+		$toarray = explode('/', $nodepath);
+		if (empty($toarray[0])) {
+			array_shift($toarray);
+		}
 		while (count($toarray) > 0) {
-			$knownpath .= '/' . $toarray[0];
-			$pathcheck = $this->checkPathExists($domdocument, $knownpath);
+			$testpath = $knownpath . '/' . $toarray[0];
+			$pathcheck = $this->checkPathExists($domdocument, $testpath);
 			if ($pathcheck === null) {
-				return false;
+				return null;
 			}
 			if ($pathcheck === true) {
+				$knownpath .= '/' . $toarray[0];
 				array_shift($toarray);
 			} else {
-				exit;
+				break;
 			}
 		}
 		if (!$toarray) {
 			// This shoudn't happen since it means that the whole path was found
 			return null;
 		}
+		if (!$knownpath) {
+			$knownpath = '/';
+		}
 		$parentelement = $domxpath->query($knownpath)->item(0);
-		foreach ($toarray as $element) {
-			$parentelement = $this->attachElement($parentelement, $element);
+		foreach ($toarray as $elementname) {
+			$parentelement = $this->attachElement($parentelement, $elementname);
 		}
 		return $parentelement;
 	}
@@ -228,31 +269,138 @@ class XMLFunctions {
 	 * $excludetagstring = array of substrings to exclude
 	 */
 
-	public function moveNodes(&$domdocument, $fromelement, $topath, $excludetagarray = [], $excludetagstring = []) {
-		$toelement = $this->findOrCreateElementPath($domdocument, $topath);
+	public function moveNodes(&$domdocument, $topath, &$fromelement, $nodequery) {
+		$nodearray = [];
+		$toelement = $this->findOrCreateNodePath($domdocument, $topath);
 		if ($toelement === null) {
+			// findOrCreateNodePath passed an error
 			return null;
 		}
-		$i = $fromelement->childNodes->length - 1;
-		while ($i > -1) {
-			$node = $skillsnode->childNodes->item($i);
-			if ($excludetagarray && in_array($node->nodeName, $excludetagarray)) {
-				continue;
-			}
-			if ($excludetagstring) {
-				foreach ($excludetagstring as $substring) {
-					if (stripos($node->nodeName, $substring) === false) {
-						continue 2;
-					}
-				}
-			}
+		$movequery = $fromelement->getNodePath() . $nodequery;
+		$nodelist = $this->getNodeList($fromelement->ownerDocument, $movequery);
+		foreach ($nodelist as $node) {
 			$clone = $node->cloneNode(true);
 			$movednode = $domdocument->importNode($clone, true);
-			$toelement->appendchild($modednode);
+			$childnode = $toelement->appendchild($movednode);
+			$nodearray[] = $childnode;
 			$node->parentNode->removeChild($node);
-			$i--;
+		}
+		return $nodearray ? : false;
+	}
+
+	
+	//TODO this function needs work
+	function getChild(&$node, $childname, $match = 'exact') {
+		if (!$node || !$node->hasChildNodes()) {
+			return false;
+		}
+		$query = $node->getNodePath() . '/' . $childname;
+		$nodelist = $this->getNodeList($node->ownerDocument, $query);
+		if ($nodelist->length == 0) {
+			return false;
+		}
+		if ($match == 'exact') {
+			if ($nodelist->length != 1) {
+				return null;
+			} else {
+				return($nodelist->item(0));
+			}
+		}
+		return false;
+	}
+
+	function getFirstMatchingChild(&$node, $childname) {
+		if (!$node || !$node->hasChildNodes()) {
+			return false;
+		}
+		foreach ($node->childNodes as $childnode) {
+			if ($childnode->nodeName == $childname) {
+				return $childnode;
+			}
+		}
+		return false;
+	}
+
+	function hasChild(&$node, $childname) {
+		if (!$node || !$node->hasChildNodes()) {
+			return false;
+		}
+		foreach ($node->childNodes as $childnode) {
+			if ($childnode->nodeName == $childname) {
+				return true;
+			}
+		}
+		return false;
+	}
+
+	function displayNode(\DOMNode $node) {
+		switch ($node->nodeType) {
+			case XML_TEXT_NODE:
+				debug($node->wholeText);
+				break;
+			default:
+				$snode = simplexml_import_dom($node);
+				debug($snode);
+//				$debug_xml = new \DOMDocument();
+//				$child = $debug_xml->importNode($node);
+//				$debug_xml->appendChild($child);
+//				debug($this->objectToArray($debug_xml));
+//				unset($debug_xml);
 		}
 	}
-	
+
+	function displayNodeList(\DOMNodeList $nodelist) {
+		for ($i = 0; $i < $nodelist->length; $i++) {
+			debug($nodelist->item($i)->nodeType);
+			debug($nodelist->item($i)->getNodePath());
+			$this->displayNode($nodelist->item($i));
+		}
+	}
+
+	//TODO: Not working, not currently used
+	function objectToArray($object) {
+		if (!is_object($object) && !is_array($object)) {
+			return $object;
+		}
+		return array_map(array($this, 'objectToArray'), (array) $object);
+	}
+
+	function getAttributeValue(&$node, $name, $default = null) {
+		return $node->getAttribute($name) ? : $default;
+	}
+
+	function getAttributesAsArray(&$node) {
+		$attributes = [];
+		if ($node->attributes) {
+			foreach ($node->attributes as $attribute) {
+				$attributes[$attribute->name] = $attribute->value;
+			}
+//		} else {
+//			debug('Node has no attributes');
+		}
+		return $attributes;
+	}
+
+	function getSXEAttributesAsArray(&$sxeattributes){
+		$attributes = [];
+		foreach($sxeattributes as $name => $value){
+			$attributes[$name] = $value;
+		}
+		return $attributes;
+	}
+	function displayAttributes(&$node, $caller = null) {
+		if ($caller) {
+			echo '<h3>', $caller, '</h3><br>';
+		}
+		echo '<b>', $node->nodeName, '</b><br>';
+		if ($node->attributes) {
+			foreach ($node->attributes as $attribute) {
+				echo $attribute->name, ': ', $attribute->value, '<br>';
+			}
+		} else {
+			debug('child has no attributes: ' . $node->nodeName);
+		}
+	}
+
 
 }

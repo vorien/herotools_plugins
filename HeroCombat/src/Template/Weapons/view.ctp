@@ -131,7 +131,7 @@
         <table cellpadding="0" cellspacing="0">
             <tr>
                 <th><?= __('Id') ?></th>
-                <th><?= __('Character Id') ?></th>
+                <th><?= __('Characterstat Id') ?></th>
                 <th><?= __('Weapon Id') ?></th>
                 <th><?= __('Name') ?></th>
                 <th><?= __('Ocv Modifier') ?></th>
@@ -152,7 +152,7 @@
             <?php foreach ($weapon->characterweapons as $characterweapons): ?>
             <tr>
                 <td><?= h($characterweapons->id) ?></td>
-                <td><?= h($characterweapons->character_id) ?></td>
+                <td><?= h($characterweapons->characterstat_id) ?></td>
                 <td><?= h($characterweapons->weapon_id) ?></td>
                 <td><?= h($characterweapons->name) ?></td>
                 <td><?= h($characterweapons->ocv_modifier) ?></td>

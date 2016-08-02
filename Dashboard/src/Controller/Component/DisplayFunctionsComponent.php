@@ -66,6 +66,20 @@ class DisplayFunctionsComponent extends Component {
 		}
 	}
 
+	public function standardizeArray(&$array){
+		$outarray = $keyarray = [];
+		//Create an array containing all 2nd level keys
+		foreach($array as $key => $value){
+			$keyarray = array_merge($keyarray, $value);
+		}
+		foreach($array as $key => $value){
+			foreach($keyarray as $kkey =>$kvalue){
+				$outarray[$key][$kkey] = array_key_exists($kkey, $value) ? $array[$key][$kkey] : ' ';
+			}
+		}
+		return $outarray;
+	}
+	
 	function echoline($string) {
 		echo($string . "<br>\n");
 	}

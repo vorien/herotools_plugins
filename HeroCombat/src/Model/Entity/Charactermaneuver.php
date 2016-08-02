@@ -4,15 +4,16 @@ namespace Vorien\HeroCombat\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Charactermaneuver Entity.
+ * Charactermaneuver Entity
  *
  * @property int $id
- * @property int $character_id
- * @property \Vorien\HeroCombat\Model\Entity\Character $character
+ * @property int $characterstat_id
  * @property int $maneuver_id
- * @property \Vorien\HeroCombat\Model\Entity\Maneuver $maneuver
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ *
+ * @property \Vorien\HeroCombat\Model\Entity\Characterstat $characterstat
+ * @property \Vorien\HeroCombat\Model\Entity\Maneuver $maneuver
  */
 class Charactermaneuver extends Entity
 {
@@ -28,6 +29,6 @@ class Charactermaneuver extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'id' => false,
+        'id' => false
     ];
 }

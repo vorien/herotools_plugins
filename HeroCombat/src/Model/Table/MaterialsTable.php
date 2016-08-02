@@ -5,13 +5,22 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Vorien\HeroCombat\Model\Entity\Material;
 
 /**
  * Materials Model
  *
  * @property \Cake\ORM\Association\HasMany $Armormaterials
  * @property \Cake\ORM\Association\HasMany $Characterprotections
+ *
+ * @method \Vorien\HeroCombat\Model\Entity\Material get($primaryKey, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Material newEntity($data = null, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Material[] newEntities(array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Material|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Material patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Material[] patchEntities($entities, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Material findOrCreate($search, callable $callback = null)
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class MaterialsTable extends Table
 {
@@ -27,7 +36,7 @@ class MaterialsTable extends Table
         parent::initialize($config);
 
         $this->table('materials');
-        $this->displayField('MaterialData');
+        $this->displayField('id');
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');

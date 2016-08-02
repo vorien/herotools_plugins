@@ -53,6 +53,7 @@ class ArmorsController extends AppController
             $armor = $this->Armors->patchEntity($armor, $this->request->data);
             if ($this->Armors->save($armor)) {
                 $this->Flash->success(__('The armor has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The armor could not be saved. Please, try again.'));
@@ -78,6 +79,7 @@ class ArmorsController extends AppController
             $armor = $this->Armors->patchEntity($armor, $this->request->data);
             if ($this->Armors->save($armor)) {
                 $this->Flash->success(__('The armor has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The armor could not be saved. Please, try again.'));
@@ -103,6 +105,7 @@ class ArmorsController extends AppController
         } else {
             $this->Flash->error(__('The armor could not be deleted. Please, try again.'));
         }
+
         return $this->redirect(['action' => 'index']);
     }
 }

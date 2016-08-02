@@ -53,6 +53,7 @@ class LevelsController extends AppController
             $level = $this->Levels->patchEntity($level, $this->request->data);
             if ($this->Levels->save($level)) {
                 $this->Flash->success(__('The level has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The level could not be saved. Please, try again.'));
@@ -78,6 +79,7 @@ class LevelsController extends AppController
             $level = $this->Levels->patchEntity($level, $this->request->data);
             if ($this->Levels->save($level)) {
                 $this->Flash->success(__('The level has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The level could not be saved. Please, try again.'));
@@ -103,6 +105,7 @@ class LevelsController extends AppController
         } else {
             $this->Flash->error(__('The level could not be deleted. Please, try again.'));
         }
+
         return $this->redirect(['action' => 'index']);
     }
 }

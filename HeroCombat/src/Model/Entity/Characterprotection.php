@@ -4,25 +4,20 @@ namespace Vorien\HeroCombat\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Characterprotection Entity.
+ * Characterprotection Entity
  *
  * @property int $id
  * @property bool $active
- * @property int $character_id
- * @property \Vorien\HeroCombat\Model\Entity\Character $character
+ * @property int $characterstat_id
  * @property int $location_id
- * @property \Vorien\HeroCombat\Model\Entity\Location $location
  * @property int $covering_id
- * @property \Vorien\HeroCombat\Model\Entity\Covering $covering
  * @property int $armor_id
- * @property \Vorien\HeroCombat\Model\Entity\Armor $armor
  * @property int $material_id
- * @property \Vorien\HeroCombat\Model\Entity\Material $material
  * @property string $name
  * @property int $n_pd_modifier
  * @property int $n_ed_modifier
- * @property int $r_pd_modifiers
- * @property int $r_ed_modifiers
+ * @property int $r_pd_modifier
+ * @property int $r_ed_modifier
  * @property int $stealth_penalty
  * @property float $weight_modifier
  * @property int $training_penalty_offset
@@ -31,6 +26,12 @@ use Cake\ORM\Entity;
  * @property string $notes
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ *
+ * @property \Vorien\HeroCombat\Model\Entity\Characterstat $characterstat
+ * @property \Vorien\HeroCombat\Model\Entity\Location $location
+ * @property \Vorien\HeroCombat\Model\Entity\Covering $covering
+ * @property \Vorien\HeroCombat\Model\Entity\Armor $armor
+ * @property \Vorien\HeroCombat\Model\Entity\Material $material
  */
 class Characterprotection extends Entity
 {
@@ -46,6 +47,6 @@ class Characterprotection extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'id' => false,
+        'id' => false
     ];
 }

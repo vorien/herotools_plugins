@@ -56,6 +56,7 @@ class ArmormaterialsController extends AppController
             $armormaterial = $this->Armormaterials->patchEntity($armormaterial, $this->request->data);
             if ($this->Armormaterials->save($armormaterial)) {
                 $this->Flash->success(__('The armormaterial has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The armormaterial could not be saved. Please, try again.'));
@@ -83,6 +84,7 @@ class ArmormaterialsController extends AppController
             $armormaterial = $this->Armormaterials->patchEntity($armormaterial, $this->request->data);
             if ($this->Armormaterials->save($armormaterial)) {
                 $this->Flash->success(__('The armormaterial has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The armormaterial could not be saved. Please, try again.'));
@@ -110,6 +112,7 @@ class ArmormaterialsController extends AppController
         } else {
             $this->Flash->error(__('The armormaterial could not be deleted. Please, try again.'));
         }
+
         return $this->redirect(['action' => 'index']);
     }
 }

@@ -19,7 +19,7 @@ class CharactermaneuversController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Characters', 'Maneuvers']
+            'contain' => ['Characterstats', 'Maneuvers']
         ];
         $charactermaneuvers = $this->paginate($this->Charactermaneuvers);
 
@@ -37,7 +37,7 @@ class CharactermaneuversController extends AppController
     public function view($id = null)
     {
         $charactermaneuver = $this->Charactermaneuvers->get($id, [
-            'contain' => ['Characters', 'Maneuvers']
+            'contain' => ['Characterstats', 'Maneuvers']
         ]);
 
         $this->set('charactermaneuver', $charactermaneuver);
@@ -56,14 +56,15 @@ class CharactermaneuversController extends AppController
             $charactermaneuver = $this->Charactermaneuvers->patchEntity($charactermaneuver, $this->request->data);
             if ($this->Charactermaneuvers->save($charactermaneuver)) {
                 $this->Flash->success(__('The charactermaneuver has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The charactermaneuver could not be saved. Please, try again.'));
             }
         }
-        $characters = $this->Charactermaneuvers->Characters->find('list', ['limit' => 200]);
+        $characterstats = $this->Charactermaneuvers->Characterstats->find('list', ['limit' => 200]);
         $maneuvers = $this->Charactermaneuvers->Maneuvers->find('list', ['limit' => 200]);
-        $this->set(compact('charactermaneuver', 'characters', 'maneuvers'));
+        $this->set(compact('charactermaneuver', 'characterstats', 'maneuvers'));
         $this->set('_serialize', ['charactermaneuver']);
     }
 
@@ -83,14 +84,15 @@ class CharactermaneuversController extends AppController
             $charactermaneuver = $this->Charactermaneuvers->patchEntity($charactermaneuver, $this->request->data);
             if ($this->Charactermaneuvers->save($charactermaneuver)) {
                 $this->Flash->success(__('The charactermaneuver has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The charactermaneuver could not be saved. Please, try again.'));
             }
         }
-        $characters = $this->Charactermaneuvers->Characters->find('list', ['limit' => 200]);
+        $characterstats = $this->Charactermaneuvers->Characterstats->find('list', ['limit' => 200]);
         $maneuvers = $this->Charactermaneuvers->Maneuvers->find('list', ['limit' => 200]);
-        $this->set(compact('charactermaneuver', 'characters', 'maneuvers'));
+        $this->set(compact('charactermaneuver', 'characterstats', 'maneuvers'));
         $this->set('_serialize', ['charactermaneuver']);
     }
 
@@ -110,6 +112,7 @@ class CharactermaneuversController extends AppController
         } else {
             $this->Flash->error(__('The charactermaneuver could not be deleted. Please, try again.'));
         }
+
         return $this->redirect(['action' => 'index']);
     }
 }

@@ -5,13 +5,22 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Vorien\HeroCombat\Model\Entity\Armormaterial;
 
 /**
  * Armormaterials Model
  *
  * @property \Cake\ORM\Association\BelongsTo $Armors
  * @property \Cake\ORM\Association\BelongsTo $Materials
+ *
+ * @method \Vorien\HeroCombat\Model\Entity\Armormaterial get($primaryKey, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Armormaterial newEntity($data = null, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Armormaterial[] newEntities(array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Armormaterial|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Armormaterial patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Armormaterial[] patchEntities($entities, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Armormaterial findOrCreate($search, callable $callback = null)
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class ArmormaterialsTable extends Table
 {
@@ -68,6 +77,7 @@ class ArmormaterialsTable extends Table
     {
         $rules->add($rules->existsIn(['armor_id'], 'Armors'));
         $rules->add($rules->existsIn(['material_id'], 'Materials'));
+
         return $rules;
     }
 

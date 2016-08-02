@@ -5,8 +5,8 @@
         <li><?= $this->Form->postLink(__('Delete Charactermaneuver'), ['action' => 'delete', $charactermaneuver->id], ['confirm' => __('Are you sure you want to delete # {0}?', $charactermaneuver->id)]) ?> </li>
         <li><?= $this->Html->link(__('List Charactermaneuvers'), ['action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New Charactermaneuver'), ['action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Characters'), ['controller' => 'Characters', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Character'), ['controller' => 'Characters', 'action' => 'add']) ?> </li>
+        <li><?= $this->Html->link(__('List Characterstats'), ['controller' => 'Characterstats', 'action' => 'index']) ?> </li>
+        <li><?= $this->Html->link(__('New Characterstat'), ['controller' => 'Characterstats', 'action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Maneuvers'), ['controller' => 'Maneuvers', 'action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New Maneuver'), ['controller' => 'Maneuvers', 'action' => 'add']) ?> </li>
     </ul>
@@ -15,8 +15,8 @@
     <h3><?= h($charactermaneuver->id) ?></h3>
     <table class="vertical-table">
         <tr>
-            <th><?= __('Character') ?></th>
-            <td><?= $charactermaneuver->has('character') ? $this->Html->link($charactermaneuver->character->name, ['controller' => 'Characters', 'action' => 'view', $charactermaneuver->character->id]) : '' ?></td>
+            <th><?= __('Characterstat') ?></th>
+            <td><?= $charactermaneuver->has('characterstat') ? $this->Html->link($charactermaneuver->characterstat->id, ['controller' => 'Characterstats', 'action' => 'view', $charactermaneuver->characterstat->id]) : '' ?></td>
         </tr>
         <tr>
             <th><?= __('Maneuver') ?></th>

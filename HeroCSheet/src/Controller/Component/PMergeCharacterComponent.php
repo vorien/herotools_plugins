@@ -9,8 +9,10 @@ use Cake\Core\App;
 
 //
 require_once(App::path('Lib', 'Vorien/HeroCSheet')[0] . 'NodeStack.php');
+require_once(App::path('Lib', 'Vorien/HeroCSheet')[0] . 'XMLFunctions.php');
 
 use NodeStack;
+use XMLFunctions;
 
 //use App\Plugins\Vorien\HeroCSheet\Lib\NodeStack;
 /**
@@ -21,19 +23,26 @@ class PMergeCharacterComponent extends Component {
 	public $components = [];
 	public $basequery = 'HEROCSHEET';
 	public $character_xml;
+	public $rules;
 	public $merged_xml;
 	public $cpath;
 	public $tpath;
 	public $idattribute = 'XMLID';
 	public $errorstack = [];
-	public $nodestack;
+	public $NodeStack;
+	public $XMLFunctions;
 
 	public function initialize(array $config) {
 		parent::initialize($config);
-		$this->nodestack = new NodeStack();
+		$this->NodeStack = new NodeStack();
+		$this->XMLFunctions = new XMLFunctions();
 		$this->character_xml = new \DOMDocument();
 		$this->character_xml->preserveWhiteSpace = false;
 		$this->character_xml->loadXML($config['character_xml']->saveXML());
+		$rules_xml = new \DOMDocument();
+		$rules_xml->preserveWhiteSpace = false;
+		$rules_xml->loadXML($config['rules_xml']->saveXML());
+		$this->rules = $this->XMLFunctions->getAttributesAsArray($rules_xml->documentElement);
 		$this->cpath = new \DOMXPath($this->character_xml);
 		$this->merged_xml = new \DOMDocument();
 		$this->merged_xml->preserveWhiteSpace = false;
@@ -52,55 +61,66 @@ class PMergeCharacterComponent extends Component {
 //		$xquery = "/HEROCSHEET/SKILLS/SKILL[@XMLID = 'GAMBLING']/ADDER[@XMLID = 'SPORTSBETTING' and @XMLID = 'FANDOM']/ADDER[@XMLID = 'STEELBALL']";
 //		$xquery = 'HEROCSHEET';
 //		debug($xquery);
-//		$nodestack = $this->PNodeStack->parseNodeString($xquery);
+//		$nodestack = $this->NodeStack->parseNodeString($xquery);
 //		debug($nodestack);
-//		$xquery = $this->PNodeStack->buildNodeString($nodestack);
+//		$xquery = $this->NodeStack->buildNodeString($nodestack);
 //		debug($xquery);
 //		die(' ');
 	}
-	
-	function ignoreNode(&$node){
-		if($node->hasAttribute($this->idattribute) && $node->getAttribute($this->idattribute) == 'MAKEASENSE'){
+
+	function ignoreNode(&$node) {
+		if ($node->hasAttribute($this->idattribute) && $node->getAttribute($this->idattribute) == 'MAKEASENSE') {
 			return true;
 		} else {
 			return false;
 		}
 	}
 
+	function addDefinitionAsAttribute(&$node, &$matchednode) {
+		if($childnode = $this->XMLFunctions->getFirstMatchingChild($matchednode, 'DEFINITION')){
+			$cleanedvalue = preg_replace('/[\t|\r|\n]/', '', $childnode->nodeValue);
+			$node->setAttribute('DEFINITION', $cleanedvalue);
+//			var_dump($childnode);
+//				$this->XMLFunctions->copyNode($node, $childnode);
+				return true;
+		}
+		return false;
+	}
+
 	function mergeCharacter($nodestack = null, $depth = 0) {
 		$this->errorstack[] = 'mergeCharacter';
 		if (!$nodestack) {
-			$nodestack = $this->PNodeStack->parseNodeString($this->basequery);
+			$nodestack = $this->NodeStack->parseNodeString($this->basequery);
 		}
-		$nodelist = $this->cpath->query($this->PNodeStack->buildNodeString($nodestack, true));
+		$nodelist = $this->cpath->query($this->NodeStack->buildNodeString($nodestack, true));
 		foreach ($nodelist as $node) {
-			if(!$this->ignorenode($node)){
-			if ($matchednode = $this->runMatchingTests($nodestack, $node, true)) {
+			if (!$this->ignorenode($node)) {
+				if ($matchednode = $this->runMatchingTests($nodestack, $node, true)) {
 //				$this->displayText('Match found', $node->getNodePath(), $matchednode->getNodePath());
-				$success = $this->updateAttributes($node, $matchednode);
-				$this->errorstack = [];
-			} else {
-				$errorstack[] = 'No matching node found';
+					$this->updateAttributes($node, $matchednode);
+					$this->errorstack = [];
+				} else {
+					$errorstack[] = 'No matching node found';
 //				debug('nodeType (3 is TEXT): ' . $node->nodeType);
 //				debug($optionstack);
-				$errorstack[] = $nodestack;
-//				debug($this->PNodeStack->buildNodeString($nodestack,false, true));
-				$this->showErrorStack();
+					$errorstack[] = $nodestack;
+//				debug($this->NodeStack->buildNodeString($nodestack,false, true));
+//				$this->showErrorStack();
 //				die();
-			}
-			if ($node->hasChildNodes()) {
-				foreach ($node->childNodes as $child) {
-					if ($child->nodeType == XML_TEXT_NODE || $child->nodeName == 'NOTES') {
+				}
+				if ($node->hasChildNodes()) {
+					foreach ($node->childNodes as $child) {
+						if ($child->nodeType == XML_TEXT_NODE || $child->nodeName == 'NOTES') {
 //						debug('Text Node');
-//						$this->displayNode($child);
-						//TODO Compare text, then ?
-					} else {
-						$childstack = $this->PNodeStack->addQueryLevel($nodestack, $child, [$this->idattribute]);
+//						$this->XMLFunctions->displayNode($child);
+							//TODO Compare text, then ?
+						} else {
+							$childstack = $this->NodeStack->addQueryLevel($nodestack, $child, [$this->idattribute]);
 //						debug($childstack);
-						$this->mergeCharacter($childstack, $depth + 1);
+							$this->mergeCharacter($childstack, $depth + 1);
+						}
 					}
 				}
-			}
 			}
 		}
 		return $this->character_xml;
@@ -111,7 +131,7 @@ class PMergeCharacterComponent extends Component {
 		if (!($matchednode = $this->getMatchingNode($nodestack))) { //Exact match
 			if (!($matchednode = $this->testWithOption($nodestack, $node))) {// Match OPTION child node
 				if (!($matchednode = $this->testWithInjectOption($nodestack, $node))) {// Parent has OPTION before node
-					if ($checkmodifier && $this->PNodeStack->findInStack($nodestack, 'MODIFIER') && !($matchednode = $this->checkInModifiersNodePath($nodestack, $node))) {
+					if ($checkmodifier && $this->NodeStack->findInStack($nodestack, 'MODIFIER') && !($matchednode = $this->checkInModifiersNodePath($nodestack, $node))) {
 						return false;
 					}
 				}
@@ -122,7 +142,7 @@ class PMergeCharacterComponent extends Component {
 
 	function getMatchingNode(&$nodestack) {
 		$this->errorstack[] = 'getMatchingNode';
-		$nodequery = $this->PNodeStack->buildNodeString($nodestack, true);
+		$nodequery = $this->NodeStack->buildNodeString($nodestack, true);
 		$nodelist = $this->tpath->query($nodequery);
 		switch ($nodelist->length) {
 			case 0:
@@ -160,7 +180,7 @@ class PMergeCharacterComponent extends Component {
 				return $matchednode;
 //				} else {
 //					debug($optionstack);
-//					debug($this->PNodeStack->buildNodeString($optionstack, true));
+//					debug($this->NodeStack->buildNodeString($optionstack, true));
 			}
 		}
 		return false;
@@ -173,7 +193,7 @@ class PMergeCharacterComponent extends Component {
 				return $matchednode;
 //			} else {
 //				debug($optionstack);
-//				debug($this->PNodeStack->buildNodeString($optionstack, true));
+//				debug($this->NodeStack->buildNodeString($optionstack, true));
 			}
 		}
 		return false;
@@ -181,7 +201,7 @@ class PMergeCharacterComponent extends Component {
 
 	function checkInModifiersNodePath(&$nodestack, &$node) {
 		$this->errorstack[] = 'checkIntModifiersNodePath';
-		if ($modifierstack = $this->PNodeStack->getRebasedNodeStack($nodestack, 'MODIFIER', '/HEROCSHEET/MODIFIERS')) {
+		if ($modifierstack = $this->NodeStack->getRebasedNodeStack($nodestack, 'MODIFIER', '/HEROCSHEET/MODIFIERS')) {
 			$this->errorstack[] = $modifierstack;
 			$matchednode = $this->runMatchingTests($modifierstack, $node);
 			if ($matchednode) {
@@ -196,8 +216,8 @@ class PMergeCharacterComponent extends Component {
 	}
 
 	function updateAttributes(&$tonode, &$fromnode) {
-		debug($tonode->getNodePath());
-		debug($fromnode->getNodePath());
+//		debug($tonode->getNodePath());
+//		debug($fromnode->getNodePath());
 		$this->errorstack[] = 'updateAttributes';
 		if (!$tonode->hasAttributes() || !$fromnode->hasAttributes()) {
 			return 'No Attributes to merge';
@@ -205,17 +225,28 @@ class PMergeCharacterComponent extends Component {
 		if ($tonode->nodeType == XML_TEXT_NODE || $fromnode->nodeType == XML_TEXT_NODE) {
 			return 'One or both are TEXT nodes';
 		}
-//		$this->displayAttributes($fromnode);
-//		$this->displayAttributes($tonode);
+//		$this->displayAttributes($fromnode, 'updateAttributes');
+//		$this->displayAttributes($tonode, 'updateAttributes');
 		foreach ($fromnode->attributes as $attribute) {
 //			if(!$tonode->hasAttribute($attribute->name)){
 			$tonode->setAttribute($attribute->name, $attribute->value);
 //			}
 		}
-		$this->displayAttributes($tonode);
+		$this->addDefinitionAsAttribute($tonode, $fromnode);
+		$this->addMaximaAsAttribute($tonode);
+//		$this->displayAttributes($tonode, 'updateAttributes');
 		return 'Success';
 	}
 
+	function addMaximaAsAttribute(&$node){
+		if($node->nodeName == 'SKILL' && $this->rules['USESKILLMAXIMA'] == 'Yes'){
+			$node->setAttribute('SKILLMAXIMA', $this->rules['SKILLMAXIMALIMIT']);
+		}
+		if($node->parentNode->nodeName == 'CHARACTERISTICS'){
+			$node->setAttribute('CHARACTERISTICMAXIMA', $this->rules[$node->nodeName . '_MAX']);
+		}
+	}
+	
 	function injectOptionNode(&$nodestack, &$node) {
 		$this->errorstack[] = 'injectOptionNode';
 		if ($node->parentNode) {
@@ -277,46 +308,6 @@ class PMergeCharacterComponent extends Component {
 //		} while (!$gmn);
 //		return $gmn;
 //	}
-
-	function displayNode(\DOMNode $node) {
-		switch ($node->nodeType) {
-			case XML_TEXT_NODE:
-				debug($node->wholeText);
-				break;
-			default:
-				$debug_xml = new \DOMDocument();
-				$child = $debug_xml->importNode($node);
-				$debug_xml->appendChild($child);
-				debug(Xml::toArray($debug_xml));
-				unset($debug_xml);
-		}
-	}
-
-	function displayNodeList(\DOMNodeList $nodelist) {
-//		$debug_xml = new \DOMDocument();
-		for ($i = 0; $i < $nodelist->length; $i++) {
-			debug($nodelist->item($i)->nodeType);
-			debug($nodelist->item($i)->getNodePath());
-			$this->displayNode($nodelist->item($i));
-//			$debugnode = $nodelist->item($i);
-//			$child = $debug_xml->importNode($debugnode);
-//			$child->setAttribute('nodeType', $child->nodeType);
-//			$debug_xml->appendChild($child);
-		}
-//		debug(Xml::toArray($debug_xml));
-//		unset($debug_xml);
-	}
-
-	function displayAttributes(&$node) {
-		echo '<b>', $node->nodeName, '</b><br>';
-		if ($node->attributes) {
-			foreach ($node->attributes as $attribute) {
-				echo $attribute->name, ': ', $attribute->value, '<br>';
-			}
-		} else {
-			debug('child has no attributes: ' . $node->nodeName);
-		}
-	}
 
 	function showErrorStack() {
 		foreach ($this->errorstack as $error) {

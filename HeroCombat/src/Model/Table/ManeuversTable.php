@@ -5,12 +5,21 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Vorien\HeroCombat\Model\Entity\Maneuver;
 
 /**
  * Maneuvers Model
  *
  * @property \Cake\ORM\Association\HasMany $Charactermaneuvers
+ *
+ * @method \Vorien\HeroCombat\Model\Entity\Maneuver get($primaryKey, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Maneuver newEntity($data = null, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Maneuver[] newEntities(array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Maneuver|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Maneuver patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Maneuver[] patchEntities($entities, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Maneuver findOrCreate($search, callable $callback = null)
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class ManeuversTable extends Table
 {

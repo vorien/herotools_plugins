@@ -19,7 +19,7 @@ class CharacterlevelsController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Characters', 'Levels']
+            'contain' => ['Characterstats', 'Levels']
         ];
         $characterlevels = $this->paginate($this->Characterlevels);
 
@@ -37,7 +37,7 @@ class CharacterlevelsController extends AppController
     public function view($id = null)
     {
         $characterlevel = $this->Characterlevels->get($id, [
-            'contain' => ['Characters', 'Levels', 'Characterweapons']
+            'contain' => ['Characterstats', 'Levels', 'Characterweapons']
         ]);
 
         $this->set('characterlevel', $characterlevel);
@@ -56,15 +56,16 @@ class CharacterlevelsController extends AppController
             $characterlevel = $this->Characterlevels->patchEntity($characterlevel, $this->request->data);
             if ($this->Characterlevels->save($characterlevel)) {
                 $this->Flash->success(__('The characterlevel has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The characterlevel could not be saved. Please, try again.'));
             }
         }
-        $characters = $this->Characterlevels->Characters->find('list', ['limit' => 200]);
+        $characterstats = $this->Characterlevels->Characterstats->find('list', ['limit' => 200]);
         $levels = $this->Characterlevels->Levels->find('list', ['limit' => 200]);
         $characterweapons = $this->Characterlevels->Characterweapons->find('list', ['limit' => 200]);
-        $this->set(compact('characterlevel', 'characters', 'levels', 'characterweapons'));
+        $this->set(compact('characterlevel', 'characterstats', 'levels', 'characterweapons'));
         $this->set('_serialize', ['characterlevel']);
     }
 
@@ -84,15 +85,16 @@ class CharacterlevelsController extends AppController
             $characterlevel = $this->Characterlevels->patchEntity($characterlevel, $this->request->data);
             if ($this->Characterlevels->save($characterlevel)) {
                 $this->Flash->success(__('The characterlevel has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The characterlevel could not be saved. Please, try again.'));
             }
         }
-        $characters = $this->Characterlevels->Characters->find('list', ['limit' => 200]);
+        $characterstats = $this->Characterlevels->Characterstats->find('list', ['limit' => 200]);
         $levels = $this->Characterlevels->Levels->find('list', ['limit' => 200]);
         $characterweapons = $this->Characterlevels->Characterweapons->find('list', ['limit' => 200]);
-        $this->set(compact('characterlevel', 'characters', 'levels', 'characterweapons'));
+        $this->set(compact('characterlevel', 'characterstats', 'levels', 'characterweapons'));
         $this->set('_serialize', ['characterlevel']);
     }
 
@@ -112,6 +114,7 @@ class CharacterlevelsController extends AppController
         } else {
             $this->Flash->error(__('The characterlevel could not be deleted. Please, try again.'));
         }
+
         return $this->redirect(['action' => 'index']);
     }
 }

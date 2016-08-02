@@ -5,12 +5,21 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Vorien\HeroCSheet\Model\Entity\Charactersheet;
 
 /**
  * Charactersheets Model
  *
  * @property \Cake\ORM\Association\BelongsTo $Characters
+ *
+ * @method \Vorien\HeroCSheet\Model\Entity\Charactersheet get($primaryKey, $options = [])
+ * @method \Vorien\HeroCSheet\Model\Entity\Charactersheet newEntity($data = null, array $options = [])
+ * @method \Vorien\HeroCSheet\Model\Entity\Charactersheet[] newEntities(array $data, array $options = [])
+ * @method \Vorien\HeroCSheet\Model\Entity\Charactersheet|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Vorien\HeroCSheet\Model\Entity\Charactersheet patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Vorien\HeroCSheet\Model\Entity\Charactersheet[] patchEntities($entities, array $data, array $options = [])
+ * @method \Vorien\HeroCSheet\Model\Entity\Charactersheet findOrCreate($search, callable $callback = null)
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class CharactersheetsTable extends Table
 {
@@ -25,7 +34,7 @@ class CharactersheetsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('herocsheet.charactersheets');
+        $this->table('charactersheets');
         $this->displayField('id');
         $this->primaryKey('id');
 
@@ -33,7 +42,7 @@ class CharactersheetsTable extends Table
 
         $this->belongsTo('Characters', [
             'foreignKey' => 'character_id',
-            'className' => 'Vorien/HeroCombat.Characters'
+            'className' => 'Vorien/HeroCSheet.Characters'
         ]);
     }
 
@@ -55,6 +64,36 @@ class CharactersheetsTable extends Table
         $validator
             ->allowEmpty('mainfile');
 
+        $validator
+            ->allowEmpty('basic_configuration');
+
+        $validator
+            ->allowEmpty('character_info');
+
+        $validator
+            ->allowEmpty('characteristics');
+
+        $validator
+            ->allowEmpty('skills');
+
+        $validator
+            ->allowEmpty('perks');
+
+        $validator
+            ->allowEmpty('talents');
+
+        $validator
+            ->allowEmpty('powers');
+
+        $validator
+            ->allowEmpty('disadvantages');
+
+        $validator
+            ->allowEmpty('equipment');
+
+        $validator
+            ->allowEmpty('skill_enhancers');
+
         return $validator;
     }
 
@@ -68,6 +107,7 @@ class CharactersheetsTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['character_id'], 'Characters'));
+
         return $rules;
     }
 

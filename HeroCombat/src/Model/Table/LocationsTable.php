@@ -5,7 +5,6 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Vorien\HeroCombat\Model\Entity\Location;
 
 /**
  * Locations Model
@@ -13,6 +12,16 @@ use Vorien\HeroCombat\Model\Entity\Location;
  * @property \Cake\ORM\Association\BelongsTo $Targets
  * @property \Cake\ORM\Association\HasMany $Characterprotections
  * @property \Cake\ORM\Association\HasMany $Coveringlocations
+ *
+ * @method \Vorien\HeroCombat\Model\Entity\Location get($primaryKey, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Location newEntity($data = null, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Location[] newEntities(array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Location|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Location patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Location[] patchEntities($entities, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Location findOrCreate($search, callable $callback = null)
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class LocationsTable extends Table
 {
@@ -28,7 +37,7 @@ class LocationsTable extends Table
         parent::initialize($config);
 
         $this->table('locations');
-        $this->displayField('LocationData');
+        $this->displayField('id');
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
@@ -83,6 +92,7 @@ class LocationsTable extends Table
     public function buildRules(RulesChecker $rules)
     {
         $rules->add($rules->existsIn(['target_id'], 'Targets'));
+
         return $rules;
     }
 

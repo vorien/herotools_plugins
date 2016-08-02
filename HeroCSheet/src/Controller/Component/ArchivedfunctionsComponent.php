@@ -12,6 +12,39 @@ use Cake\Controller\Component;
 class ArchivedfunctionsComponent extends Component {
 
 /* XML Functions
+	public function moveNodes(&$domdocument, $fromelement, $topath, $excludetagarray = [], $excludetagstring = []) {
+		$nodearray = [];
+		$toelement = $this->findOrCreateNodePath($domdocument, $topath);
+		if ($toelement === null) {
+			return null;
+		}
+		debug($fromelement->childNodes->length);
+		$i = $fromelement->childNodes->length - 1;
+		return($nodearray);
+		while ($i > -1) {
+			debug($i);
+			$node = $fromelement->childNodes->item($i);
+			if ($excludetagarray && in_array($node->nodeName, $excludetagarray)) {
+				continue;
+			}
+			if ($excludetagstring) {
+				foreach ($excludetagstring as $substring) {
+					if (stripos($node->nodeName, $substring) !== false) {
+						continue 2;
+					}
+				}
+			}
+			$clone = $node->cloneNode(true);
+			$movednode = $domdocument->importNode($clone, true);
+			$childnode = $toelement->appendchild($movednode);
+			$nodearray[] = $childnode;
+			$node->parentNode->removeChild($node);
+			$i--;
+		}
+		debug($nodearray);
+		return $nodearray ?: false;
+	}
+
 
 	function getMatchingNodeList(&$node, $targetxpath) {
 		$nodepath = preg_replace('/\[[0-9]+\]/', '', $node->getNodePath());

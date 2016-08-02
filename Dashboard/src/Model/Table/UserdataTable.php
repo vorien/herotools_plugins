@@ -25,7 +25,7 @@ class UserdataTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('voriendashboard.userdata');
+        $this->table('herodashboard.userdata');
         $this->displayField('id');
         $this->primaryKey('id');
 
@@ -85,6 +85,6 @@ class UserdataTable extends Table
      */
     public static function defaultConnectionName()
     {
-        return 'voriendashboard';
+        return 'herodashboard';
     }
 }

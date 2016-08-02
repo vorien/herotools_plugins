@@ -2,8 +2,8 @@
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
         <li><?= $this->Html->link(__('New Characterweapon'), ['action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Characters'), ['controller' => 'Characters', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Character'), ['controller' => 'Characters', 'action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('List Characterstats'), ['controller' => 'Characterstats', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('New Characterstat'), ['controller' => 'Characterstats', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Weapons'), ['controller' => 'Weapons', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Weapon'), ['controller' => 'Weapons', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Characterlevels'), ['controller' => 'Characterlevels', 'action' => 'index']) ?></li>
@@ -16,7 +16,7 @@
         <thead>
             <tr>
                 <th><?= $this->Paginator->sort('id') ?></th>
-                <th><?= $this->Paginator->sort('character_id') ?></th>
+                <th><?= $this->Paginator->sort('characterstat_id') ?></th>
                 <th><?= $this->Paginator->sort('weapon_id') ?></th>
                 <th><?= $this->Paginator->sort('name') ?></th>
                 <th><?= $this->Paginator->sort('ocv_modifier') ?></th>
@@ -39,7 +39,7 @@
             <?php foreach ($characterweapons as $characterweapon): ?>
             <tr>
                 <td><?= $this->Number->format($characterweapon->id) ?></td>
-                <td><?= $characterweapon->has('character') ? $this->Html->link($characterweapon->character->name, ['controller' => 'Characters', 'action' => 'view', $characterweapon->character->id]) : '' ?></td>
+                <td><?= $characterweapon->has('characterstat') ? $this->Html->link($characterweapon->characterstat->id, ['controller' => 'Characterstats', 'action' => 'view', $characterweapon->characterstat->id]) : '' ?></td>
                 <td><?= $characterweapon->has('weapon') ? $this->Html->link($characterweapon->weapon->id, ['controller' => 'Weapons', 'action' => 'view', $characterweapon->weapon->id]) : '' ?></td>
                 <td><?= h($characterweapon->name) ?></td>
                 <td><?= $this->Number->format($characterweapon->ocv_modifier) ?></td>

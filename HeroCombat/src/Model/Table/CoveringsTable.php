@@ -5,13 +5,22 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Vorien\HeroCombat\Model\Entity\Covering;
 
 /**
  * Coverings Model
  *
  * @property \Cake\ORM\Association\HasMany $Characterprotections
  * @property \Cake\ORM\Association\HasMany $Coveringlocations
+ *
+ * @method \Vorien\HeroCombat\Model\Entity\Covering get($primaryKey, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Covering newEntity($data = null, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Covering[] newEntities(array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Covering|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Covering patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Covering[] patchEntities($entities, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Covering findOrCreate($search, callable $callback = null)
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class CoveringsTable extends Table
 {

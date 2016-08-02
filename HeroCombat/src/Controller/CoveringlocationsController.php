@@ -56,6 +56,7 @@ class CoveringlocationsController extends AppController
             $coveringlocation = $this->Coveringlocations->patchEntity($coveringlocation, $this->request->data);
             if ($this->Coveringlocations->save($coveringlocation)) {
                 $this->Flash->success(__('The coveringlocation has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The coveringlocation could not be saved. Please, try again.'));
@@ -83,6 +84,7 @@ class CoveringlocationsController extends AppController
             $coveringlocation = $this->Coveringlocations->patchEntity($coveringlocation, $this->request->data);
             if ($this->Coveringlocations->save($coveringlocation)) {
                 $this->Flash->success(__('The coveringlocation has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The coveringlocation could not be saved. Please, try again.'));
@@ -110,6 +112,7 @@ class CoveringlocationsController extends AppController
         } else {
             $this->Flash->error(__('The coveringlocation could not be deleted. Please, try again.'));
         }
+
         return $this->redirect(['action' => 'index']);
     }
 }

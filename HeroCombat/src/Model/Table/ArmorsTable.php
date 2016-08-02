@@ -5,13 +5,22 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Vorien\HeroCombat\Model\Entity\Armor;
 
 /**
  * Armors Model
  *
  * @property \Cake\ORM\Association\HasMany $Armormaterials
  * @property \Cake\ORM\Association\HasMany $Characterprotections
+ *
+ * @method \Vorien\HeroCombat\Model\Entity\Armor get($primaryKey, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Armor newEntity($data = null, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Armor[] newEntities(array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Armor|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Armor patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Armor[] patchEntities($entities, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Armor findOrCreate($search, callable $callback = null)
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class ArmorsTable extends Table
 {
@@ -27,7 +36,7 @@ class ArmorsTable extends Table
         parent::initialize($config);
 
         $this->table('armors');
-        $this->displayField('ArmorData');
+        $this->displayField('id');
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
@@ -73,7 +82,7 @@ class ArmorsTable extends Table
             ->allowEmpty('training_penalty');
 
         $validator
-            ->allowEmpty('a-r_cost');
+            ->allowEmpty('ar_cost');
 
         $validator
             ->numeric('weight')

@@ -5,13 +5,22 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Vorien\HeroCombat\Model\Entity\Charactermaneuver;
 
 /**
  * Charactermaneuvers Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Characters
+ * @property \Cake\ORM\Association\BelongsTo $Characterstats
  * @property \Cake\ORM\Association\BelongsTo $Maneuvers
+ *
+ * @method \Vorien\HeroCombat\Model\Entity\Charactermaneuver get($primaryKey, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Charactermaneuver newEntity($data = null, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Charactermaneuver[] newEntities(array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Charactermaneuver|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Charactermaneuver patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Charactermaneuver[] patchEntities($entities, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Charactermaneuver findOrCreate($search, callable $callback = null)
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class CharactermaneuversTable extends Table
 {
@@ -32,9 +41,9 @@ class CharactermaneuversTable extends Table
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Characters', [
-            'foreignKey' => 'character_id',
-            'className' => 'Vorien/HeroCombat.Characters'
+        $this->belongsTo('Characterstats', [
+            'foreignKey' => 'characterstat_id',
+            'className' => 'Vorien/HeroCombat.Characterstats'
         ]);
         $this->belongsTo('Maneuvers', [
             'foreignKey' => 'maneuver_id',
@@ -66,8 +75,9 @@ class CharactermaneuversTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['character_id'], 'Characters'));
+        $rules->add($rules->existsIn(['characterstat_id'], 'Characterstats'));
         $rules->add($rules->existsIn(['maneuver_id'], 'Maneuvers'));
+
         return $rules;
     }
 

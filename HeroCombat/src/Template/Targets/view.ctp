@@ -13,6 +13,10 @@
     <h3><?= h($target->id) ?></h3>
     <table class="vertical-table">
         <tr>
+            <th><?= __('Type') ?></th>
+            <td><?= h($target->type) ?></td>
+        </tr>
+        <tr>
             <th><?= __('Roll') ?></th>
             <td><?= h($target->roll) ?></td>
         </tr>
@@ -23,6 +27,10 @@
         <tr>
             <th><?= __('Id') ?></th>
             <td><?= $this->Number->format($target->id) ?></td>
+        </tr>
+        <tr>
+            <th><?= __('Sort Order') ?></th>
+            <td><?= $this->Number->format($target->sort_order) ?></td>
         </tr>
         <tr>
             <th><?= __('Penalty') ?></th>

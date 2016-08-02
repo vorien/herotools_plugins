@@ -5,12 +5,21 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Vorien\HeroCombat\Model\Entity\Level;
 
 /**
  * Levels Model
  *
  * @property \Cake\ORM\Association\HasMany $Characterlevels
+ *
+ * @method \Vorien\HeroCombat\Model\Entity\Level get($primaryKey, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Level newEntity($data = null, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Level[] newEntities(array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Level|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Level patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Level[] patchEntities($entities, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Level findOrCreate($search, callable $callback = null)
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class LevelsTable extends Table
 {

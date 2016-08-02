@@ -19,7 +19,7 @@ class CharacterweaponsController extends AppController
     public function index()
     {
         $this->paginate = [
-            'contain' => ['Characters', 'Weapons']
+            'contain' => ['Characterstats', 'Weapons']
         ];
         $characterweapons = $this->paginate($this->Characterweapons);
 
@@ -37,7 +37,7 @@ class CharacterweaponsController extends AppController
     public function view($id = null)
     {
         $characterweapon = $this->Characterweapons->get($id, [
-            'contain' => ['Characters', 'Weapons', 'Characterlevels']
+            'contain' => ['Characterstats', 'Weapons', 'Characterlevels']
         ]);
 
         $this->set('characterweapon', $characterweapon);
@@ -56,15 +56,16 @@ class CharacterweaponsController extends AppController
             $characterweapon = $this->Characterweapons->patchEntity($characterweapon, $this->request->data);
             if ($this->Characterweapons->save($characterweapon)) {
                 $this->Flash->success(__('The characterweapon has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The characterweapon could not be saved. Please, try again.'));
             }
         }
-        $characters = $this->Characterweapons->Characters->find('list', ['limit' => 200]);
+        $characterstats = $this->Characterweapons->Characterstats->find('list', ['limit' => 200]);
         $weapons = $this->Characterweapons->Weapons->find('list', ['limit' => 200]);
         $characterlevels = $this->Characterweapons->Characterlevels->find('list', ['limit' => 200]);
-        $this->set(compact('characterweapon', 'characters', 'weapons', 'characterlevels'));
+        $this->set(compact('characterweapon', 'characterstats', 'weapons', 'characterlevels'));
         $this->set('_serialize', ['characterweapon']);
     }
 
@@ -84,15 +85,16 @@ class CharacterweaponsController extends AppController
             $characterweapon = $this->Characterweapons->patchEntity($characterweapon, $this->request->data);
             if ($this->Characterweapons->save($characterweapon)) {
                 $this->Flash->success(__('The characterweapon has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The characterweapon could not be saved. Please, try again.'));
             }
         }
-        $characters = $this->Characterweapons->Characters->find('list', ['limit' => 200]);
+        $characterstats = $this->Characterweapons->Characterstats->find('list', ['limit' => 200]);
         $weapons = $this->Characterweapons->Weapons->find('list', ['limit' => 200]);
         $characterlevels = $this->Characterweapons->Characterlevels->find('list', ['limit' => 200]);
-        $this->set(compact('characterweapon', 'characters', 'weapons', 'characterlevels'));
+        $this->set(compact('characterweapon', 'characterstats', 'weapons', 'characterlevels'));
         $this->set('_serialize', ['characterweapon']);
     }
 
@@ -112,6 +114,7 @@ class CharacterweaponsController extends AppController
         } else {
             $this->Flash->error(__('The characterweapon could not be deleted. Please, try again.'));
         }
+
         return $this->redirect(['action' => 'index']);
     }
 }

@@ -53,6 +53,7 @@ class TargetsController extends AppController
             $target = $this->Targets->patchEntity($target, $this->request->data);
             if ($this->Targets->save($target)) {
                 $this->Flash->success(__('The target has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The target could not be saved. Please, try again.'));
@@ -78,6 +79,7 @@ class TargetsController extends AppController
             $target = $this->Targets->patchEntity($target, $this->request->data);
             if ($this->Targets->save($target)) {
                 $this->Flash->success(__('The target has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The target could not be saved. Please, try again.'));
@@ -103,6 +105,7 @@ class TargetsController extends AppController
         } else {
             $this->Flash->error(__('The target could not be deleted. Please, try again.'));
         }
+
         return $this->redirect(['action' => 'index']);
     }
 }

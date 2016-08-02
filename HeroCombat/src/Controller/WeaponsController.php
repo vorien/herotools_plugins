@@ -53,6 +53,7 @@ class WeaponsController extends AppController
             $weapon = $this->Weapons->patchEntity($weapon, $this->request->data);
             if ($this->Weapons->save($weapon)) {
                 $this->Flash->success(__('The weapon has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The weapon could not be saved. Please, try again.'));
@@ -78,6 +79,7 @@ class WeaponsController extends AppController
             $weapon = $this->Weapons->patchEntity($weapon, $this->request->data);
             if ($this->Weapons->save($weapon)) {
                 $this->Flash->success(__('The weapon has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The weapon could not be saved. Please, try again.'));
@@ -103,6 +105,7 @@ class WeaponsController extends AppController
         } else {
             $this->Flash->error(__('The weapon could not be deleted. Please, try again.'));
         }
+
         return $this->redirect(['action' => 'index']);
     }
 }

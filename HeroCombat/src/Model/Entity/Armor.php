@@ -4,7 +4,7 @@ namespace Vorien\HeroCombat\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Armor Entity.
+ * Armor Entity
  *
  * @property int $id
  * @property string $type
@@ -12,10 +12,11 @@ use Cake\ORM\Entity;
  * @property int $r_pd
  * @property int $r_ed
  * @property int $training_penalty
- * @property string $a-r_cost
+ * @property string $ar_cost
  * @property float $weight
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ *
  * @property \Vorien\HeroCombat\Model\Entity\Armormaterial[] $armormaterials
  * @property \Vorien\HeroCombat\Model\Entity\Characterprotection[] $characterprotections
  */
@@ -33,11 +34,6 @@ class Armor extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'id' => false,
+        'id' => false
     ];
-	
-		protected function _getArmorData() {
-		return $this->_properties['armor'] . ' (' . $this->_properties['type'] . ')';
-	}
-
 }

@@ -18,7 +18,7 @@ class CharactermaneuversFixture extends TestFixture
     // @codingStandardsIgnoreStart
     public $fields = [
         'id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => false, 'default' => null, 'comment' => '', 'autoIncrement' => true, 'precision' => null],
-        'character_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
+        'characterstat_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'maneuver_id' => ['type' => 'integer', 'length' => 11, 'unsigned' => false, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null, 'autoIncrement' => null],
         'created' => ['type' => 'datetime', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
         'modified' => ['type' => 'datetime', 'length' => null, 'null' => true, 'default' => null, 'comment' => '', 'precision' => null],
@@ -40,10 +40,10 @@ class CharactermaneuversFixture extends TestFixture
     public $records = [
         [
             'id' => 1,
-            'character_id' => 1,
+            'characterstat_id' => 1,
             'maneuver_id' => 1,
-            'created' => '2016-06-19 17:39:03',
-            'modified' => '2016-06-19 17:39:03'
+            'created' => '2016-08-02 19:37:51',
+            'modified' => '2016-08-02 19:37:51'
         ],
     ];
 }

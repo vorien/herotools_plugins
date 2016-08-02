@@ -5,13 +5,22 @@ use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
 use Cake\ORM\Table;
 use Cake\Validation\Validator;
-use Vorien\HeroCombat\Model\Entity\Coveringlocation;
 
 /**
  * Coveringlocations Model
  *
  * @property \Cake\ORM\Association\BelongsTo $Coverings
  * @property \Cake\ORM\Association\BelongsTo $Locations
+ *
+ * @method \Vorien\HeroCombat\Model\Entity\Coveringlocation get($primaryKey, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Coveringlocation newEntity($data = null, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Coveringlocation[] newEntities(array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Coveringlocation|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Coveringlocation patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Coveringlocation[] patchEntities($entities, array $data, array $options = [])
+ * @method \Vorien\HeroCombat\Model\Entity\Coveringlocation findOrCreate($search, callable $callback = null)
+ *
+ * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
 class CoveringlocationsTable extends Table
 {
@@ -68,6 +77,7 @@ class CoveringlocationsTable extends Table
     {
         $rules->add($rules->existsIn(['covering_id'], 'Coverings'));
         $rules->add($rules->existsIn(['location_id'], 'Locations'));
+
         return $rules;
     }
 

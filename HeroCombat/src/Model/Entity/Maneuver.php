@@ -4,7 +4,7 @@ namespace Vorien\HeroCombat\Model\Entity;
 use Cake\ORM\Entity;
 
 /**
- * Maneuver Entity.
+ * Maneuver Entity
  *
  * @property int $id
  * @property int $sort_order
@@ -25,6 +25,7 @@ use Cake\ORM\Entity;
  * @property string $notes
  * @property \Cake\I18n\Time $created
  * @property \Cake\I18n\Time $modified
+ *
  * @property \Vorien\HeroCombat\Model\Entity\Charactermaneuver[] $charactermaneuvers
  */
 class Maneuver extends Entity
@@ -41,6 +42,6 @@ class Maneuver extends Entity
      */
     protected $_accessible = [
         '*' => true,
-        'id' => false,
+        'id' => false
     ];
 }

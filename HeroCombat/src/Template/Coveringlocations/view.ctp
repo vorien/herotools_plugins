@@ -20,7 +20,7 @@
         </tr>
         <tr>
             <th><?= __('Location') ?></th>
-            <td><?= $coveringlocation->has('location') ? $this->Html->link($coveringlocation->location->LocationData, ['controller' => 'Locations', 'action' => 'view', $coveringlocation->location->id]) : '' ?></td>
+            <td><?= $coveringlocation->has('location') ? $this->Html->link($coveringlocation->location->id, ['controller' => 'Locations', 'action' => 'view', $coveringlocation->location->id]) : '' ?></td>
         </tr>
         <tr>
             <th><?= __('Id') ?></th>

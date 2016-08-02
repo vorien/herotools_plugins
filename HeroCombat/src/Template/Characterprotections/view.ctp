@@ -5,8 +5,8 @@
         <li><?= $this->Form->postLink(__('Delete Characterprotection'), ['action' => 'delete', $characterprotection->id], ['confirm' => __('Are you sure you want to delete # {0}?', $characterprotection->id)]) ?> </li>
         <li><?= $this->Html->link(__('List Characterprotections'), ['action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New Characterprotection'), ['action' => 'add']) ?> </li>
-        <li><?= $this->Html->link(__('List Characters'), ['controller' => 'Characters', 'action' => 'index']) ?> </li>
-        <li><?= $this->Html->link(__('New Character'), ['controller' => 'Characters', 'action' => 'add']) ?> </li>
+        <li><?= $this->Html->link(__('List Characterstats'), ['controller' => 'Characterstats', 'action' => 'index']) ?> </li>
+        <li><?= $this->Html->link(__('New Characterstat'), ['controller' => 'Characterstats', 'action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Locations'), ['controller' => 'Locations', 'action' => 'index']) ?> </li>
         <li><?= $this->Html->link(__('New Location'), ['controller' => 'Locations', 'action' => 'add']) ?> </li>
         <li><?= $this->Html->link(__('List Coverings'), ['controller' => 'Coverings', 'action' => 'index']) ?> </li>
@@ -21,12 +21,12 @@
     <h3><?= h($characterprotection->name) ?></h3>
     <table class="vertical-table">
         <tr>
-            <th><?= __('Character') ?></th>
-            <td><?= $characterprotection->has('character') ? $this->Html->link($characterprotection->character->name, ['controller' => 'Characters', 'action' => 'view', $characterprotection->character->id]) : '' ?></td>
+            <th><?= __('Characterstat') ?></th>
+            <td><?= $characterprotection->has('characterstat') ? $this->Html->link($characterprotection->characterstat->id, ['controller' => 'Characterstats', 'action' => 'view', $characterprotection->characterstat->id]) : '' ?></td>
         </tr>
         <tr>
             <th><?= __('Location') ?></th>
-            <td><?= $characterprotection->has('location') ? $this->Html->link($characterprotection->location->LocationData, ['controller' => 'Locations', 'action' => 'view', $characterprotection->location->id]) : '' ?></td>
+            <td><?= $characterprotection->has('location') ? $this->Html->link($characterprotection->location->id, ['controller' => 'Locations', 'action' => 'view', $characterprotection->location->id]) : '' ?></td>
         </tr>
         <tr>
             <th><?= __('Covering') ?></th>
@@ -34,11 +34,11 @@
         </tr>
         <tr>
             <th><?= __('Armor') ?></th>
-            <td><?= $characterprotection->has('armor') ? $this->Html->link($characterprotection->armor->ArmorData, ['controller' => 'Armors', 'action' => 'view', $characterprotection->armor->id]) : '' ?></td>
+            <td><?= $characterprotection->has('armor') ? $this->Html->link($characterprotection->armor->id, ['controller' => 'Armors', 'action' => 'view', $characterprotection->armor->id]) : '' ?></td>
         </tr>
         <tr>
             <th><?= __('Material') ?></th>
-            <td><?= $characterprotection->has('material') ? $this->Html->link($characterprotection->material->MaterialData, ['controller' => 'Materials', 'action' => 'view', $characterprotection->material->id]) : '' ?></td>
+            <td><?= $characterprotection->has('material') ? $this->Html->link($characterprotection->material->id, ['controller' => 'Materials', 'action' => 'view', $characterprotection->material->id]) : '' ?></td>
         </tr>
         <tr>
             <th><?= __('Name') ?></th>
@@ -61,12 +61,12 @@
             <td><?= $this->Number->format($characterprotection->n_ed_modifier) ?></td>
         </tr>
         <tr>
-            <th><?= __('R Pd Modifiers') ?></th>
-            <td><?= $this->Number->format($characterprotection->r_pd_modifiers) ?></td>
+            <th><?= __('R Pd Modifier') ?></th>
+            <td><?= $this->Number->format($characterprotection->r_pd_modifier) ?></td>
         </tr>
         <tr>
-            <th><?= __('R Ed Modifiers') ?></th>
-            <td><?= $this->Number->format($characterprotection->r_ed_modifiers) ?></td>
+            <th><?= __('R Ed Modifier') ?></th>
+            <td><?= $this->Number->format($characterprotection->r_ed_modifier) ?></td>
         </tr>
         <tr>
             <th><?= __('Stealth Penalty') ?></th>

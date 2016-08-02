@@ -53,6 +53,7 @@ class ManeuversController extends AppController
             $maneuver = $this->Maneuvers->patchEntity($maneuver, $this->request->data);
             if ($this->Maneuvers->save($maneuver)) {
                 $this->Flash->success(__('The maneuver has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The maneuver could not be saved. Please, try again.'));
@@ -78,6 +79,7 @@ class ManeuversController extends AppController
             $maneuver = $this->Maneuvers->patchEntity($maneuver, $this->request->data);
             if ($this->Maneuvers->save($maneuver)) {
                 $this->Flash->success(__('The maneuver has been saved.'));
+
                 return $this->redirect(['action' => 'index']);
             } else {
                 $this->Flash->error(__('The maneuver could not be saved. Please, try again.'));
@@ -103,6 +105,7 @@ class ManeuversController extends AppController
         } else {
             $this->Flash->error(__('The maneuver could not be deleted. Please, try again.'));
         }
+
         return $this->redirect(['action' => 'index']);
     }
 }

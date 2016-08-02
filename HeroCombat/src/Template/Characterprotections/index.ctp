@@ -2,8 +2,8 @@
     <ul class="side-nav">
         <li class="heading"><?= __('Actions') ?></li>
         <li><?= $this->Html->link(__('New Characterprotection'), ['action' => 'add']) ?></li>
-        <li><?= $this->Html->link(__('List Characters'), ['controller' => 'Characters', 'action' => 'index']) ?></li>
-        <li><?= $this->Html->link(__('New Character'), ['controller' => 'Characters', 'action' => 'add']) ?></li>
+        <li><?= $this->Html->link(__('List Characterstats'), ['controller' => 'Characterstats', 'action' => 'index']) ?></li>
+        <li><?= $this->Html->link(__('New Characterstat'), ['controller' => 'Characterstats', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Locations'), ['controller' => 'Locations', 'action' => 'index']) ?></li>
         <li><?= $this->Html->link(__('New Location'), ['controller' => 'Locations', 'action' => 'add']) ?></li>
         <li><?= $this->Html->link(__('List Coverings'), ['controller' => 'Coverings', 'action' => 'index']) ?></li>
@@ -21,7 +21,7 @@
             <tr>
                 <th><?= $this->Paginator->sort('id') ?></th>
                 <th><?= $this->Paginator->sort('active') ?></th>
-                <th><?= $this->Paginator->sort('character_id') ?></th>
+                <th><?= $this->Paginator->sort('characterstat_id') ?></th>
                 <th><?= $this->Paginator->sort('location_id') ?></th>
                 <th><?= $this->Paginator->sort('covering_id') ?></th>
                 <th><?= $this->Paginator->sort('armor_id') ?></th>
@@ -29,8 +29,8 @@
                 <th><?= $this->Paginator->sort('name') ?></th>
                 <th><?= $this->Paginator->sort('n_pd_modifier') ?></th>
                 <th><?= $this->Paginator->sort('n_ed_modifier') ?></th>
-                <th><?= $this->Paginator->sort('r_pd_modifiers') ?></th>
-                <th><?= $this->Paginator->sort('r_ed_modifiers') ?></th>
+                <th><?= $this->Paginator->sort('r_pd_modifier') ?></th>
+                <th><?= $this->Paginator->sort('r_ed_modifier') ?></th>
                 <th><?= $this->Paginator->sort('stealth_penalty') ?></th>
                 <th><?= $this->Paginator->sort('weight_modifier') ?></th>
                 <th><?= $this->Paginator->sort('training_penalty_offset') ?></th>
@@ -47,16 +47,16 @@
             <tr>
                 <td><?= $this->Number->format($characterprotection->id) ?></td>
                 <td><?= h($characterprotection->active) ?></td>
-                <td><?= $characterprotection->has('character') ? $this->Html->link($characterprotection->character->name, ['controller' => 'Characters', 'action' => 'view', $characterprotection->character->id]) : '' ?></td>
-                <td><?= $characterprotection->has('location') ? $this->Html->link($characterprotection->location->LocationData, ['controller' => 'Locations', 'action' => 'view', $characterprotection->location->id]) : '' ?></td>
+                <td><?= $characterprotection->has('characterstat') ? $this->Html->link($characterprotection->characterstat->id, ['controller' => 'Characterstats', 'action' => 'view', $characterprotection->characterstat->id]) : '' ?></td>
+                <td><?= $characterprotection->has('location') ? $this->Html->link($characterprotection->location->id, ['controller' => 'Locations', 'action' => 'view', $characterprotection->location->id]) : '' ?></td>
                 <td><?= $characterprotection->has('covering') ? $this->Html->link($characterprotection->covering->name, ['controller' => 'Coverings', 'action' => 'view', $characterprotection->covering->id]) : '' ?></td>
-                <td><?= $characterprotection->has('armor') ? $this->Html->link($characterprotection->armor->ArmorData, ['controller' => 'Armors', 'action' => 'view', $characterprotection->armor->id]) : '' ?></td>
-                <td><?= $characterprotection->has('material') ? $this->Html->link($characterprotection->material->MaterialData, ['controller' => 'Materials', 'action' => 'view', $characterprotection->material->id]) : '' ?></td>
+                <td><?= $characterprotection->has('armor') ? $this->Html->link($characterprotection->armor->id, ['controller' => 'Armors', 'action' => 'view', $characterprotection->armor->id]) : '' ?></td>
+                <td><?= $characterprotection->has('material') ? $this->Html->link($characterprotection->material->id, ['controller' => 'Materials', 'action' => 'view', $characterprotection->material->id]) : '' ?></td>
                 <td><?= h($characterprotection->name) ?></td>
                 <td><?= $this->Number->format($characterprotection->n_pd_modifier) ?></td>
                 <td><?= $this->Number->format($characterprotection->n_ed_modifier) ?></td>
-                <td><?= $this->Number->format($characterprotection->r_pd_modifiers) ?></td>
-                <td><?= $this->Number->format($characterprotection->r_ed_modifiers) ?></td>
+                <td><?= $this->Number->format($characterprotection->r_pd_modifier) ?></td>
+                <td><?= $this->Number->format($characterprotection->r_ed_modifier) ?></td>
                 <td><?= $this->Number->format($characterprotection->stealth_penalty) ?></td>
                 <td><?= $this->Number->format($characterprotection->weight_modifier) ?></td>
                 <td><?= $this->Number->format($characterprotection->training_penalty_offset) ?></td>
