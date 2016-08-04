@@ -17,7 +17,7 @@ class DashboardController extends AppController {
 
 	public function dashboard() {
 		$username = $this->Auth->user('username');
-		$data = TableRegistry::get('Vorien/HeroCombat.Characters');
+		$data = TableRegistry::get('Vorien/Dashboard.Characters');
 		$query = $data->find();
 		$query->hydrate(false);
 		$query->innerJoinWith('Userdata', function ($q) {

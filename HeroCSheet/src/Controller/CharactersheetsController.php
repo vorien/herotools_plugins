@@ -4,13 +4,6 @@ namespace Vorien\HeroCSheet\Controller;
 
 use Vorien\HeroCSheet\Controller\AppController;
 use Cake\Event\Event;
-use Cake\Core\Plugin;
-use Cake\Utility\Xml;
-use Cake\Core\App;
-
-require_once(App::path('Lib', 'Vorien/HeroCSheet')[0] . 'XMLFunctions.php');
-
-use XMLFunctions;
 
 /**
  * Charactersheets Controller
@@ -19,7 +12,6 @@ use XMLFunctions;
  */
 class CharactersheetsController extends AppController {
 
-	public $PFiles;
 	public $cpath;
 	public $mpath;
 	public $tpath;
@@ -27,16 +19,15 @@ class CharactersheetsController extends AppController {
 
 	public function initialize() {
 		parent::initialize();
-		$this->XMLFunctions = new XMLFunctions();
-		$this->loadComponent('Vorien/Dashboard.Ownership');
+		$this->loadComponent('Vorien/Dashboard.CharacterOwnership');
 		$this->loadComponent('Vorien/Dashboard.DisplayFunctions');
+		$this->loadComponent('Vorien/HeroCSheet.CharactersheetProcessor');
 //		$this->loadComponent('Vorien/HeroCSheet.PCore');
-		$this->loadComponent('Vorien/HeroCSheet.PXML');
+//		$this->loadComponent('Vorien/HeroCSheet.PXML');
 //		$this->loadComponent('Vorien/HeroCSheet.PStandardize');
 //		$this->loadComponent('Vorien/HeroCSheet.PSkillDisplay');
 //		$this->loadComponent('Vorien/HeroCSheet.PSections');
 //		$this->loadComponent('Vorien/HeroCSheet.PArray');
-		$this->PFiles = Plugin::path('Vorien/HeroCSheet') . 'webroot' . DS . 'files/';
 	}
 
 	public function beforeRender(Event $event) {
@@ -44,6 +35,10 @@ class CharactersheetsController extends AppController {
 		$this->viewBuilder()->helpers(['Vorien/Dashboard.Display']);
 	}
 
+	public function index($charactersheet_id){
+		$this->CharactersheetProcessor->processCharactersheet($charactersheet_id);
+	}
+	
 	function testxml($charactersheet_id) {
 		$characterfile = $this->PFiles . 'merged_character.xml';
 		$character_sxml = simplexml_load_file($characterfile);
@@ -64,120 +59,6 @@ class CharactersheetsController extends AppController {
 			}
 		}
 		debug($bychar);
-	}
-
-	function index($charactersheet_id) {
-
-		/* Commented out while working on processCharacter
-		  $xmlfiles = $this->getXMLFilesForCharacterID($charactersheet_id);
-
-		  $template_xml = new \DOMDocument;
-		  $template_xml->preserveWhiteSpace = false;
-		  $template_xml->loadXML($xmlfiles['character_sxml']->TEMPLATE->saveXML());
-		  unset($xmlfiles['character_sxml']->TEMPLATE);
-		  $rules_xml = new \DOMDocument;
-		  $rules_xml->preserveWhiteSpace = false;
-		  $rules_xml->loadXML($xmlfiles['character_sxml']->RULES->saveXML());
-		  unset($xmlfiles['character_sxml']->RULES);
-		  $character_xml = dom_import_simplexml($xmlfiles['character_sxml'])->ownerDocument;
-		  $main_xml = dom_import_simplexml($xmlfiles['main_sxml'])->ownerDocument;
-
-		  $this->PXML->renameElement($character_xml->documentElement, 'HEROCSHEET');
-		  $this->PXML->renameElement($main_xml->documentElement, 'HEROCSHEET');
-		  $this->PXML->renameElement($template_xml->documentElement, 'HEROCSHEET');
-
-		  $this->moveEnhancers($character_xml);
-
-
-		  $this->cpath = new \DOMXPath($character_xml);
-		  $this->mpath = new \DOMXPath($main_xml);
-		  $this->tpath = new \DOMXPath($template_xml);
-
-		  $this->PXML->standardizeTemplate($this->mpath);
-		  $this->PXML->standardizeTemplate($this->tpath);
-
-		  $removenames = ['EXAMPLE'];
-		  $this->PXML->removeNamedTags($character_xml, $removenames);
-		  $this->PXML->removeNamedTags($main_xml, $removenames);
-		  $this->PXML->removeNamedTags($template_xml, $removenames);
-
-		  $this->PXML->removeEmptyTags($character_xml);
-		  $this->PXML->removeEmptyTags($main_xml);
-		  $this->PXML->removeEmptyTags($template_xml);
-		  $this->PXML->removeEmptyTags($rules_xml);
-
-
-		  file_put_contents($this->PFiles . 'main_standardized.xml', $main_xml->saveXML());
-		  file_put_contents($this->PFiles . 'template_standardized.xml', $template_xml->saveXML());
-		  file_put_contents($this->PFiles . 'character_standardized.xml', $character_xml->saveXML());
-		  file_put_contents($this->PFiles . 'rules_standardized.xml', $rules_xml->saveXML());
-
-		  $this->loadComponent('Vorien/HeroCSheet.PMergeTemplates', [
-		  'to_xml' => $main_xml,
-		  'from_xml' => $template_xml,
-		  'basequery' => '/HEROCSHEET'
-		  ]
-		  );
-		  $merge_xml = $this->PMergeTemplates->mergeTemplates();
-		  file_put_contents($this->PFiles . 'merged_templates.xml', $merge_xml->saveXML());
-
-		  $mpath = new \DomXPath($merge_xml);
-
-		  $this->loadComponent('Vorien/HeroCSheet.PMergeCharacter', [
-		  'character_xml' => $character_xml,
-		  'merged_xml' => $merge_xml,
-		  'rules_xml' => $rules_xml,
-		  'basequery' => '/HEROCSHEET'
-		  ]
-		  );
-		  $mergedcharacter_xml = $this->PMergeCharacter->mergeCharacter();
-		  file_put_contents($this->PFiles . 'merged_character.xml', $mergedcharacter_xml->saveXML());
-
-		  End Temporary Commenting */
-
-		/* Load merged_character.xml directly for testing */
-		$mergedcharacter_xml = new \DOMDocument();
-		$mergedcharacter_xml->preserveWhiteSpace = false;
-		$mergedcharacter_xml->load($this->PFiles . 'merged_character.xml');
-		/* End Load */
-
-//		debug(Xml::toArray($mergedcharacter_xml));
-//		die();
-		$this->loadComponent('Vorien/HeroCSheet.PProcessCharacter', [
-			'character_xml' => $mergedcharacter_xml
-		]);
-//		$firstpass = $this->PProcessCharacter->firstPass();
-//		$standardized = $this->DisplayFunctions->standardizeArray($firstpass);
-//		$this->DisplayFunctions->echo2DArrayAsTable($standardized);
-
-		$charactersheet = $this->Charactersheets->get($charactersheet_id);
-		if ($charactersheet) {
-			$this->PProcessCharacter->processCharacter();
-			$character_sxml = simplexml_load_string($this->PProcessCharacter->character_xml->saveXML());
-
-			foreach ($character_sxml->children() as $child) {
-				$child_xml = $child->asXML();
-				$child_name = $child->getName();
-				$charactersheet->$child_name = $child_xml;
-				$this->Charactersheets->save($charactersheet);
-			}
-		} else {
-			debug('Charactersheet id: ' . $charactersheet_id . ' not found');
-		}
-		debug('Process Complete');
-	}
-
-	public function moveEnhancers(&$cxml) {
-		$skillsnode = $cxml->getElementsByTagName('SKILLS')->item(0);
-		$nodepath = $skillsnode->getNodePath();
-		$tagsremovedcount = $this->XMLFunctions->removeTags($cxml, $nodepath . $this->XMLFunctions->buildSkipEmptyNodes(['starts-with(name(),"HYKERU")']));
-		if ($movednodes = $this->XMLFunctions->moveNodes($cxml, '/HEROCSHEET/SKILL_ENHANCERS', $skillsnode, $this->XMLFunctions->buildSkipEmptyNodes(['not(self::SKILL)']))) {
-			$this->XMLFunctions->renameElements($movednodes, 'ENHANCER');
-			return $movednodes;
-		} else {
-			//Either there was an error (null), or there were no Elements to move
-			return $movednodes;
-		}
 	}
 
 	function getNodeByXmlid($xmlid, $nodelist) {
@@ -216,42 +97,45 @@ class CharactersheetsController extends AppController {
 		}
 	}
 
-	function getXMLFilesForCharacterID($charactersheet_id) {
-		if (empty($charactersheet_id)) {
-			$this->Flash->set('No character was selected');
-			return $this->redirect(['plugin' => 'Vorien/Dashboard', 'controller' => 'dashboard']);
+	public function select() {
+//		debug("In select");
+		if (!Cache::deleteMany([ 'character', 'main'], 'herocsheet')) { // deleting cache entries
+			$this->Flash->set("Unable to delete cache entries");
+//			debug(Cache::deleteMany([ 'character', 'main'], 'herocsheet'));
 		}
-		$charactersheet = $this->Charactersheets->find('all')->where(['character_id' => $charactersheet_id])->first();
-		if (empty($charactersheet)) {
-			$this->Flash->set('There is no entry in the table for that character');
-			return $this->redirect(['plugin' => 'Vorien/Dashboard', 'controller' => 'dashboard']);
-		}
-		if (empty($charactersheet['characterfile'])) {
-			$this->Flash->set('There is no character file set for that character');
-			return $this->redirect(['plugin' => 'Vorien/HeroCSheet', 'controller' => 'charactersheets', 'action' => 'upload']);
-		}
-		if (empty($charactersheet['mainfile'])) {
-			$this->Flash->set('There is no main file set for that character.<br>Contact your GM for more information.');
-			return $this->redirect(['plugin' => 'Vorien/Dashboard', 'controller' => 'dashboard']);
-		}
-
-		$characterfile = $this->PFiles . $charactersheet['characterfile'];
-		$mainfile = $this->PFiles . $charactersheet['mainfile'];
-
-		$character_sxml = simplexml_load_file($characterfile);
-		$main_sxml = simplexml_load_file($mainfile);
-
-
-		$character_xml = new \DOMDocument();
-		$character_xml->preserveWhiteSpace = false;
-		$character_xml->load($characterfile);
-
-		$main_xml = new \DOMDocument();
-		$main_xml->preserveWhiteSpace = false;
-		$main_xml->load($mainfile);
-
-		return compact('character_sxml', 'main_sxml', 'character_xml', 'main_xml');
+		$characterfiles = [];
+		$templates = [];
+		$dir = new Folder($this->PFiles);
+		$characterfiles = $dir->find('.*\.hdc');
+		$templates = $dir->find('.*\.hdt');
+		$this->set(compact('characterfiles', 'templates'));
 	}
+
+	public function upload() {
+		if ($this->request->is('post')) {
+			if (!empty($this->request->data)) {
+				$filename = $this->PFiles . $this->request->data['file']['name'];
+				if (move_uploaded_file($this->request->data['file']['tmp_name'], $filename)) {
+					$this->Flash->set('File uploaded successfuly.');
+					$this->request->data = [];
+					$this->request->data['action'] = 'index';
+					$this->routeAction();
+				} else {
+					$this->Flash->set('There was a problem uploading file. Please try again.');
+				}
+			}
+		}
+	}
+
+	function getRollFromLevels($levels) {
+		if ($levels == 1) {
+			$roll = 8;
+		} else {
+			$roll = 11 + ($levels - 2);
+		}
+		return $roll;
+	}
+
 
 	/*
 	  public function display($charactersheet_id) {

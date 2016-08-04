@@ -11,12 +11,13 @@ use Cake\Event\Event;
  * CakePHP CombatController
  * @author Michael
  */
-class CombatController extends AppController {
+class HerocombatController extends AppController {
 
 	public function initialize() {
 		parent::initialize();
-		$this->loadComponent('Vorien/Dashboard.Ownership');
+		$this->loadComponent('Vorien/Dashboard.CharacterOwnership');
 		$this->loadComponent('Vorien/Dashboard.DisplayFunctions');
+		$this->loadComponent('Vorien/HeroCombat.Ownership');
 	}
 
 	public function beforeRender(Event $event) {
@@ -24,17 +25,17 @@ class CombatController extends AppController {
 		$this->viewBuilder()->helpers(['Vorien/Dashboard.PageBuild']);
 	}
 
-	public function index($character_id) {
+	public function index($characterstat_id) {
 //		debug($this->Ownership->user());
 //		exit;
 		//Make sure the current user should have access to the selected character
-		$this->Ownership->checkCharacterOwnership($character_id);
+		$this->CharacterOwnership->checkCharacterOwnership($characterstat_id);
 
 		//Set the active character in the session for faster reference
-//		$this->ActiveCharacter->setActiveCharacter($character_id);
+//		$this->ActiveCharacter->setActiveCharacter($characterstat_id);
 
 		$ajax_root = '/herocombat/';
-		$armorlocationinfo = $this->getArmorLocationInfo($character_id);
+		$armorlocationinfo = $this->getArmorLocationInfo($characterstat_id);
 		$json_armorlocationinfo = json_encode($armorlocationinfo);
 
 		$targetinfo = $this->getTargetInfo();
@@ -46,16 +47,16 @@ class CombatController extends AppController {
 		$maneuvers_standard = $this->getManeuverList("Standard");
 		$maneuvers_optional = $this->getManeuverList("Optional");
 
-		$characterinfo = $this->getCharacterInfo($character_id);
+		$characterinfo = $this->getCharacterInfo($characterstat_id);
 		$json_characterinfo = json_encode($characterinfo);
 
-		$weapons = $this->getAllWeaponInfo($character_id);
+		$weapons = $this->getAllWeaponInfo($characterstat_id);
 		$json_weapons = json_encode($weapons);
 
-		$leveltracking = $this->getLevelTrackingArray($character_id);
+		$leveltracking = $this->getLevelTrackingArray($characterstat_id);
 		$json_leveltracking = json_encode($leveltracking);
 
-		$starting_weapon_id = $this->getUnarmedCharacterWeapon($character_id);
+		$starting_weapon_id = $this->getUnarmedCharacterWeapon($characterstat_id);
 
 
 //		debug($weapons);
@@ -66,8 +67,8 @@ class CombatController extends AppController {
 		$this->set(compact('ajax_root', 'characterinfo', 'json_characterinfo', 'locationinfo', 'json_targetinfo', 'targetinfo', 'json_locationinfo', 'json_weapons', 'maneuvers_standard', 'maneuvers_optional', 'weapons', 'starting_weapon_id', 'armorlocationinfo', 'json_armorlocationinfo', 'leveltracking', 'json_leveltracking'));
 	}
 
-	public function getArmorLocationInfo($character_id) {
-		if (!$character_id) {
+	public function getArmorLocationInfo($characterstat_id) {
+		if (!$characterstat_id) {
 			return [];
 		}
 		$data = TableRegistry::get('Vorien/HeroCombat.Characterprotections');
@@ -85,7 +86,7 @@ class CombatController extends AppController {
 			}
 				]);
 				$query->where([
-					'Characterprotections.character_id' => $character_id,
+					'Characterprotections.characterstat_id' => $characterstat_id,
 					'Characterprotections.active' => true
 				]);
 				$armorlocationinfo = $query->all()->toArray();
@@ -95,7 +96,7 @@ class CombatController extends AppController {
 					$armordata[$armorlocation['location']['roll']] = [
 						'id' => $armorlocation['id'],
 						'active' => $armorlocation['active'],
-						'character_id' => $armorlocation['character_id'],
+						'character_id' => $armorlocation['characterstat_id'],
 						'location_id' => $armorlocation['location_id'],
 						'covering_id' => $armorlocation['covering_id'],
 						'armor_id' => $armorlocation['armor_id'],
@@ -186,35 +187,35 @@ class CombatController extends AppController {
 				return $maneuverlist;
 			}
 
-			public function getCharacterInfo($character_id = null) {
-				if (!$character_id) {
+			public function getCharacterInfo($characterstat_id = null) {
+				if (!$characterstat_id) {
 					return [];
 				}
-				$data = TableRegistry::get('Vorien/HeroCombat.Characters');
+				$data = TableRegistry::get('Vorien/HeroCombat.Characterstats');
 				$query = $data->find();
 				$query->hydrate(false);
-				$query->where(['Characters.id' => $character_id]);
+				$query->where(['Characterstats.id' => $characterstat_id]);
 				$characterinfo = $query->first();
 				$this->DisplayFunctions->removeByKey($characterinfo, ['created', 'modified']);
 				return $characterinfo;
 			}
 
-			public function getAllWeaponInfo($character_id) {
-				if (!$character_id) {
+			public function getAllWeaponInfo($characterstat_id) {
+				if (!$characterstat_id) {
 					return [];
 				}
 				$data = TableRegistry::get('Vorien/HeroCombat.Characterweapons');
 				$query = $data->find();
 				$query->hydrate(false);
 				$query->contain(['Weapons']);
-				$query->where(['Characterweapons.character_id' => $character_id]);
+				$query->where(['Characterweapons.characterstat_id' => $characterstat_id]);
 				$characterweapons = $query->all()->toArray();
 
 				$weapondata = [];
 				foreach ($characterweapons as $characterweapon) {
 					$weapondata[$characterweapon['id']] = [
 						'id' => $characterweapon['id'],
-						'character_id' => $characterweapon['character_id'],
+						'character_id' => $characterweapon['characterstat_id'],
 						'weapon_id' => $characterweapon['weapon_id'],
 						'name' => $characterweapon['name'],
 						'ocv' => $characterweapon['ocv_modifier'] + $characterweapon['weapon']['ocv'],
@@ -252,8 +253,8 @@ class CombatController extends AppController {
 				return $weapondata;
 			}
 
-			public function getLevelTrackingArray($character_id) {
-				if (!$character_id) {
+			public function getLevelTrackingArray($characterstat_id) {
+				if (!$characterstat_id) {
 					return [];
 				}
 				$data = TableRegistry::get('Vorien/HeroCombat.Characterlevels');
@@ -263,7 +264,7 @@ class CombatController extends AppController {
 					'Levels',
 					'Characterweapons'
 				]);
-				$query->where(['Characterlevels.character_id' => $character_id]);
+				$query->where(['Characterlevels.characterstat_id' => $characterstat_id]);
 				$leveltrackingarray = $query->all()->toArray();
 
 				$explodedlevels = [];
@@ -290,7 +291,7 @@ class CombatController extends AppController {
 
 //				$all_levels = $this->Characterlevel->find('all', array(
 //					'conditions' => array(
-//						'Characterlevel.character_id' => $character_id
+//						'Characterlevel.characterstat_id' => $characterstat_id
 //					),
 //					'fields' => 'Characterlevel.qty',
 //					'contain' => array(
@@ -313,8 +314,8 @@ class CombatController extends AppController {
 //				return($leveltrackingarray);
 			}
 
-			public function getUnarmedCharacterWeapon($character_id) {
-				if (!$character_id) {
+			public function getUnarmedCharacterWeapon($characterstat_id) {
+				if (!$characterstat_id) {
 					return [];
 				}
 				$data = TableRegistry::get('Vorien/HeroCombat.Characterweapons');
@@ -322,7 +323,7 @@ class CombatController extends AppController {
 				$query->hydrate(false);
 				$query->select('id');
 				$query->where([
-					'Characterweapons.character_id' => $character_id,
+					'Characterweapons.characterstat_id' => $characterstat_id,
 					'Characterweapons.weapon_id' => 90
 				]);
 				$unarmedcharacterweapon = $query->first();
@@ -336,32 +337,32 @@ class CombatController extends AppController {
 			 * Functions below this line have not been migrated to CakePHP 3...
 			 */
 
-			public function listweapons($character_id) {
+			public function listweapons($characterstat_id) {
 				$weaponlist = $this->Characterweapon->find('list', array(
 					'fields' => array('Characterweapon.name'),
 					'contain' => array('Weapon'),
 					'order' => array('Weapon.type'),
-					'conditions' => array('character_id' => $character_id)
+					'conditions' => array('character_id' => $characterstat_id)
 				));
 
 				return $weaponlist;
 			}
 
-			public function ajax_getcharacterinfo($character_id) {
+			public function ajax_getcharacterinfo($characterstat_id) {
 				$this->autoRender = false;
-				echo json_encode($this->getcharacterinfo($character_id));
+				echo json_encode($this->getcharacterinfo($characterstat_id));
 			}
 
-			public function ajax_getweapondata($character_id, $id) {
+			public function ajax_getweapondata($characterstat_id, $id) {
 				$this->autoRender = false;
-				echo json_encode($this->getWeaponData($character_id, $id));
+				echo json_encode($this->getWeaponData($characterstat_id, $id));
 			}
 
-			public function getWeaponData($character_id, $id) {
+			public function getWeaponData($characterstat_id, $id) {
 //		$weapondata = $this->Characterweapon->find('all');
 				$weapondata = $this->Characterweapon->find('first', array(
 					'conditions' => array(
-						'Characterweapon.character_id' => $character_id,
+						'Characterweapon.characterstat_id' => $characterstat_id,
 						'Characterweapon.id' => $id
 					),
 					'contain' => array(
@@ -371,17 +372,17 @@ class CombatController extends AppController {
 				return $this->UTF->arrayToUTF8($weapondata);
 			}
 
-			public function getmartialmaneuvers($character_id = null, $mainid = 0) {
+			public function getmartialmaneuvers($characterstat_id = null, $mainid = 0) {
 				$this->viewBuilder()->autoLayout(false);
 				$maneuverlist = array();
 
-				if ($character_id) {
+				if ($characterstat_id) {
 
 					$data = TableRegistry::get('Vorien/HeroCombat.Characterweapons');
 					$query = $data->find();
 					$query->hydrate(false);
 					$query->where([
-						'Characterweapons.character_id' => $character_id,
+						'Characterweapons.characterstat_id' => $characterstat_id,
 						'Characterweapons.id' => $mainid,
 						'Characterweapons.weapon_element' => 1
 					]);
@@ -391,7 +392,7 @@ class CombatController extends AppController {
 						$data = TableRegistry::get('Vorien/HeroCombat.Charactermaneuvers');
 						$query = $data->find();
 						$query->hydrate(false);
-						$query->where(['Charactermaneuvers.character_id' => $character_id]);
+						$query->where(['Charactermaneuvers.characterstat_id' => $characterstat_id]);
 						$query->contain([
 							'Maneuvers' => function ($q) {
 								return $q->order(['type', 'sort_order']);
@@ -434,12 +435,12 @@ class CombatController extends AppController {
 //		exit();
 //	}
 
-					public function getlevels($character_id, $main_id, $off_id) {
+					public function getlevels($characterstat_id, $main_id, $off_id) {
 						$this->autoLayout = false;
 
 						$mainleveltracking = $this->Characterweapon->find('all', array(
 							'conditions' => array(
-								'Characterweapon.character_id' => $character_id,
+								'Characterweapon.characterstat_id' => $characterstat_id,
 								'Characterweapon.id' => $main_id
 							),
 							'contain' => array(
@@ -456,7 +457,7 @@ class CombatController extends AppController {
 
 						$offleveltracking = $this->Characterweapon->find('all', array(
 							'conditions' => array(
-								'Characterweapon.character_id' => $character_id,
+								'Characterweapon.characterstat_id' => $characterstat_id,
 								'Characterweapon.id' => $off_id
 							),
 							'contain' => array(
@@ -568,8 +569,8 @@ class CombatController extends AppController {
 						
 					}
 
-//	public function getArmorLocationInfo($character_id) {
-//		if (!$character_id) {
+//	public function getArmorLocationInfo($characterstat_id) {
+//		if (!$characterstat_id) {
 //			return [];
 //		}
 //		$data = TableRegistry::get('Vorien/HeroCombat.Characterprotections');
@@ -609,7 +610,7 @@ class CombatController extends AppController {
 //			}
 //				]);
 //				$query->where([
-//					'Characterprotections.character_id' => $character_id,
+//					'Characterprotections.characterstat_id' => $characterstat_id,
 //					'Characterprotections.active' => true
 //				]);
 //				$armorlocationinfo = $query->all()->toArray();

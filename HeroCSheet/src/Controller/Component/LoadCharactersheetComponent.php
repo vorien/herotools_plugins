@@ -4,35 +4,57 @@ namespace Vorien\HeroCSheet\Controller\Component;
 
 use Cake\Controller\Component;
 use Cake\Controller\ComponentRegistry;
-use Cake\Utility\Xml;
+use Cake\ORM\TableRegistry;
 use Cake\Core\App;
 
-//
 require_once(App::path('Lib', 'Vorien/HeroCSheet')[0] . 'XMLFunctions.php');
 
 use XMLFunctions;
 
-//use App\Plugins\Vorien\HeroCSheet\Lib\NodeStack;
 /**
- * PMergeCharacter component
+ * LoadCharactersheetComponent component
  */
-class PProcessCharacterComponent extends Component {
+class LoadCharactersheetComponent extends Component {
 
 	public $XMLFunctions;
 	public $errorstack = [];
 	public $character_xml;
 	public $rolluparray = ['cost' => 0, 'add' => 0, 'plus' => 0, 'minus' => 0, 'alias' => '', 'attributes' => []];
+	private $CharactersheetsTable;
+	private $idattribute = 'XMLID';
+	private $charactersheet_id;
 
-	public function initialize(array $config) {
-		parent::initialize($config);
+	public function setConfiguration(array $config) {
 		$this->XMLFunctions = new XMLFunctions();
+		$this->CharactersheetsTable = TableRegistry::get('Vorien/HeroCSheet.Charactersheets');
 		$this->character_xml = new \DOMDocument();
 		$this->character_xml->preserveWhiteSpace = false;
 		$this->character_xml->formatOutput = true;
 		$this->character_xml->loadXML($config['character_xml']->saveXML());
+		$this->charactersheet_id = $config['charactersheet_id'];
+		if (isset($config['idattribute']) && $config['idattribute']) {
+			$this->idattribute = $config['idattribute'];
+		}
 	}
 
-	function processCharacter($query = null, $depth = 0) {
+	function loadCharactersheet() {
+		$charactersheet = $this->CharactersheetsTable->get($this->charactersheet_id);
+		if ($charactersheet) {
+			$this->processCharactersheet();
+			$character_sxml = simplexml_load_string($this->character_xml->saveXML());
+
+			foreach ($character_sxml->children() as $child) {
+				$child_name = strtolower($child->getName());
+				$child_xml = $child->asXML();
+				$charactersheet->$child_name = $child_xml;
+			}
+			$this->CharactersheetsTable->save($charactersheet);
+		} else {
+			debug('Charactersheet id: ' . $this->charactersheet_id . ' not found');
+		}
+	}
+
+	function processCharactersheet($query = null, $depth = 0) {
 		$rollup = $this->rolluparray;
 		if (!$query) {
 			$query = $this->character_xml->documentElement->getNodePath();
@@ -49,7 +71,7 @@ class PProcessCharacterComponent extends Component {
 		if ($node->hasChildNodes()) {
 			foreach ($node->childNodes as $child) {
 				if ($child->nodeType != XML_TEXT_NODE && $child->nodeName != 'text()') {
-					$this->combineRollupArrays($rollup, $this->processCharacter($child->getNodePath(), $depth + 1));
+					$this->combineRollupArrays($rollup, $this->processCharactersheet($child->getNodePath(), $depth + 1));
 				}
 			}
 			$this->applyCalcs($rollup);
@@ -69,8 +91,10 @@ class PProcessCharacterComponent extends Component {
 				break;
 			default:
 				if ($node->hasAttribute('XMLID')) {
-					echo $rollup['cost'], ',', $node->getAttribute('ALIAS'), ',', $node->getAttribute('INPUT'), ',', $node->getAttribute('XMLID'), '<br>';
+					$this->XMLFunctions->displayNode($node);
 					debug($rollup);
+//					echo $rollup['cost'], ',', $node->getAttribute('ALIAS'), ',', $node->getAttribute('INPUT'), ',', $node->getAttribute('XMLID'), '<br>';
+//					debug($rollup);
 //					$this->displayAttributes($node);
 				} else {
 //					debug($node->getNodePath());
@@ -80,7 +104,7 @@ class PProcessCharacterComponent extends Component {
 		return $rollup;
 	}
 
-	function getSelectedAttributes(&$node){
+	function getSelectedAttributes(&$node) {
 		$return = [];
 		$attributelist = [
 			'ALIAS',
@@ -101,22 +125,22 @@ class PProcessCharacterComponent extends Component {
 			'SKILLMAXIMA',
 			'CHARACTERISTICMAXIMA'
 		];
-		foreach($attributelist as $attribute){
-			if($add = $this->XMLFunctions->getAttributeValue($node, $attribute)){
+		foreach ($attributelist as $attribute) {
+			if ($add = $this->XMLFunctions->getAttributeValue($node, $attribute)) {
 				$return[$attribute] = $add;
 			}
 		}
-			if(($characteristic = $this->XMLFunctions->getAttributeValue($node, 'CHARACTERISTIC')) && $characteristic != 'GENERAL'){
-				if(($nodelist = $this->XMLFunctions->getNodeList($node->ownerDocument, '/HEROCSHEET/CHARACTERISTICS/' . $characteristic)) && $nodelist->length == 1){
-					$characteristicnode = $nodelist->item(0);
-					$return['CHARACTERISTICVALUE'] = $characteristicnode->getAttribute('BASE') +  $characteristicnode->getAttribute('LEVELS');
-					$return['CHARACTERISTICMAXIMA'] = $characteristicnode->getAttribute('CHARACTERISTICMAXIMA');
-				}
+		if (($characteristic = $this->XMLFunctions->getAttributeValue($node, 'CHARACTERISTIC')) && $characteristic != 'GENERAL') {
+			if (($nodelist = $this->XMLFunctions->getNodeList($node->ownerDocument, '/HEROCSHEET/CHARACTERISTICS/' . $characteristic)) && $nodelist->length == 1) {
+				$characteristicnode = $nodelist->item(0);
+				$return['CHARACTERISTICVALUE'] = $characteristicnode->getAttribute('BASE') + $characteristicnode->getAttribute('LEVELS');
+				$return['CHARACTERISTICMAXIMA'] = $characteristicnode->getAttribute('CHARACTERISTICMAXIMA');
 			}
-		
+		}
+
 		return $return;
 	}
-	
+
 	function clearCalcs(&$rollup) {
 		$rollup['add'] = $rollup['plus'] = $rollup['minus'] = 0;
 	}
@@ -217,14 +241,10 @@ class PProcessCharacterComponent extends Component {
 //			}
 //		}
 //	}
-
-
-
 //	function showErrorStack() {
 //		foreach ($this->errorstack as $error) {
 //			debug($error);
 //		}
 //		$this->errorstack = [];
 //	}
-
 }

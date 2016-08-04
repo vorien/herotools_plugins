@@ -20,9 +20,6 @@
 		<title>
 			<?= $this->fetch('title') ?>
 		</title>
-		<title>
-			<?= $title_for_layout; ?>
-		</title>
 
 		<?= $this->Html->meta('icon') ?>
 

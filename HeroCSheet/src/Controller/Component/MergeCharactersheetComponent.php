@@ -4,7 +4,7 @@ namespace Vorien\HeroCSheet\Controller\Component;
 
 use Cake\Controller\Component;
 use Cake\Controller\ComponentRegistry;
-use Cake\Utility\Xml;
+//use Cake\Utility\Xml;
 use Cake\Core\App;
 
 //
@@ -14,11 +14,10 @@ require_once(App::path('Lib', 'Vorien/HeroCSheet')[0] . 'XMLFunctions.php');
 use NodeStack;
 use XMLFunctions;
 
-//use App\Plugins\Vorien\HeroCSheet\Lib\NodeStack;
 /**
- * PMergeCharacter component
+ * MergeCharactersheetComponent component
  */
-class PMergeCharacterComponent extends Component {
+class MergeCharactersheetComponent extends Component {
 
 	public $components = [];
 	public $basequery = 'HEROCSHEET';
@@ -32,22 +31,28 @@ class PMergeCharacterComponent extends Component {
 	public $NodeStack;
 	public $XMLFunctions;
 
-	public function initialize(array $config) {
-		parent::initialize($config);
+	public function setConfiguration(array $config) {
 		$this->NodeStack = new NodeStack();
 		$this->XMLFunctions = new XMLFunctions();
+
 		$this->character_xml = new \DOMDocument();
 		$this->character_xml->preserveWhiteSpace = false;
 		$this->character_xml->loadXML($config['character_xml']->saveXML());
-		$rules_xml = new \DOMDocument();
-		$rules_xml->preserveWhiteSpace = false;
-		$rules_xml->loadXML($config['rules_xml']->saveXML());
-		$this->rules = $this->XMLFunctions->getAttributesAsArray($rules_xml->documentElement);
+		$this->XMLFunctions->renameElement($this->character_xml->documentElement, 'HEROCSHEET');
+		$this->moveEnhancers($this->character_xml);
+//		$this->XMLFunctions->removeEmptyTags($this->character_xml);
 		$this->cpath = new \DOMXPath($this->character_xml);
 		$this->merged_xml = new \DOMDocument();
 		$this->merged_xml->preserveWhiteSpace = false;
 		$this->merged_xml->loadXML($config['merged_xml']->saveXML());
+		$this->XMLFunctions->removeEmptyTags($this->merged_xml);
 		$this->tpath = new \DOMXPath($this->merged_xml);
+
+		$rules_xml = new \DOMDocument();
+		$rules_xml->preserveWhiteSpace = false;
+		$rules_xml->loadXML($config['rules_xml']->saveXML());
+		$this->rules = $this->XMLFunctions->getAttributesAsArray($rules_xml->documentElement);
+
 		if (isset($config['allowtext']) && $config['allowtext']) {
 			$this->skipempty = '';
 			$this->skipemptynodes = '/node()';
@@ -68,6 +73,19 @@ class PMergeCharacterComponent extends Component {
 //		die(' ');
 	}
 
+	public function moveEnhancers(&$cxml) {
+		$skillsnode = $cxml->getElementsByTagName('SKILLS')->item(0);
+		$nodepath = $skillsnode->getNodePath();
+		$tagsremovedcount = $this->XMLFunctions->removeTags($cxml, $nodepath . $this->XMLFunctions->buildSkipEmptyNodes(['starts-with(name(),"HYKERU")']));
+		if ($movednodes = $this->XMLFunctions->moveNodes($cxml, '/HEROCSHEET/SKILL_ENHANCERS', $skillsnode, $this->XMLFunctions->buildSkipEmptyNodes(['not(self::SKILL)']))) {
+			$this->XMLFunctions->renameElements($movednodes, 'ENHANCER');
+			return $movednodes;
+		} else {
+			//Either there was an error (null), or there were no Elements to move
+			return $movednodes;
+		}
+	}
+
 	function ignoreNode(&$node) {
 		if ($node->hasAttribute($this->idattribute) && $node->getAttribute($this->idattribute) == 'MAKEASENSE') {
 			return true;
@@ -77,12 +95,13 @@ class PMergeCharacterComponent extends Component {
 	}
 
 	function addDefinitionAsAttribute(&$node, &$matchednode) {
-		if($childnode = $this->XMLFunctions->getFirstMatchingChild($matchednode, 'DEFINITION')){
+		if ($childnode = $this->XMLFunctions->getFirstMatchingChild($matchednode, 'DEFINITION')) {
+			debug($node->nodeName);
 			$cleanedvalue = preg_replace('/[\t|\r|\n]/', '', $childnode->nodeValue);
 			$node->setAttribute('DEFINITION', $cleanedvalue);
 //			var_dump($childnode);
 //				$this->XMLFunctions->copyNode($node, $childnode);
-				return true;
+			return true;
 		}
 		return false;
 	}
@@ -94,6 +113,7 @@ class PMergeCharacterComponent extends Component {
 		}
 		$nodelist = $this->cpath->query($this->NodeStack->buildNodeString($nodestack, true));
 		foreach ($nodelist as $node) {
+			debug($node->nodeName);
 			if (!$this->ignorenode($node)) {
 				if ($matchednode = $this->runMatchingTests($nodestack, $node, true)) {
 //				$this->displayText('Match found', $node->getNodePath(), $matchednode->getNodePath());
@@ -108,10 +128,13 @@ class PMergeCharacterComponent extends Component {
 //				$this->showErrorStack();
 //				die();
 				}
+				$this->addMaximaAsAttribute($node);
 				if ($node->hasChildNodes()) {
 					foreach ($node->childNodes as $child) {
 						if ($child->nodeType == XML_TEXT_NODE || $child->nodeName == 'NOTES') {
-//						debug('Text Node');
+//							debug('Text Node');
+//							debug($child->nodeName);
+//							debug($child->hasAttributes());
 //						$this->XMLFunctions->displayNode($child);
 							//TODO Compare text, then ?
 						} else {
@@ -127,6 +150,7 @@ class PMergeCharacterComponent extends Component {
 	}
 
 	function runMatchingTests(&$nodestack, &$node, $checkmodifier = false) {
+		debug($nodestack);
 		$this->errorstack[] = 'runMatchingTests';
 		if (!($matchednode = $this->getMatchingNode($nodestack))) { //Exact match
 			if (!($matchednode = $this->testWithOption($nodestack, $node))) {// Match OPTION child node
@@ -233,20 +257,19 @@ class PMergeCharacterComponent extends Component {
 //			}
 		}
 		$this->addDefinitionAsAttribute($tonode, $fromnode);
-		$this->addMaximaAsAttribute($tonode);
 //		$this->displayAttributes($tonode, 'updateAttributes');
 		return 'Success';
 	}
 
-	function addMaximaAsAttribute(&$node){
-		if($node->nodeName == 'SKILL' && $this->rules['USESKILLMAXIMA'] == 'Yes'){
+	function addMaximaAsAttribute(&$node) {
+		if ($node->nodeName == 'SKILL' && $this->rules['USESKILLMAXIMA'] == 'Yes') {
 			$node->setAttribute('SKILLMAXIMA', $this->rules['SKILLMAXIMALIMIT']);
 		}
-		if($node->parentNode->nodeName == 'CHARACTERISTICS'){
+		if ($node->parentNode->nodeName == 'CHARACTERISTICS') {
 			$node->setAttribute('CHARACTERISTICMAXIMA', $this->rules[$node->nodeName . '_MAX']);
 		}
 	}
-	
+
 	function injectOptionNode(&$nodestack, &$node) {
 		$this->errorstack[] = 'injectOptionNode';
 		if ($node->parentNode) {

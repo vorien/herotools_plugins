@@ -1,5 +1,5 @@
 <?php
-namespace Vorien\HeroCombat\Model\Table;
+namespace Vorien\Dashboard\Model\Table;
 
 use Cake\ORM\Query;
 use Cake\ORM\RulesChecker;
@@ -7,25 +7,22 @@ use Cake\ORM\Table;
 use Cake\Validation\Validator;
 
 /**
- * Characterstats Model
+ * Characters Model
  *
- * @property \Cake\ORM\Association\BelongsTo $Characters
- * @property \Cake\ORM\Association\HasMany $Characterlevels
- * @property \Cake\ORM\Association\HasMany $Charactermaneuvers
- * @property \Cake\ORM\Association\HasMany $Characterprotections
- * @property \Cake\ORM\Association\HasMany $Characterweapons
+ * @property \Cake\ORM\Association\BelongsTo $Userdata
+ * @property \Cake\ORM\Association\BelongsTo $Gms
  *
- * @method \Vorien\HeroCombat\Model\Entity\Characterstat get($primaryKey, $options = [])
- * @method \Vorien\HeroCombat\Model\Entity\Characterstat newEntity($data = null, array $options = [])
- * @method \Vorien\HeroCombat\Model\Entity\Characterstat[] newEntities(array $data, array $options = [])
- * @method \Vorien\HeroCombat\Model\Entity\Characterstat|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
- * @method \Vorien\HeroCombat\Model\Entity\Characterstat patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
- * @method \Vorien\HeroCombat\Model\Entity\Characterstat[] patchEntities($entities, array $data, array $options = [])
- * @method \Vorien\HeroCombat\Model\Entity\Characterstat findOrCreate($search, callable $callback = null)
+ * @method \Vorien\Dashboard\Model\Entity\Character get($primaryKey, $options = [])
+ * @method \Vorien\Dashboard\Model\Entity\Character newEntity($data = null, array $options = [])
+ * @method \Vorien\Dashboard\Model\Entity\Character[] newEntities(array $data, array $options = [])
+ * @method \Vorien\Dashboard\Model\Entity\Character|bool save(\Cake\Datasource\EntityInterface $entity, $options = [])
+ * @method \Vorien\Dashboard\Model\Entity\Character patchEntity(\Cake\Datasource\EntityInterface $entity, array $data, array $options = [])
+ * @method \Vorien\Dashboard\Model\Entity\Character[] patchEntities($entities, array $data, array $options = [])
+ * @method \Vorien\Dashboard\Model\Entity\Character findOrCreate($search, callable $callback = null)
  *
  * @mixin \Cake\ORM\Behavior\TimestampBehavior
  */
-class CharacterstatsTable extends Table
+class CharactersTable extends Table
 {
 
     /**
@@ -38,31 +35,19 @@ class CharacterstatsTable extends Table
     {
         parent::initialize($config);
 
-        $this->table('characterstats');
-        $this->displayField('id');
+        $this->table('characters');
+        $this->displayField('name');
         $this->primaryKey('id');
 
         $this->addBehavior('Timestamp');
 
-        $this->belongsTo('Characters', [
-            'foreignKey' => 'character_id',
-            'className' => 'Vorien/Dashboard.Characters'
+        $this->belongsTo('Userdata', [
+            'foreignKey' => 'userdata_id',
+            'className' => 'Vorien/Dashboard.Userdata'
         ]);
-        $this->hasMany('Characterlevels', [
-            'foreignKey' => 'characterstat_id',
-            'className' => 'Vorien/HeroCombat.Characterlevels'
-        ]);
-        $this->hasMany('Charactermaneuvers', [
-            'foreignKey' => 'characterstat_id',
-            'className' => 'Vorien/HeroCombat.Charactermaneuvers'
-        ]);
-        $this->hasMany('Characterprotections', [
-            'foreignKey' => 'characterstat_id',
-            'className' => 'Vorien/HeroCombat.Characterprotections'
-        ]);
-        $this->hasMany('Characterweapons', [
-            'foreignKey' => 'characterstat_id',
-            'className' => 'Vorien/HeroCombat.Characterweapons'
+        $this->belongsTo('Gms', [
+            'foreignKey' => 'gm_id',
+            'className' => 'Vorien/Dashboard.Userdata'
         ]);
     }
 
@@ -77,6 +62,12 @@ class CharacterstatsTable extends Table
         $validator
             ->integer('id')
             ->allowEmpty('id', 'create');
+
+        $validator
+            ->allowEmpty('name');
+
+        $validator
+            ->allowEmpty('player');
 
         $validator
             ->integer('str')
@@ -150,7 +141,8 @@ class CharacterstatsTable extends Table
      */
     public function buildRules(RulesChecker $rules)
     {
-        $rules->add($rules->existsIn(['character_id'], 'Characters'));
+        $rules->add($rules->existsIn(['userdata_id'], 'Userdata'));
+        $rules->add($rules->existsIn(['gm_id'], 'Gms'));
 
         return $rules;
     }
@@ -162,6 +154,6 @@ class CharacterstatsTable extends Table
      */
     public static function defaultConnectionName()
     {
-        return 'herocombat';
+        return 'herodashboard';
     }
 }

@@ -42,7 +42,7 @@ class CharactersheetsTable extends Table
 
         $this->belongsTo('Characters', [
             'foreignKey' => 'character_id',
-            'className' => 'Vorien/HeroCSheet.Characters'
+            'className' => 'Vorien/Dashboard.Characters'
         ]);
     }
 

@@ -1,6 +1,6 @@
 <?php
 
-namespace Vorien\Dashboard\Controller\Component;
+namespace Vorien\HeroCombat\Controller\Component;
 
 use Cake\Controller\Component;
 use Cake\Controller\ComponentRegistry;
@@ -62,7 +62,7 @@ class OwnershipComponent extends Component {
 					return true;
 				}
 
-				$model = ClassRegistry::init('Characterweapon');
+				$model = TableRegistry::get('Vorien/HeroCombat.Characterweapons');
 
 				if (!$model->exists($weaponid)) {
 					$this->Flash->set('Weapon not found', 'flash/error');

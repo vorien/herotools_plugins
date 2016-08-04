@@ -46,6 +46,17 @@ class XMLFunctions {
 		return '/node()' . $this->buildSkipEmpty($selectarray);
 	}
 
+function buildNodeQuery($basequery, $getnodes=true, $skipempty=true, $options=[]){
+	$nodequery = $basequery;
+	if($getnodes){
+		$nodequery .= '/node()';
+	}
+	if($skipempty){
+		$nodequery.= $this->buildSkipEmpty($options);
+	}
+	return $nodequery;
+}
+
 	function removeNamedTags(&$domdocument, $namearray = []) {
 		$domxpath = $this->getDOMXPathFromDOMDocument($domdocument);
 		foreach ($namearray as $name) {
@@ -67,7 +78,7 @@ class XMLFunctions {
 				return false;
 			}
 		}
-		$query .= '/*[not(node())]';
+		$query .= '/*' . $this->buildOptions($this->emptynottext);
 		$this->removeTags($domdocument, $query);
 		return true;
 	}
@@ -135,10 +146,11 @@ class XMLFunctions {
 	}
 
 	function getDOMXPathFromDOMDocument(&$domdocument) {
-		return new DOMXPath($domdocument);
+		return new \DOMXPath($domdocument);
 	}
 
 	function getNodeList(&$domdocument, $query) {
+//		var_dump($domdocument);
 		$domxpath = $this->getDOMXPathFromDOMDocument($domdocument);
 		$nodelist = $domxpath->query($query);
 		return $nodelist;
@@ -206,6 +218,10 @@ class XMLFunctions {
 		$newelement = $domdocument->createElement($elementname);
 		$newchild = $node->appendChild($newelement);
 		return $newchild;
+	}
+
+	function cleanStringForTagName($string) {
+		return strtoupper(str_replace(' ', '_', $string));
 	}
 
 	function findOrCreateNodePath(&$domdocument, $nodepath) {
