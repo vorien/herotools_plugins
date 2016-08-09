@@ -8,17 +8,17 @@
 class XMLFunctions {
 
 	private $skipemptynodes = '/node()';
-	public $skipempty = ['not(self::text()[not(normalize-space())])'];
-	public $emptynottext = ['not(*) and not(@*) and not(text()[normalize-space()])'];
-	public $empty = ['not(*) and not(@*)'];
-	public $documentelementid = 'ID';
+	private $skipempty = ['not(self::text()[not(normalize-space())])'];
+	private $emptynottext = ['not(*) and not(@*) and not(text()[normalize-space()])'];
+	private $empty = ['not(*) and not(@*)'];
+	private $idattribute = 'ID';
 
 	function __construct($params = []) {
 		if (isset($params['SkipEmptyNodes'])) {
 			$this->setSkipEmptyNodes($params['SkipEmptyNodes']);
 		}
-		if (isset($params['DocumentElementID'])) {
-			$this->setDocumentElementID($params['DocumentElementID']);
+		if (isset($params['idattribute'])) {
+			$this->idattribute = $params['idattribute'];
 		}
 	}
 
@@ -27,11 +27,11 @@ class XMLFunctions {
 		$this->skipemptynodes = $skip ? '/node()' : '';
 	}
 
-	function buildOptions($selectarray = []){
+	function buildOptions($selectarray = []) {
 		if ($selectarray) {
 			$built = '[' . implode(' and ', $selectarray) . ']';
 		}
-		return $built ?: '';
+		return $built ? : '';
 	}
 
 	function buildSkipEmpty($selectarray = []) {
@@ -39,23 +39,32 @@ class XMLFunctions {
 		if ($parameters) {
 			$built = '[' . implode(' and ', $parameters) . ']';
 		}
-		return $built ?: '';
+		return $built ? : '';
 	}
 
 	function buildSkipEmptyNodes($selectarray = []) {
 		return '/node()' . $this->buildSkipEmpty($selectarray);
 	}
 
-function buildNodeQuery($basequery, $getnodes=true, $skipempty=true, $options=[]){
-	$nodequery = $basequery;
-	if($getnodes){
-		$nodequery .= '/node()';
+	function buildNodeQuery($basequery, $getnodes = true, $skipempty = true, $options = []) {
+		$nodequery = $basequery;
+		if ($getnodes) {
+			$nodequery .= '/node()';
+		}
+		if ($skipempty) {
+			$nodequery.= $this->buildSkipEmpty($options);
+		}
+		return $nodequery;
 	}
-	if($skipempty){
-		$nodequery.= $this->buildSkipEmpty($options);
+
+	function createNode($name, $attributes = []) {
+		$tempdoc = new \DOMDocument();
+		$tempelement = $tempdoc->createElement($name);
+		foreach ($attributes as $akey => $avalue) {
+			$tempelement->setAttribute($akey, $avalue);
+		}
+		return $tempelement;
 	}
-	return $nodequery;
-}
 
 	function removeNamedTags(&$domdocument, $namearray = []) {
 		$domxpath = $this->getDOMXPathFromDOMDocument($domdocument);
@@ -113,11 +122,11 @@ function buildNodeQuery($basequery, $getnodes=true, $skipempty=true, $options=[]
 		$renamed = $element->ownerDocument->createElement($name);
 
 		foreach ($element->attributes as $attribute) {
-			if ($newid !== false || $attribute->nodeName !== $this->documentelementid)
+			if ($newid !== false || $attribute->nodeName !== $this->idattribute)
 				$renamed->setAttribute($attribute->nodeName, $attribute->nodeValue);
 		}
 		if ($newid) {
-			$renamed->setAttribute($this->documentelementid, $newid);
+			$renamed->setAttribute($this->idattribute, $newid);
 		}
 		while ($element->firstChild) {
 			$renamed->appendChild($element->firstChild);
@@ -136,7 +145,6 @@ function buildNodeQuery($basequery, $getnodes=true, $skipempty=true, $options=[]
 	function removeTags(&$domdocument, $query) {
 		$nodecount = 0;
 		while (($nodelist = $this->getNodeList($domdocument, $query)) && $nodelist->length) {
-//			debug($nodelist->length);
 			foreach ($nodelist as $element) {
 				$nodecount += 1;
 				$element->parentNode->removeChild($element);
@@ -150,10 +158,19 @@ function buildNodeQuery($basequery, $getnodes=true, $skipempty=true, $options=[]
 	}
 
 	function getNodeList(&$domdocument, $query) {
-//		var_dump($domdocument);
 		$domxpath = $this->getDOMXPathFromDOMDocument($domdocument);
 		$nodelist = $domxpath->query($query);
 		return $nodelist;
+	}
+
+	function getElementNodeList(&$element, $name) {
+		$nodelist = $element->getElementsByTagName($name);
+		if(!$nodelist->length){
+			// No nodes found
+			return false;
+		} else {
+			return $nodelist;
+		}
 	}
 
 	function renameNodesSetIDToTag(&$nodelist, $newname) {
@@ -167,7 +184,7 @@ function buildNodeQuery($basequery, $getnodes=true, $skipempty=true, $options=[]
 	function tagsToID(&$nodelist, $filter = null) {
 		foreach ($nodelist as $element) {
 			if (!$filter || $element->nodeName == $filter) {
-				$this->renameElement($element, $element->getAttribute($this->documentelementid));
+				$this->renameElement($element, $element->getAttribute($this->idattribute));
 			}
 		}
 	}
@@ -176,7 +193,7 @@ function buildNodeQuery($basequery, $getnodes=true, $skipempty=true, $options=[]
 		foreach ($nodelist as $element) {
 			if (!$filter || $element->nodeName == $filter) {
 				if ($element->hasAttribute($attribute)) {
-					$element->setAttribute($this->documentelementid, $this->cleanStringForID($element->getAttribute($attribute)));
+					$element->setAttribute($this->idattribute, $this->cleanStringForID($element->getAttribute($attribute)));
 				}
 			}
 		}
@@ -190,7 +207,7 @@ function buildNodeQuery($basequery, $getnodes=true, $skipempty=true, $options=[]
 	function setParentNodeIDToText($nodelist) {
 		foreach ($nodelist as $element) {
 			if ($element->nodeType == XML_TEXT_NODE) {
-				$element->parentNode->setAttribute($this->documentelementid, $this->cleanStringForID($element->nodeValue));
+				$element->parentNode->setAttribute($this->idattribute, $this->cleanStringForID($element->nodeValue));
 			}
 		}
 	}
@@ -213,11 +230,40 @@ function buildNodeQuery($basequery, $getnodes=true, $skipempty=true, $options=[]
 		return $attributes;
 	}
 
-	function attachElement(&$node, $elementname) {
+	function attachElement(&$node, $elementname, $attributes = []) {
 		$domdocument = $node->ownerDocument;
 		$newelement = $domdocument->createElement($elementname);
+		foreach ($attributes as $akey => $avalue) {
+			$newelement->setAttribute($akey, $avalue);
+		}
 		$newchild = $node->appendChild($newelement);
 		return $newchild;
+	}
+
+	function parseElementPath($elementpath) {
+		$elementstack = ['tag' => '', 'attributes' => []];
+		$rx_tag = "/^(\w+)/";
+		$rx_attributes = "/\@(\w+)\s*\=\s*[\"|']([^\"|']*)[\"|']/";
+		$queryarray = explode('/', $elementpath);
+		if (count($queryarray) != 1 || empty($queryarray[0])) {
+			// An error has occurred, send back to caller for processing
+			return null;
+		}
+		$item = $queryarray[0];
+		if (preg_match($rx_tag, $item, $tag)) {
+			$elementstack['tag'] = $tag[1];
+			if (preg_match_all($rx_attributes, $item, $attributes, PREG_SET_ORDER)) {
+				foreach ($attributes as $attribute) {
+					$elementstack['attributes'][$attribute[1]] = $attribute[2];
+				}
+			}
+			return $elementstack;
+		} else {
+			// No Tag Found, return to caller for processing;
+			return null;
+		}
+		// Process should not reach this point
+		return null;
 	}
 
 	function cleanStringForTagName($string) {
@@ -225,6 +271,7 @@ function buildNodeQuery($basequery, $getnodes=true, $skipempty=true, $options=[]
 	}
 
 	function findOrCreateNodePath(&$domdocument, $nodepath) {
+		//TODO: Support paths with id attributes
 		$domxpath = $this->getDOMXPathFromDOMDocument($domdocument);
 		$checkpath = $this->checkPathExists($domdocument, $nodepath);
 		if ($checkpath === null) {
@@ -259,8 +306,13 @@ function buildNodeQuery($basequery, $getnodes=true, $skipempty=true, $options=[]
 			$knownpath = '/';
 		}
 		$parentelement = $domxpath->query($knownpath)->item(0);
-		foreach ($toarray as $elementname) {
-			$parentelement = $this->attachElement($parentelement, $elementname);
+		foreach ($toarray as $elementpath) {
+			if ($parsedpath = $this->parseElementPath($elementpath)) {
+				$parentelement = $this->attachElement($parentelement, $parsedpath['tag'], $parsedpath['attributes']);
+			} else {
+				//parseElementPath returned failure
+				return null;
+			}
 		}
 		return $parentelement;
 	}
@@ -304,7 +356,6 @@ function buildNodeQuery($basequery, $getnodes=true, $skipempty=true, $options=[]
 		return $nodearray ? : false;
 	}
 
-	
 	//TODO this function needs work
 	function getChild(&$node, $childname, $match = 'exact') {
 		if (!$node || !$node->hasChildNodes()) {
@@ -350,19 +401,20 @@ function buildNodeQuery($basequery, $getnodes=true, $skipempty=true, $options=[]
 	}
 
 	function displayNode(\DOMNode $node) {
-		switch ($node->nodeType) {
-			case XML_TEXT_NODE:
-				debug($node->wholeText);
-				break;
-			default:
-				$snode = simplexml_import_dom($node);
-				debug($snode);
-//				$debug_xml = new \DOMDocument();
-//				$child = $debug_xml->importNode($node);
-//				$debug_xml->appendChild($child);
-//				debug($this->objectToArray($debug_xml));
-//				unset($debug_xml);
-		}
+		debug(json_decode(json_encode((array) simplexml_import_dom($node)), 1));
+//		switch ($node->nodeType) {
+//			case XML_TEXT_NODE:
+//				debug($node->wholeText);
+//				break;
+//			default:
+//				$snode = simplexml_import_dom($node);
+//				debug($snode);
+////				$debug_xml = new \DOMDocument();
+////				$child = $debug_xml->importNode($node);
+////				$debug_xml->appendChild($child);
+////				debug($this->objectToArray($debug_xml));
+////				unset($debug_xml);
+//		}
 	}
 
 	function displayNodeList(\DOMNodeList $nodelist) {
@@ -382,7 +434,11 @@ function buildNodeQuery($basequery, $getnodes=true, $skipempty=true, $options=[]
 	}
 
 	function getAttributeValue(&$node, $name, $default = null) {
-		return $node->getAttribute($name) ? : $default;
+		$attributevalue = $node->getAttribute($name);
+		if($attributevalue === null || $attributevalue === false || strlen(trim($attributevalue)) == 0){
+			return $default;
+		}
+		return  $attributevalue;
 	}
 
 	function getAttributesAsArray(&$node) {
@@ -397,13 +453,14 @@ function buildNodeQuery($basequery, $getnodes=true, $skipempty=true, $options=[]
 		return $attributes;
 	}
 
-	function getSXEAttributesAsArray(&$sxeattributes){
+	function getSXEAttributesAsArray(&$sxeattributes) {
 		$attributes = [];
-		foreach($sxeattributes as $name => $value){
+		foreach ($sxeattributes as $name => $value) {
 			$attributes[$name] = $value;
 		}
 		return $attributes;
 	}
+
 	function displayAttributes(&$node, $caller = null) {
 		if ($caller) {
 			echo '<h3>', $caller, '</h3><br>';
@@ -417,6 +474,5 @@ function buildNodeQuery($basequery, $getnodes=true, $skipempty=true, $options=[]
 			debug('child has no attributes: ' . $node->nodeName);
 		}
 	}
-
 
 }

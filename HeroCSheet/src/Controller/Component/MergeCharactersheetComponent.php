@@ -20,39 +20,18 @@ use XMLFunctions;
 class MergeCharactersheetComponent extends Component {
 
 	public $components = [];
-	public $basequery = 'HEROCSHEET';
-	public $character_xml;
+	public $basequery = '/';
+	public $to_xml;
+	public $to_path;
+	public $from_xml;
+	public $from_path;
 	public $rules;
-	public $merged_xml;
-	public $cpath;
-	public $tpath;
-	public $idattribute = 'XMLID';
+	public $idattribute = 'ID';
 	public $errorstack = [];
 	public $NodeStack;
 	public $XMLFunctions;
 
 	public function setConfiguration(array $config) {
-		$this->NodeStack = new NodeStack();
-		$this->XMLFunctions = new XMLFunctions();
-
-		$this->character_xml = new \DOMDocument();
-		$this->character_xml->preserveWhiteSpace = false;
-		$this->character_xml->loadXML($config['character_xml']->saveXML());
-		$this->XMLFunctions->renameElement($this->character_xml->documentElement, 'HEROCSHEET');
-		$this->moveEnhancers($this->character_xml);
-//		$this->XMLFunctions->removeEmptyTags($this->character_xml);
-		$this->cpath = new \DOMXPath($this->character_xml);
-		$this->merged_xml = new \DOMDocument();
-		$this->merged_xml->preserveWhiteSpace = false;
-		$this->merged_xml->loadXML($config['merged_xml']->saveXML());
-		$this->XMLFunctions->removeEmptyTags($this->merged_xml);
-		$this->tpath = new \DOMXPath($this->merged_xml);
-
-		$rules_xml = new \DOMDocument();
-		$rules_xml->preserveWhiteSpace = false;
-		$rules_xml->loadXML($config['rules_xml']->saveXML());
-		$this->rules = $this->XMLFunctions->getAttributesAsArray($rules_xml->documentElement);
-
 		if (isset($config['allowtext']) && $config['allowtext']) {
 			$this->skipempty = '';
 			$this->skipemptynodes = '/node()';
@@ -63,21 +42,64 @@ class MergeCharactersheetComponent extends Component {
 		if (isset($config['idattribute']) && $config['idattribute']) {
 			$this->idattribute = $config['idattribute'];
 		}
-//		$xquery = "/HEROCSHEET/SKILLS/SKILL[@XMLID = 'GAMBLING']/ADDER[@XMLID = 'SPORTSBETTING' and @XMLID = 'FANDOM']/ADDER[@XMLID = 'STEELBALL']";
-//		$xquery = 'HEROCSHEET';
-//		debug($xquery);
-//		$nodestack = $this->NodeStack->parseNodeString($xquery);
-//		debug($nodestack);
-//		$xquery = $this->NodeStack->buildNodeString($nodestack);
-//		debug($xquery);
-//		die(' ');
+
+		$this->XMLFunctions = new XMLFunctions(['idattribute' => $this->idattribute]);
+		$this->NodeStack = new NodeStack();
+		$this->to_xml = new \DOMDocument();
+		$this->to_xml->preserveWhiteSpace = false;
+		$this->to_xml->loadXML($config['character_xml']->saveXML());
+		$this->XMLFunctions->renameElement($this->to_xml->documentElement, 'HEROCSHEET');
+		$this->moveEnhancers();
+		$this->XMLFunctions->removeEmptyTags($this->to_xml);
+		$this->to_path = new \DOMXPath($this->to_xml);
+		$this->from_xml = new \DOMDocument();
+		$this->from_xml->preserveWhiteSpace = false;
+		$this->from_xml->loadXML($config['merged_xml']->saveXML());
+		$this->XMLFunctions->removeEmptyTags($this->from_xml);
+		$this->from_path = new \DOMXPath($this->from_xml);
+
+		$rules_xml = new \DOMDocument();
+		$rules_xml->preserveWhiteSpace = false;
+		$rules_xml->loadXML($config['rules_xml']->saveXML());
+		$this->rules = $this->XMLFunctions->getAttributesAsArray($rules_xml->documentElement);
 	}
 
-	public function moveEnhancers(&$cxml) {
-		$skillsnode = $cxml->getElementsByTagName('SKILLS')->item(0);
+	public function addPerceptionSkill() {
+		$attributes = [
+			'XMLID' => 'PERCEPTION',
+			'SHOWDIALOG' => 'No',
+			'DISPLAY' => 'Perception',
+			'MINCOST' => '0',
+			'EXCLUSIVE' => 'Yes',
+			'CHARACTERISTIC' => 'INT',
+			'BASECOST' => '0',
+			'LVLCOST' => '3',
+			'LVLVAL' => '1',
+			'ID' => '1351803027794',
+			'LEVELS' => '0',
+			'ALIAS' => 'Perception',
+			'POSITION' => '28',
+			'MULTIPLIER' => '1.0',
+			'GRAPHIC' => 'Burst',
+			'COLOR' => '255 255 255',
+			'SFX' => 'Default',
+			'SHOW_ACTIVE_COST' => 'No',
+			'INCLUDE_NOTES_IN_PRINTOUT' => 'No',
+			'FAMILIARITY' => 'No',
+			'PROFICIENCY' => 'No',
+			'LEVELSONLY' => 'No',
+			'DEFINITION' => 'This skill is used to perceive their surroundings.'
+		];
+		$skillsnode = $this->to_xml->getElementsByTagName('SKILLS')->item(0);
+		$node = $this->XMLFunctions->attachElement($skillsnode, 'SKILL', $attributes);
+//		$this->XMLFunctions->displayNode($node);
+	}
+
+	public function moveEnhancers() {
+		$skillsnode = $this->to_xml->getElementsByTagName('SKILLS')->item(0);
 		$nodepath = $skillsnode->getNodePath();
-		$tagsremovedcount = $this->XMLFunctions->removeTags($cxml, $nodepath . $this->XMLFunctions->buildSkipEmptyNodes(['starts-with(name(),"HYKERU")']));
-		if ($movednodes = $this->XMLFunctions->moveNodes($cxml, '/HEROCSHEET/SKILL_ENHANCERS', $skillsnode, $this->XMLFunctions->buildSkipEmptyNodes(['not(self::SKILL)']))) {
+		$tagsremovedcount = $this->XMLFunctions->removeTags($this->to_xml, $nodepath . $this->XMLFunctions->buildSkipEmptyNodes(['starts-with(name(),"HYKERU")']));
+		if ($movednodes = $this->XMLFunctions->moveNodes($this->to_xml, '/HEROCSHEET/SKILL_ENHANCERS', $skillsnode, $this->XMLFunctions->buildSkipEmptyNodes(['not(self::SKILL)']))) {
 			$this->XMLFunctions->renameElements($movednodes, 'ENHANCER');
 			return $movednodes;
 		} else {
@@ -94,39 +116,27 @@ class MergeCharactersheetComponent extends Component {
 		}
 	}
 
-	function addDefinitionAsAttribute(&$node, &$matchednode) {
-		if ($childnode = $this->XMLFunctions->getFirstMatchingChild($matchednode, 'DEFINITION')) {
-			debug($node->nodeName);
-			$cleanedvalue = preg_replace('/[\t|\r|\n]/', '', $childnode->nodeValue);
-			$node->setAttribute('DEFINITION', $cleanedvalue);
-//			var_dump($childnode);
-//				$this->XMLFunctions->copyNode($node, $childnode);
-			return true;
-		}
-		return false;
-	}
-
 	function mergeCharacter($nodestack = null, $depth = 0) {
 		$this->errorstack[] = 'mergeCharacter';
 		if (!$nodestack) {
 			$nodestack = $this->NodeStack->parseNodeString($this->basequery);
 		}
-		$nodelist = $this->cpath->query($this->NodeStack->buildNodeString($nodestack, true));
+		$nodequery = $this->NodeStack->buildNodeString($nodestack) . $this->XMLFunctions->buildSkipEmpty();
+		$nodelist = $this->to_path->query($nodequery);
 		foreach ($nodelist as $node) {
-			debug($node->nodeName);
+//			debug($node->nodeName);
 			if (!$this->ignorenode($node)) {
+//				debug($nodestack);
 				if ($matchednode = $this->runMatchingTests($nodestack, $node, true)) {
-//				$this->displayText('Match found', $node->getNodePath(), $matchednode->getNodePath());
-					$this->updateAttributes($node, $matchednode);
+					$updated = $this->updateAttributes($node, $matchednode);
+//					debug('Updating attributes for: ' . $node->getNodePath() . ' reported ' . $updated);
 					$this->errorstack = [];
 				} else {
 					$errorstack[] = 'No matching node found';
-//				debug('nodeType (3 is TEXT): ' . $node->nodeType);
-//				debug($optionstack);
+//					debug('nodeType (3 is TEXT): ' . $node->nodeType);
 					$errorstack[] = $nodestack;
-//				debug($this->NodeStack->buildNodeString($nodestack,false, true));
-//				$this->showErrorStack();
-//				die();
+//					$this->showErrorStack();
+//					die('No matching node found');
 				}
 				$this->addMaximaAsAttribute($node);
 				if ($node->hasChildNodes()) {
@@ -135,43 +145,53 @@ class MergeCharactersheetComponent extends Component {
 //							debug('Text Node');
 //							debug($child->nodeName);
 //							debug($child->hasAttributes());
-//						$this->XMLFunctions->displayNode($child);
+//							$this->XMLFunctions->displayNode($child);
 							//TODO Compare text, then ?
 						} else {
 							$childstack = $this->NodeStack->addQueryLevel($nodestack, $child, [$this->idattribute]);
-//						debug($childstack);
 							$this->mergeCharacter($childstack, $depth + 1);
 						}
 					}
 				}
 			}
 		}
-		return $this->character_xml;
+		return $this->to_xml;
 	}
 
 	function runMatchingTests(&$nodestack, &$node, $checkmodifier = false) {
-		debug($nodestack);
 		$this->errorstack[] = 'runMatchingTests';
 		if (!($matchednode = $this->getMatchingNode($nodestack))) { //Exact match
 			if (!($matchednode = $this->testWithOption($nodestack, $node))) {// Match OPTION child node
 				if (!($matchednode = $this->testWithInjectOption($nodestack, $node))) {// Parent has OPTION before node
 					if ($checkmodifier && $this->NodeStack->findInStack($nodestack, 'MODIFIER') && !($matchednode = $this->checkInModifiersNodePath($nodestack, $node))) {
 						return false;
+					} else {
+//						debug('Found using checkInModifiersNodePath');
+//						debug($node->getAttribute($this->idattribute) . ' -> ' . $matchednode->getAttribute($this->idattribute));
 					}
+				} else {
+//					debug('Found using testWithInjectOption');
+//					debug($node->getAttribute($this->idattribute) . ' -> ' . $matchednode->getAttribute($this->idattribute));
 				}
+			} else {
+//				debug('Found using testWithOption');
+//				debug($node->getAttribute($this->idattribute) . ' -> ' . $matchednode->getAttribute($this->idattribute));
 			}
+		} else {
+//			debug('Found using getMatchingNode');
+//			debug($node->getAttribute($this->idattribute) . ' -> ' . $matchednode->getAttribute($this->idattribute));
 		}
 		return $matchednode;
 	}
 
 	function getMatchingNode(&$nodestack) {
 		$this->errorstack[] = 'getMatchingNode';
-		$nodequery = $this->NodeStack->buildNodeString($nodestack, true);
-		$nodelist = $this->tpath->query($nodequery);
+		$nodequery = $this->NodeStack->buildNodeString($nodestack);
+//		debug($nodequery);
+		$nodelist = $this->from_path->query($nodequery);
 		switch ($nodelist->length) {
 			case 0:
 				// No match found, return to caller for processing
-//					debug($nodestack);
 				$this->errorstack[] = $nodequery;
 				return false;
 				break;
@@ -187,7 +207,7 @@ class MergeCharactersheetComponent extends Component {
 				$this->errorstack[] = $nodequery;
 				$this->errorstack[] = $nodestack;
 				$this->showErrorStack();
-				die(' ');
+				die('Multiple tag/xmlid matches found');
 				break;
 		}
 	}
@@ -202,9 +222,8 @@ class MergeCharactersheetComponent extends Component {
 			];
 			if ($matchednode = $this->getMatchingNode($optionstack)) {
 				return $matchednode;
-//				} else {
-//					debug($optionstack);
-//					debug($this->NodeStack->buildNodeString($optionstack, true));
+//			} else {
+//				debug($optionstack);
 			}
 		}
 		return false;
@@ -217,7 +236,6 @@ class MergeCharactersheetComponent extends Component {
 				return $matchednode;
 //			} else {
 //				debug($optionstack);
-//				debug($this->NodeStack->buildNodeString($optionstack, true));
 			}
 		}
 		return false;
@@ -235,13 +253,11 @@ class MergeCharactersheetComponent extends Component {
 		} else {
 			return false;
 //			$this->displayText('MODIFIER IN PATH, getRebasedNodeStack failed, prepath: MODIFIER, /HEROCSHEET/MODIFIERS', null, null);
-//			die(' ');
+//			die('getRebasedNodeStack failed');
 		}
 	}
 
 	function updateAttributes(&$tonode, &$fromnode) {
-//		debug($tonode->getNodePath());
-//		debug($fromnode->getNodePath());
 		$this->errorstack[] = 'updateAttributes';
 		if (!$tonode->hasAttributes() || !$fromnode->hasAttributes()) {
 			return 'No Attributes to merge';
@@ -249,24 +265,42 @@ class MergeCharactersheetComponent extends Component {
 		if ($tonode->nodeType == XML_TEXT_NODE || $fromnode->nodeType == XML_TEXT_NODE) {
 			return 'One or both are TEXT nodes';
 		}
-//		$this->displayAttributes($fromnode, 'updateAttributes');
-//		$this->displayAttributes($tonode, 'updateAttributes');
 		foreach ($fromnode->attributes as $attribute) {
-//			if(!$tonode->hasAttribute($attribute->name)){
-			$tonode->setAttribute($attribute->name, $attribute->value);
-//			}
+			if (!$tonode->hasAttribute($attribute->name)) {
+				$tonode->setAttribute($attribute->name, $attribute->value);
+			}
 		}
 		$this->addDefinitionAsAttribute($tonode, $fromnode);
-//		$this->displayAttributes($tonode, 'updateAttributes');
 		return 'Success';
 	}
 
+	function addDefinitionAsAttribute(&$node, &$matchednode) {
+		if ($childnode = $this->XMLFunctions->getFirstMatchingChild($matchednode, 'DEFINITION')) {
+			$cleanedvalue = preg_replace('/[\t|\r|\n]/', '', $childnode->nodeValue);
+			$node->setAttribute('DEFINITION', $cleanedvalue);
+//			var_dump($childnode);
+//				$this->XMLFunctions->copyNode($node, $childnode);
+			return true;
+		}
+		return false;
+	}
+
 	function addMaximaAsAttribute(&$node) {
-		if ($node->nodeName == 'SKILL' && $this->rules['USESKILLMAXIMA'] == 'Yes') {
-			$node->setAttribute('SKILLMAXIMA', $this->rules['SKILLMAXIMALIMIT']);
+		if ($node->nodeName == 'SKILL' && ($characteristic = $this->XMLFunctions->getAttributeValue($node, 'CHARACTERISTIC'))) {
+			if ($this->rules['USESKILLMAXIMA'] == 'Yes') {
+				$node->setAttribute('SKILLMAXIMALIMIT', $this->rules['SKILLMAXIMALIMIT']);
+			}
+			if ($characteristic != 'GENERAL') {
+				$node->setAttribute('SKILLROLLBASE', $this->rules['SKILLROLLBASE']);
+				$node->setAttribute('SKILLROLLDENOMINATOR', $this->rules['SKILLROLLDENOMINATOR']);
+			}
 		}
 		if ($node->parentNode->nodeName == 'CHARACTERISTICS') {
 			$node->setAttribute('CHARACTERISTICMAXIMA', $this->rules[$node->nodeName . '_MAX']);
+			if (in_array($this->XMLFunctions->getAttributeValue($node, $this->idattribute), ['STR', 'DEX', 'CON', 'INT', 'EGO', 'PRE'])) {
+				$node->setAttribute('CHARROLLBASE', $this->rules['CHARROLLBASE']);
+				$node->setAttribute('CHARROLLDENOMINATOR', $this->rules['CHARROLLDENOMINATOR']);
+			}
 		}
 	}
 
@@ -284,53 +318,13 @@ class MergeCharactersheetComponent extends Component {
 				array_push($newstack, $lastlevel);
 				return $newstack;
 			} else {
-//					debug('Parent node has no option id');
+//				debug('Parent node has no option id');
 			}
 		} else {
 			$this->errorstack[] = 'Matched node has no parent node';
 		}
 		return false;
 	}
-
-//	function addOptionsToAdderPath($nodestack) {
-//		$startchar = strpos($nodestack, '/ADDER');
-//		$nodestack = substr_replace($nodquery, '', $pos, 0);
-//		if ($node->hasAttribute('OPTIONID') && $node->getAttribute('OPTIONID')) {
-//			$optionnode = $node->ownerDocument->createElement("OPTION");
-//			$optionnode->setAttribute('XMLID', $node->getAttribute('OPTIONID'));
-//			$node->appendChild($optionnode);
-//			debug('Added option node to: ' . $node->nodeName);
-//		}
-//
-//		$nodestack = $basequery . substr($nodestack, $startchar);
-////		debug($nodestack);
-//		return $nodestack;
-//	}
-//
-//	function displayText($message, $nodestack, $matchednodepath, $error = false) {
-//		$msg = $message . ' - nodepath: ';
-//		$msg .= $nodestack;
-//		if ($matchednodepath) {
-//			$msg .= ' -> matching nodepath: ' . $matchednodepath;
-//		}
-//		if ($error) {
-//			$msg = '<h2>' . $msg . '</h2>';
-//		}
-//		debug($msg);
-//	}
-//
-//	function getLowestMatchingParent($nodestack, $node) {
-//		do {
-//			$gmn = $this->getMatchingNode($nodestack, $node);
-//			if ($node->parentNode) {
-//				$node = $node->parentNode;
-//				$nodestack = $this->removeQueryLevel($nodestack);
-//			} else {
-//				return false;
-//			}
-//		} while (!$gmn);
-//		return $gmn;
-//	}
 
 	function showErrorStack() {
 		foreach ($this->errorstack as $error) {

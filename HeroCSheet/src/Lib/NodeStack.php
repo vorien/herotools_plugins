@@ -12,10 +12,10 @@ class NodeStack {
 	public $attributes;
 	public $node;
 
-	function __construct(){
+	function __construct() {
 		
 	}
-	
+
 	function findInStack(&$nodestack, $tag) {
 		$tagkey = false;
 		foreach ($nodestack as $npkey => $npvalue) {
@@ -50,26 +50,25 @@ class NodeStack {
 		$nodestack = [];
 		$rx_tag = "/^([^\[]+)/";
 		$rx_attributes = "/\@(\w+)\s*\=\s*[\"|']([^\"|']*)[\"|']/";
+		$rx_brackets = "/\[([0-9]+)\]/";
 		$queryarray = explode('/', $string);
 		foreach ($queryarray as $item) {
 			if ($item) {
 				$itemarray = [];
 				if (preg_match($rx_tag, $item, $tag)) {
 					$itemarray['tag'] = $tag[1];
+					if (preg_match_all($rx_attributes, $item, $attributes, PREG_SET_ORDER)) {
+						$itemarray['attributes'] = [];
+						foreach ($attributes as $attribute) {
+							$itemarray['attributes'][] = $attribute[0];
+						}
+					} else if (preg_match_all($rx_brackets, $item, $brackets, PREG_SET_ORDER)) {
+						$itemarray['brackets'] = $brackets[1];
+					}
+					$nodestack[] = $itemarray;
 				} else {
 					die('No Tag Found');
 				}
-				if (preg_match_all($rx_attributes, $item, $attributes, PREG_SET_ORDER)) {
-					$itemarray['attributes'] = [];
-//					debug($attributes);
-					foreach ($attributes as $attribute) {
-//						debug($attribute);
-						$itemarray['attributes'][] = $attribute[0];
-					}
-				} else {
-//					die('No Tag Found');
-				}
-				$nodestack[] = $itemarray;
 			}
 		}
 		return $nodestack;
@@ -98,7 +97,6 @@ class NodeStack {
 		} else {
 			die('No Match Found');
 		}
-
 		if ($attributes) {
 			foreach ($attributes as $attribute) {
 				if ($node->hasAttribute($attribute)) {
@@ -115,11 +113,7 @@ class NodeStack {
 		array_pop($nodestack);
 	}
 
-	function attachEmptyFilter(&$nodestring) {
-		$nodestring .= $this->skipempty;
-	}
-
-	function buildNodeString(&$nodestack, $skipempty = false, $usebrackets = false) {
+	function buildNodeString(&$nodestack, $usebrackets = false) {
 		$nodestring = '';
 		foreach ($nodestack as $node) {
 			$nodestring .= '/' . $node['tag'];
@@ -133,14 +127,25 @@ class NodeStack {
 				}
 			}
 		}
-		if ($skipempty) {
-			$this->attachEmptyFilter($nodestring);
-		}
 		return $nodestring;
 	}
 
+//	function buildNodeArray(&$nodestack) {
+//		$nodearray = ['base' => '', 'attributes' => []];
+//		foreach ($nodestack as $nkey => $node) {
+//			$nodearray['base'] .= '/' . $node['tag'];
+//			if (array_key_exists('attributes', $node) && !empty($node['attributes'])) {
+//				if ($nkey < count($nodestack) - 1) {
+//					$nodestring .= '[' . implode(' and ', $node['attributes']) . ']';
+//				} else {
+//					$nodearray['attributes'] = $node['attributes'];
+//				}
+//			}
+//		}
+//		return $nodearray;
+//	}
 }
 
-function testNodeStackClassLoad(){
+function testNodeStackClassLoad() {
 	debug('Load successful');
 }

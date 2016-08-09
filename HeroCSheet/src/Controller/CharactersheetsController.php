@@ -16,6 +16,7 @@ class CharactersheetsController extends AppController {
 	public $mpath;
 	public $tpath;
 	public $carray = [];
+	public $idattribute = 'XMLID';
 
 	public function initialize() {
 		parent::initialize();
@@ -73,26 +74,26 @@ class CharactersheetsController extends AppController {
 		return false;
 	}
 
-	function getXMLID($node) {
-		if ($node->hasAttribute('XMLID')) {
-			return $node->getAttribute('XMLID');
+	function getID($node) {
+		if ($node->hasAttribute($this->idattribute)) {
+			return $node->getAttribute($this->idattribute);
 		} else {
 			return null;
 		}
 	}
 
-	function showParentNodes($node, $showxmlid = false) {
+	function showParentNodes($node, $showid = false) {
 		while (substr($node->parentNode->nodeName, 0, 1) != '#') {
-			$xmlid = $pxmlid = '';
-			if ($showxmlid) {
-				if ($xmlid = $this->getXMLID($node)) {
-					$xmlid = " [$xmlid]";
+			$id = $pid = '';
+			if ($showid) {
+				if ($id = $this->getID($node)) {
+					$id = " [$id]";
 				}
-				if ($pxmlid = $this->getXMLID($node->parentNode)) {
-					$pxmlid = " [$xmlid]";
+				if ($pid = $this->getID($node->parentNode)) {
+					$pid = " [$id]";
 				}
 			}
-			echo $node->nodeName, $xmlid, ' -> ', $node->parentNode->nodeName, $pxmlid, '<br>';
+			echo $node->nodeName, $id, ' -> ', $node->parentNode->nodeName, $pid, '<br>';
 			$node = $node->parentNode;
 		}
 	}

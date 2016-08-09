@@ -38,32 +38,45 @@ class CharactersheetProcessorComponent extends Component {
 		$character_xml = dom_import_simplexml($xmlfiles['character_sxml'])->ownerDocument;
 		$main_xml = dom_import_simplexml($xmlfiles['main_sxml'])->ownerDocument;
 
+		$character_xml->save($this->CharactersheetFilePath . 'character_xml.xml');
+		
 		$this->MergeTemplates->setConfiguration([
 			'to_xml' => $main_xml,
 			'from_xml' => $template_xml,
-			'basequery' => '/HEROCSHEET'
+			'basequery' => '/HEROCSHEET',
+			'idattribute' => 'XMLID'
 		]);
 		$merge_xml = $this->MergeTemplates->mergeTemplates();
+		
+		$merge_xml->save($this->CharactersheetFilePath . 'merge_xml.xml');
 
-debug($merge_xml->saveXML());
+//		debug($merge_xml->saveXML());
 
 		$this->MergeCharactersheet->setConfiguration([
 			'character_xml' => $character_xml,
 			'merged_xml' => $merge_xml,
 			'rules_xml' => $rules_xml,
-			'basequery' => '/HEROCSHEET/CHARACTERISTICS'
+			'basequery' => '/HEROCSHEET',
+			'idattribute' => 'XMLID'
 		]);
+		
+		$this->MergeCharactersheet->addPerceptionSkill();
 
 		$mergedcharacter_xml = $this->MergeCharactersheet->mergeCharacter();
-debug($mergedcharacter_xml->saveXML());
-
-//		$this->LoadCharactersheet->setConfiguration([
-//			'character_xml' => $mergedcharacter_xml,
-//			'charactersheet_id' => $charactersheet_id
-//		]);
-//
-//		$this->LoadCharactersheet->loadCharactersheet();
 		
+		$mergedcharacter_xml->save($this->CharactersheetFilePath . 'mergedcharacter_xml.xml');
+
+//		debug($mergedcharacter_xml->saveXML());
+
+		$this->LoadCharactersheet->setConfiguration([
+			'character_xml' => $mergedcharacter_xml,
+			'charactersheet_id' => $charactersheet_id,
+			'basequery' => '/HEROCSHEET',
+			'idattribute' => 'XMLID'
+		]);
+
+		$this->LoadCharactersheet->loadCharactersheet();
+
 		debug('Process Complete');
 	}
 
